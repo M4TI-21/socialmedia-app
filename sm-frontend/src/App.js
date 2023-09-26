@@ -10,8 +10,8 @@ export default function App() {
     <div className="main">
       <BrowserRouter>
       <Routes>
-        <Route path="/" element={<MainPage />}></Route>
-        <Route path="/login" element={<LoginForm />}></Route>
+        <Route path="/home" element={<MainPage />}></Route>
+        <Route path="/" element={<LoginForm />}></Route>
         <Route path="/register" element={<RegisterForm />}></Route>
       </Routes>
       </BrowserRouter>

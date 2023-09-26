@@ -41,8 +41,8 @@ export default function RegisterForm() {
         else{
           console.log(registerData);
           
-          axios.post('http://localhost:8080/register', registerData)
-          .then(res => console.log(res.status, res.data))
+          axios.post('http://localhost:8080/register', {email, pass, dob, name, tag})
+          .then(res => console.log(res))
           .catch(err => console.log(err))
           alert("User registered. Login Now!")
         }
