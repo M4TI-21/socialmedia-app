@@ -35,15 +35,14 @@ export default function RegisterForm() {
         const error = SecondValidation(registerData);
         setErrorMsg(error);
         if(error.name !== "" && error.tag !== "" && error.pass !== "" && error.email !== "" && error.dob !== ""){
-            console.log(registerData);
+            console.log("Wpisane dane: ", registerData);
             console.log("error");
         }
         else{
-          console.log(registerData);
-          
+          console.log("Wpisane dane: ", registerData);
           axios.post('http://localhost:8080/register', {email, pass, dob, name, tag})
           .then(res => console.log(res))
-          .catch(err => console.log(err))
+          
           alert("User registered. Login Now!")
         }
     }

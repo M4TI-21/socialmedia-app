@@ -8,5 +8,5 @@ const RegisterSchema = new mongoose.Schema({
     date_of_birth: Date
 })
 
-const RegisterModel = mongoose.model("register", RegisterSchema);
-module.exports = RegisterModel;
+const UserDataModel = mongoose.model("user-data", RegisterSchema);
+module.exports = UserDataModel;

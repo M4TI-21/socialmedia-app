@@ -1,15 +1,15 @@
 import { Form, Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-
 export default function LoginForm() {
 
-  let [email, setEmail] = useState('');
-  let [pass, setPass] = useState('');
+  let [loginEmail, setEmail] = useState('');
+  let [loginPass, setPass] = useState('');
   const [errorMsg, setErrorMsg] = useState({});
-  const [loginData, setLoginData] = useState({email: '', pass: ''});
+  const [loginData, setLoginData] = useState({loginEmail: null, loginPass: null});
 
 
   const validation = (loginData) => {
@@ -17,20 +17,23 @@ export default function LoginForm() {
     const emailRegex = /\S+@\S+\.\S+/;
     const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
 
-    if(loginData.email === ""){
+    var pass = loginData.loginPass;
+    var email = loginData.loginEmail;
+
+    if(email === ""){
       error.email = "Enter your email";
     }
-    else if(emailRegex.test(loginData.email) === false){
+    else if(emailRegex.test(email) === false){
       error.email = "Incorrect email";
     }
     else{
       error.email = "";
     }
 
-    if(loginData.pass === ""){
+    if(pass === ""){
       error.pass = "Enter your password"
     }
-    else if(passRegex.test(loginData.pass) === false){
+    else if(passRegex.test(pass) === false){
       error.pass = "Password doesn't match the email";
     }
     else{
@@ -42,8 +45,21 @@ export default function LoginForm() {
 
   const submitOnClick = (e) => {
     e.preventDefault();
-    setLoginData(prev => ({...prev, email: email, pass: pass}));
-    setErrorMsg(validation(loginData));
+    setLoginData(prev => ({...prev, loginEmail: loginEmail, loginPass: loginPass}));
+    const error = validation(loginData);
+    setErrorMsg(error);
+
+    if(error.email !== "" && error.pass !== ""){
+      console.log("Wpisane dane: ", loginData);
+      console.log("Error");
+    }
+    else{
+      console.log("Wpisane dane: ", loginData);
+      axios.post('http://localhost:8080/register', {loginEmail, loginPass})
+          .then(res => console.log(res))
+          .catch(err => console.log(err))
+          
+    }
   }
 
   return (

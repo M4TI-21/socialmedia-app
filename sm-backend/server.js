@@ -13,6 +13,10 @@ app.get("/", (req, resp) => {
     resp.send("dziala")
 })
 
+app.listen(8080, ()=> {
+    console.log("Listening");
+})
+
 app.post("/register", (req, res) => {
     const {email, pass, name, dob, tag} = req.body;
     RegisterModel.findOne({email: email})
@@ -28,6 +32,20 @@ app.post("/register", (req, res) => {
     }).catch(err => res.json(err))
 })
 
-app.listen(8080, ()=> {
-    console.log("Listening");
+app.post("/login", (req, res) => {
+    const {loginEmail, loginPass} = req.body;
+    RegisterModel.findOne({email: loginEmail})
+    .then(user => {
+        if(user){
+            if(user.password === loginPass){
+                res.join("User logged");
+            }
+            else{
+                res.join("Incorrect password");
+            }
+        }
+        else{
+            res.join("There is no user record with that email");
+        }
+    }).catch(err => res.json(err))
 })
