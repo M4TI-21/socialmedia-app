@@ -1,0 +1,42 @@
+body{
+    background-color: #dfe1e2;
+}
+
+.main{
+    background-color: #dfe1e2;
+}
+
+*{
+    color: #1d2022;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar{
+    width: 60vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 2vh;
+}
+
+.nav{
+    width: 50vw;
+}
+
+.navLink{
+    text-decoration: none;
+    color: #1d2022;
+}
+
+.navLink:hover{
+    color: #000;
+    animation: ease-in;
+    animation-duration: 1s;
+}
+
+.register{
+    color: #dfe1e2;
+    background-color: #1d2022;
+    border-radius: 10px;
+}
