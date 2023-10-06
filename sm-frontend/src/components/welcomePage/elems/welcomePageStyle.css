@@ -1,0 +1,90 @@
+body{
+    background-color: #dfe1e2;
+}
+
+.main{
+    background-color: #dfe1e2;
+}
+
+*{
+    color: #1d2022;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar{
+    width: 60vw;
+    height: auto;
+    font-size: 2vh;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+}
+
+.nav{
+    width: 50vw;
+}
+
+.navBtns{
+    display: flex;
+    flex-direction: row;
+}
+
+.navBtnsList{
+    width: 100%;
+    display: flex;
+    justify-content: right;
+}
+
+.login, .git{
+    text-decoration: none;
+    color: #1d2022;
+    width: 10vw;
+    border-radius: 50px;
+    text-align: center;
+}
+
+.login:hover, .git:hover{
+    color: #000;
+    animation: ease-in;
+    animation-duration: 10s;
+    background-color: darkgray;
+
+}
+
+.register{
+    text-decoration: none;
+    color: #dfe1e2;
+    background-color: #1d2022;
+    border-radius: 50px;
+    text-align: center;
+}
+
+.contentArea{
+    background-color: red;
+    width: 80vw;
+    height: 70vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.quoteArea{
+    height: 100%;
+    width: 50%;
+    text-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.quote{
+    font-weight: bold;
+    font-size: 7em;
+    line-height: 1.0;
+}
+
+.signature{
+    font-size: 2em;
+    text-align: center;
+}
