@@ -1,0 +1,44 @@
+body{
+    background-color: #dfe1e2;
+}
+
+.main{
+    background-color: #dfe1e2;
+}
+
+*{
+    color: #1d2022;
+    margin: 0;
+    padding: 0;
+}
+
+.contentArea{
+    background-color: #eee;
+    border-radius: 50px;
+    width: 80vw;
+    height: 70vh;
+    display: flex;
+    flex-direction: row;
+    align-items: top;
+    padding: 5vw;
+}
+
+.quoteArea{
+    height: 100%;
+    width: 50%;
+    text-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.quote{
+    font-weight: bold;
+    font-size: 13vh;
+    line-height: 1.0;
+}
+
+.signature{
+    font-size: 3vh;
+    text-align: right;
+}

@@ -1,13 +1,16 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from "react";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Form } from "react-bootstrap";
 import axios from "axios";
-import SecondValidation from "./registerForm/RegisterValidationTwo";
-import FirstValidation from './registerForm/RegisterValidationOne';
-import RegisterStepOne from "./registerForm/RegisterStepOne";
-import RegisterStepTwo from "./registerForm/RegisterStepTwo";
+import SecondValidation from "./RegisterValidationTwo";
+import FirstValidation from './RegisterValidationOne';
+import RegisterStepOne from "./RegisterStepOne";
+import RegisterStepTwo from "./RegisterStepTwo";
+import NavbarComp from "../../elements/Navbar"
+
 export default function RegisterForm() {
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [dob, setDob] = useState();
     const [name, setName] = useState('');
@@ -42,17 +45,23 @@ export default function RegisterForm() {
           console.log("Wpisane dane: ", registerData);
           axios.post('http://localhost:8080/register', {email, pass, dob, name, tag})
           .then(res => console.log(res))
-          
-          alert("User registered. Login Now!")
+          navigate("/");
+          alert("User registered. Login Now!");
         }
     }
 
   return (
-    <div className="RegisterFormArea">
-      <h1>Register</h1>
-        {active === "StepOne" && <RegisterStepOne setEmail = {setEmail} setDob = {setDob} errorMsg = {errorMsg} continueOnClick = {continueOnClick}/>}
-
-        {active === "StepTwo" && <RegisterStepTwo setName = {setName} setTag = {setTag} setPass = {setPass} errorMsg = {errorMsg} submitOnClick = {submitOnClick} setActive = {setActive}/>}
+    <div className="d-flex flex-column align-items-center">
+      <NavbarComp />
+      <div className="pageContent">
+        <div className="loginFormArea">
+          <h1 className="title">Register new account</h1>
+            <Form className="form">
+              {active === "StepOne" && <RegisterStepOne setEmail = {setEmail} setDob = {setDob} errorMsg = {errorMsg} continueOnClick = {continueOnClick}/>}
+              {active === "StepTwo" && <RegisterStepTwo setName = {setName} setTag = {setTag} setPass = {setPass} errorMsg = {errorMsg} submitOnClick = {submitOnClick} setActive = {setActive}/>}
+            </Form>
+        </div>
+      </div>
     </div>
   );
 }

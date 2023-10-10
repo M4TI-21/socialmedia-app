@@ -1,6 +1,6 @@
 import './App.css';
-import LoginForm from './components/loginPage/LoginForm';
-import RegisterForm from './components/loginPage/RegisterForm';
+import LoginForm from './components/loginPage/loginForm/LoginForm';
+import RegisterForm from './components/loginPage/registerForm/RegisterForm';
 import MainPage from './components/mainPage/mainPage';
 import WelcomePage from './components/welcomePage/welcomePage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';

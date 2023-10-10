@@ -1,11 +1,3 @@
-body{
-    background-color: #dfe1e2;
-}
-
-.main{
-    background-color: #dfe1e2;
-}
-
 *{
     color: #1d2022;
     margin: 0;
@@ -54,37 +46,13 @@ body{
 
 .register{
     text-decoration: none;
+    width: 10vw;
     color: #dfe1e2;
     background-color: #1d2022;
     border-radius: 50px;
     text-align: center;
 }
 
-.contentArea{
-    background-color: red;
-    width: 80vw;
-    height: 70vh;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-.quoteArea{
-    height: 100%;
-    width: 50%;
-    text-align: start;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.quote{
-    font-weight: bold;
-    font-size: 7em;
-    line-height: 1.0;
-}
-
-.signature{
-    font-size: 2em;
-    text-align: center;
+.mainLink{
+    text-decoration: none;
 }
