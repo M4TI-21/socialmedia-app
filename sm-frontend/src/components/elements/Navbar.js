@@ -1,4 +1,4 @@
-import {Navbar, Container, Nav} from "react-bootstrap";
+import {Navbar, Container, Nav, Button} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import logo from "../../images/sigmaLogo.png";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -18,8 +18,8 @@ export default function NavbarComp() {
                 <Navbar.Collapse className="navBtns" id="navbarScroll">
                     <Nav className="navBtnsList">
                         <Nav.Link className="navLink git" href="https://github.com/">GIT</Nav.Link>
-                        <Nav.Link className="navLink login"><Link className="navLink login" to="/">SIGN IN</Link></Nav.Link>
-                        <Nav.Link className="navLink register"><Link className="navLink register" to="/register">REGISTER</Link></Nav.Link>
+                        <Nav.Link className="navLink loginessa"><Link className="loginLink" to="/"><button className="loginBtn">SIGN IN</button></Link></Nav.Link>
+                        <Nav.Link className="navLink register"><Link className="registerLink" to="/register"><button className="registerBtn">REGISTER</button></Link></Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

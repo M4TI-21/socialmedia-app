@@ -1,13 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form } from "react-bootstrap";
 import axios from "axios";
 import SecondValidation from "./RegisterValidationTwo";
 import FirstValidation from './RegisterValidationOne';
 import RegisterStepOne from "./RegisterStepOne";
 import RegisterStepTwo from "./RegisterStepTwo";
-import NavbarComp from "../../elements/Navbar"
+import NavbarComp from "../../elements/Navbar";
+import './registerFormStyle.css';
 
 export default function RegisterForm() {
     const navigate = useNavigate();
@@ -49,17 +49,15 @@ export default function RegisterForm() {
           alert("User registered. Login Now!");
         }
     }
-
+    
   return (
     <div className="d-flex flex-column align-items-center">
       <NavbarComp />
       <div className="pageContent">
-        <div className="loginFormArea">
+        <div className="regFormArea">
           <h1 className="title">Register new account</h1>
-            <Form className="form">
-              {active === "StepOne" && <RegisterStepOne setEmail = {setEmail} setDob = {setDob} errorMsg = {errorMsg} continueOnClick = {continueOnClick}/>}
-              {active === "StepTwo" && <RegisterStepTwo setName = {setName} setTag = {setTag} setPass = {setPass} errorMsg = {errorMsg} submitOnClick = {submitOnClick} setActive = {setActive}/>}
-            </Form>
+            {active === "StepOne" && <RegisterStepOne setEmail = {setEmail} setDob = {setDob} errorMsg = {errorMsg} continueOnClick = {continueOnClick}/>}
+            {active === "StepTwo" && <RegisterStepTwo setName = {setName} setTag = {setTag} setPass = {setPass} errorMsg = {errorMsg} submitOnClick = {submitOnClick} setActive = {setActive}/>}
         </div>
       </div>
     </div>

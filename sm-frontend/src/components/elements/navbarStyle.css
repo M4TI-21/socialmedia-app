@@ -28,29 +28,38 @@
     justify-content: right;
 }
 
-.login, .git{
+.navLink{
+    width: 10vw;
+    height: 5vh;
+    border-radius: 50px;
+    text-align: center;
+    color: #1d2022;
+}
+
+.loginLink, .registerLink{
     text-decoration: none;
     color: #1d2022;
-    width: 10vw;
-    border-radius: 50px;
-    text-align: center;
+    background-color: #fff;
 }
 
-.login:hover, .git:hover{
-    color: #000;
-    animation: ease-in;
-    animation-duration: 10s;
-    background-color: darkgray;
-
+.loginBtn{
+    background-color: #bbb;
 }
 
-.register{
-    text-decoration: none;
-    width: 10vw;
-    color: #dfe1e2;
+.registerBtn{
     background-color: #1d2022;
-    border-radius: 50px;
-    text-align: center;
+    border: none;
+}
+
+.registerBtn:hover{
+    background-color: #000;
+    color: #fff;
+    border: none;
+
+}
+
+.git:hover{
+    background-color: #bbb;
 }
 
 .mainLink{
