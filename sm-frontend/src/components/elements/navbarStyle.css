@@ -20,12 +20,13 @@
 .navBtns{
     display: flex;
     flex-direction: row;
+    justify-content: end;
 }
 
 .navBtnsList{
-    width: 100%;
+    width: 56%;
     display: flex;
-    justify-content: right;
+    justify-content: space-between;
 }
 
 .navLink{
@@ -36,30 +37,18 @@
     color: #1d2022;
 }
 
-.loginLink, .registerLink{
-    text-decoration: none;
-    color: #1d2022;
-    background-color: #fff;
+.git:hover, .signin:hover{
+    background-color: #ccc;
 }
 
-.loginBtn{
-    background-color: #bbb;
-}
-
-.registerBtn{
+.register{
     background-color: #1d2022;
-    border: none;
+    color: #dfe1e2;
 }
 
-.registerBtn:hover{
+.register:hover{
     background-color: #000;
     color: #fff;
-    border: none;
-
-}
-
-.git:hover{
-    background-color: #bbb;
 }
 
 .mainLink{

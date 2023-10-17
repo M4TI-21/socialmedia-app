@@ -1,4 +1,5 @@
 import { Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -8,6 +9,7 @@ import NavbarComp from "../../elements/Navbar";
 
 export default function LoginForm() {
 
+  const navigate = useNavigate();
   let [loginEmail, setEmail] = useState('');
   let [loginPass, setPass] = useState('');
   const [errorMsg, setErrorMsg] = useState({});
@@ -51,19 +53,27 @@ export default function LoginForm() {
     const error = validation(loginData);
     setErrorMsg(error);
 
-    if(error.email !== "" && error.pass !== ""){
-      console.log("Wpisane dane: ", loginData);
+    if(error.email !== "" || error.pass !== ""){
       console.log("Error");
     }
     else{
-      console.log("Wpisane dane: ", loginData);
-      axios.post('http://localhost:8080/register', {loginEmail, loginPass})
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
-          
+      axios.post('http://localhost:8080/login', {loginEmail, loginPass})
+          .then(res => {console.log(res);
+
+          if(res.data === "There is no user record with that email"){
+            console.log("There is no user record with that email");
+          }
+          else if(res.data === "Incorrect password"){
+            console.log("Password doesn't match the email");
+          }
+          else if(res.data === "User logged"){
+            console.log("User logged");
+            navigate("/home", {state: {id: loginEmail}})
+          }
+          })
+          .catch(err => console.log(err))     
     }
   }
-
   return (
     <div className="d-flex flex-column align-items-center">
       <NavbarComp />
@@ -80,12 +90,12 @@ export default function LoginForm() {
                     {errorMsg.pass && <Form.Text className="errorMessage">{errorMsg.pass}</Form.Text>}
                 </Form.Group>
             </Form>
-            <Button className="submitBtn" onClick={submitOnClick}>Sign in</Button>
+            <Button className="submitBtn d-flex align-items-center justify-content-center" onClick={submitOnClick}>Sign in</Button>
         </div>
         <div className="registerArea">
-          <p className="regText1">Don't have an account?</p>
-          <p className="regText2">Sign up now!</p>
-          <Button className="registerBtn"><Link className="registerBtn" to="/register">Create new account</Link></Button>
+          <p className="regText1 d-flex align-items-center justify-content-center">Don't have an account?</p>
+          <p className="regText2 d-flex align-items-center justify-content-center">Sign up now!</p>
+          <Button as={Link} className="registerBtn d-flex align-items-center justify-content-center" to="/register">Create new account</Button>
         </div>
       </div>
     </div>

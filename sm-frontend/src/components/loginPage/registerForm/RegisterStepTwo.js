@@ -20,7 +20,7 @@ export default function RegisterStepTwo(props) {
             {props.errorMsg.pass && <Form.Text className="errorMessage">{props.errorMsg.pass}</Form.Text>}
           </Form.Group>
           <Form.Group className="btnGroup">
-            <Button className="submitBtn" onClick={props.submitOnClick}>Register new account</Button>
+            <Button className="submitBtn d-flex align-items-center justify-content-center" onClick={props.submitOnClick}>Register new account</Button>
             <Button variant="danger" onClick={()=> props.setActive("StepOne")}>Back</Button>
           </Form.Group>
       </Form>

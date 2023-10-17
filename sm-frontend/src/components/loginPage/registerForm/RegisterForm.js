@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { Button } from 'react-bootstrap';
 import axios from "axios";
 import SecondValidation from "./RegisterValidationTwo";
 import FirstValidation from './RegisterValidationOne';
@@ -38,15 +39,19 @@ export default function RegisterForm() {
         const error = SecondValidation(registerData);
         setErrorMsg(error);
         if(error.name !== "" && error.tag !== "" && error.pass !== "" && error.email !== "" && error.dob !== ""){
-            console.log("Wpisane dane: ", registerData);
             console.log("error");
         }
         else{
-          console.log("Wpisane dane: ", registerData);
           axios.post('http://localhost:8080/register', {email, pass, dob, name, tag})
-          .then(res => console.log(res))
-          navigate("/");
-          alert("User registered. Login Now!");
+          .then(res => {console.log(res)
+            if(res.data === "Created account"){
+              navigate("/login");
+              alert("User registered. Login Now!");
+            }
+            else if(res.data === "Account already existing"){
+              console.log("Account already existing");
+            }
+          })  
         }
     }
     
@@ -58,6 +63,14 @@ export default function RegisterForm() {
           <h1 className="title">Register new account</h1>
             {active === "StepOne" && <RegisterStepOne setEmail = {setEmail} setDob = {setDob} errorMsg = {errorMsg} continueOnClick = {continueOnClick}/>}
             {active === "StepTwo" && <RegisterStepTwo setName = {setName} setTag = {setTag} setPass = {setPass} errorMsg = {errorMsg} submitOnClick = {submitOnClick} setActive = {setActive}/>}
+        </div>
+        <div className="essaArea">
+          <p className="regText1 d-flex align-items-center justify-content-center">Why join us?</p>
+          <ul className="regText2 d-flex">
+            <li>Essa</li>
+            <li>Essa 2</li>
+          </ul>
+          <Button as={Link} className="registerBtn d-flex align-items-center justify-content-center" to="/register">Create new account</Button>
         </div>
       </div>
     </div>

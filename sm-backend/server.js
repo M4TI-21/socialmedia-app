@@ -1,16 +1,13 @@
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose");
 const RegisterModel = require("./models/register");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect("mongodb://127.0.0.1:27017/socialmedia")
-
-app.get("/", (req, resp) => {
-    resp.send("dziala")
+app.get("/", cors(), (req, res) => {
+    res.send("dziala")
 })
 
 app.listen(8080, ()=> {
@@ -21,13 +18,14 @@ app.post("/register", (req, res) => {
     const {email, pass, name, dob, tag} = req.body;
     RegisterModel.findOne({email: email})
     .then(user => {
-        if(user){
-            res.join("Account already existing")
-        }
-        else{
+        if(!user){
+            res.json("Created account");
             RegisterModel.create({email: email, password: pass, name: name, date_of_birth: dob, tag: tag})
             .then(result => res.json(result))
             .catch(err => res.json(err))
+        }
+        else{
+            res.json("Account already existing");
         }
     }).catch(err => res.json(err))
 })
@@ -37,15 +35,15 @@ app.post("/login", (req, res) => {
     RegisterModel.findOne({email: loginEmail})
     .then(user => {
         if(user){
-            if(user.password === loginPass){
-                res.join("User logged");
+            if(user.password === loginPass && user.email === loginEmail){
+                res.json("User logged");
             }
-            else{
-                res.join("Incorrect password");
+            else if(user.password !== loginPass && user.email === loginEmail){
+                res.json("Incorrect password");
             }
         }
         else{
-            res.join("There is no user record with that email");
+            res.json("There is no user record with that email");
         }
     }).catch(err => res.json(err))
 })

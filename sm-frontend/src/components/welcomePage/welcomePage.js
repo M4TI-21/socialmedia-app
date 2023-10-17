@@ -15,7 +15,7 @@ export default function WelcomePage() {
             </div>
             <div className="sloganArea">
                 <p className="slogan">Be part of something <br /> special today! Register <br /> right now.</p>
-                <Link className="getstartedLink" to="/register"><Button className="getstartedBtn">GET STARTED!</Button></Link>
+                <Button as={Link} className="getstartedBtn d-flex align-items-center justify-content-center" to="/register">GET STARTED!</Button>
             </div>
         </div>
     </div>

@@ -15,7 +15,8 @@ export default function RegisterStepOne(props) {
               {props.errorMsg.dob && <Form.Text className="errorMessage">{props.errorMsg.dob}</Form.Text>}
           </Form.Group>
           
-          <Button className="submitBtn" onClick={props.continueOnClick}>Continue</Button>
+          <Button className="submitBtn d-flex align-items-center justify-content-center" onClick={props.continueOnClick}>Continue</Button>
       </Form>
   );
 }
+    
