@@ -1,0 +1,24 @@
+import {Navbar, Container, Nav} from "react-bootstrap";
+import { Link } from "react-router-dom";
+import logo from "../../../images/sigmaLogo.png";   
+import './mainNavStyle.css';
+
+export default function MainNavComp() {
+    return(
+        <Navbar expand="sm" className="mainNavbar" sticky="top" inverse collapseOnSelect>
+            <Navbar.Brand className="d-flex flex-column align-items-center">
+                <Link className="d-flex flex-column align-items-center mainLink" to="/home">
+                    <img alt="logo" src={logo} width="50"/>
+                    <p><b>Sigma</b></p>
+                </Link>
+            </Navbar.Brand>
+            <Navbar.Toggle className="mainNavBurger" aria-controls="navbarScroll" data-bs-toggle="collapse" data-bs-target="#navbarScroll" />
+            <Navbar.Collapse className="mainNavBtns" id="navbarScroll">
+                <Nav className="navBtnsList">
+                    <Nav.Link className="navLink op1" as={Link}>OPTION 1</Nav.Link>
+                    <Nav.Link className="navLink op2" as={Link}>OPTION 2</Nav.Link>
+                </Nav>
+            </Navbar.Collapse>
+        </Navbar>
+    );
+}

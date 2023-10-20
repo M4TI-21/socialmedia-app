@@ -1,11 +1,5 @@
-*{
-    color: #1d2022;
-    margin: 0;
-    padding: 0;
-}
-
 .navbar{
-    width: 60vw;
+    width: 100vw;
     height: auto;
     font-size: 2vh;
     display: flex;
@@ -17,36 +11,36 @@
     width: 50vw;
 }
 
-.navBtns{
+.mainNavBtns{
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
 }
 
-.navBtnsList{
+.mainNavBtnsList{
     width: 56%;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
 }
 
-.navLink{
+.mainNavLink{
     width: 10vw;
     height: 5vh;
     border-radius: 50px;
     text-align: center;
-
+    color: #1d2022;
 }
 
-.git:hover, .signin:hover{
+.op1:hover, .op2:hover{
     background-color: #ccc;
 }
 
-.register{
+.op3{
     background-color: #1d2022;
     color: #dfe1e2;
 }
 
-.register:hover{
+.op3:hover{
     background-color: #000;
     color: #fff;
 }

@@ -64,13 +64,12 @@ export default function RegisterForm() {
             {active === "StepOne" && <RegisterStepOne setEmail = {setEmail} setDob = {setDob} errorMsg = {errorMsg} continueOnClick = {continueOnClick}/>}
             {active === "StepTwo" && <RegisterStepTwo setName = {setName} setTag = {setTag} setPass = {setPass} errorMsg = {errorMsg} submitOnClick = {submitOnClick} setActive = {setActive}/>}
         </div>
-        <div className="essaArea">
+        <div className="rightArea">
           <p className="regText1 d-flex align-items-center justify-content-center">Why join us?</p>
-          <ul className="regText2 d-flex">
-            <li>Essa</li>
-            <li>Essa 2</li>
+          <ul className="regText2 d-flex flex-column align-items-start">
+            <li>IDK</li>
+            <li>IDK</li>
           </ul>
-          <Button as={Link} className="registerBtn d-flex align-items-center justify-content-center" to="/register">Create new account</Button>
         </div>
       </div>
     </div>
