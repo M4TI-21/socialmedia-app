@@ -7,7 +7,7 @@ export default function MainNavComp() {
     return(
         <Navbar expand="sm" className="mainNavbar" sticky="top" inverse collapseOnSelect>
             <Navbar.Brand className="d-flex flex-column align-items-center">
-                <Link className="d-flex flex-column align-items-center mainLink" to="/home">
+                <Link className="d-flex flex-column align-items-center mainLink" to="/main">
                     <img alt="logo" src={logo} width="50"/>
                     <p><b>Sigma</b></p>
                 </Link>

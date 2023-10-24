@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 app.use(cors());
 app.use(express.json());
 
-app.get("/home", cors(), (req, res) => {
+app.get("/main", cors(), (req, res) => {
     res.send("Strona główna");
 });
 
@@ -26,7 +26,7 @@ app.post("/register", (req, res) => {
             .catch(err => res.json(err))
         }
         else{
-            res.json("Account already existing");
+            res.json({status: error, error: "Account already existing"});
         }
     }).catch(err => res.json(err))
 })
@@ -45,11 +45,11 @@ app.post("/login", (req, res) => {
                 res.json({status: "User logged", user: token});
             }
             else if(user.password !== loginPass && user.email === loginEmail){
-                res.json("Incorrect password");
+                res.json({status: error, error: "Incorrect password"});
             }
         }
         else{
-            res.json("There is no user record with that email");
+            res.json({status: error, error: "There is no user record with that email"});
         }
     }).catch(err => res.json(err))
 })

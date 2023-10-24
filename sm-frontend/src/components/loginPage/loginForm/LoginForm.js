@@ -60,15 +60,15 @@ export default function LoginForm() {
       axios.post('http://localhost:8080/login', {loginEmail, loginPass})
           .then(res => {console.log(res);
 
-          if(res.data === "There is no user record with that email"){
+          if(res.data.status === "There is no user record with that email"){
             console.log("There is no user record with that email");
           }
-          else if(res.data === "Incorrect password"){
+          else if(res.data.status === "Incorrect password"){
             console.log("Password doesn't match the email");
           }
-          else if(res.data === "User logged"){
+          else if(res.data.status === "User logged"){
             console.log("User logged");
-            navigate("/home", {state: {id: loginEmail}})
+            navigate("/main", {state: {id: loginEmail}})
           }
           })
           .catch(err => console.log(err))     

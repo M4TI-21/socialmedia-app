@@ -11,7 +11,7 @@ export default function App() {
     <div className="main">
       <BrowserRouter>
       <Routes>
-        <Route path="/home" element={<MainPage />}></Route>
+        <Route path="/main" element={<MainPage />}></Route>
         <Route path="/" element={<WelcomePage />}></Route>
         <Route path="/login" element={<LoginForm />}></Route>
         <Route path="/register" element={<RegisterForm />}></Route>
