@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const RegisterModel = require("./models/register");
 const app = express();
-const jwt = require("jsonwebtoken");
+
  
 app.use(cors());
 app.use(express.json());
@@ -37,12 +37,7 @@ app.post("/login", (req, res) => {
     .then(user => {
         if(user){
             if(user.password === loginPass && user.email === loginEmail){
-                const token = jwt.sign({
-                    email: user.email,
-                    tag: user.tag
 
-                }, 'secret')
-                res.json({status: "User logged", user: token});
             }
             else if(user.password !== loginPass && user.email === loginEmail){
                 res.json({status: error, error: "Incorrect password"});
