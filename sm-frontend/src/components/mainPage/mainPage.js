@@ -7,7 +7,7 @@ export default function MainPage() {
   const location = useLocation();
 
   return (
-    <div className="pageContent d-flex flex-column align-items-center">
+    <div className="mainPageContent d-flex flex-column align-items-center">
       <div className="topPage">
         <MainNavComp />
       </div>

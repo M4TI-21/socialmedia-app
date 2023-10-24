@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: row;
     margin: 0 auto;
+    padding: 20px;
 }
 
 .nav{
@@ -29,6 +30,7 @@
     border-radius: 50px;
     text-align: center;
     color: #1d2022;
+    font-weight: bold;
 }
 
 .op1:hover, .op2:hover{

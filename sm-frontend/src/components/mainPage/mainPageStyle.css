@@ -3,13 +3,13 @@
     padding: 0;
 }
 
-.pageContent{
+.mainPageContent{
     width: 100%;
     background: none;
 }
 
 .topPage{
     width: 100%;
-    background-color: red;
+    background-color: #fff;
     height: 20%;
 }

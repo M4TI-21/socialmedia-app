@@ -1,15 +1,14 @@
 const mongoose = require("mongoose");
 
-
 mongoose.connect("mongodb://127.0.0.1:27017/socialmedia")
 .then(() => {
-    console.log("Databse connected");
+    console.log("Database connected");
 })
 .catch(() => {
-    console.log("Databse was not connected successfully");
+    console.log("Database was not connected successfully");
 })
 
-const RegisterSchema = new mongoose.Schema({
+const User = new mongoose.Schema({
     email:{
         type: String,
         required: true
@@ -34,7 +33,7 @@ const RegisterSchema = new mongoose.Schema({
         type: Date,
         required: true
     }
-})
+}, {collection: 'user-data'})
 
-const UserDataModel = mongoose.model("user-data", RegisterSchema);
+const UserDataModel = mongoose.model("UserData", User);
 module.exports = UserDataModel;
