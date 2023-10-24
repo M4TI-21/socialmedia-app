@@ -16,13 +16,14 @@ export default function RegisterForm() {
     const [name, setName] = useState('');
     const [tag, setTag] = useState('');
     const [pass, setPass] = useState('');
+    const [post, setPost] = useState("Essa byczku");
     const [active, setActive] = useState('StepOne');
     const [errorMsg, setErrorMsg] = useState({});
-    const [registerData, setRegisterData] = useState({email: null, dob: undefined, name: null, tag: null, pass: null});
+    const [registerData, setRegisterData] = useState({email: null, dob: undefined, name: null, tag: null, pass: null, post: "Essa byczku"});
   
     const continueOnClick = (e) => {
       e.preventDefault();
-      setRegisterData(prev => ({...prev, email: email, dob: dob, name: null, tag: null, pass: null}));
+      setRegisterData(prev => ({...prev, email: email, dob: dob, name: null, tag: null, pass: null, post: "Essa byczku"}));
       
       const error = FirstValidation(registerData);
       setErrorMsg(error);
@@ -33,7 +34,7 @@ export default function RegisterForm() {
 
     const submitOnClick = (e) => {
         e.preventDefault();
-        setRegisterData(prev => ({...prev, email: email, dob: dob, name: name, tag: tag, pass: pass}));
+        setRegisterData(prev => ({...prev, email: email, dob: dob, name: name, tag: tag, pass: pass, post: "Essa byczku"}));
 
         const error = SecondValidation(registerData);
         setErrorMsg(error);
@@ -41,16 +42,24 @@ export default function RegisterForm() {
             console.log("error");
         }
         else{
-          axios.post('http://localhost:8080/register', {email, pass, dob, name, tag})
-          .then(res => {console.log(res)
-            if(res.data === "Created account"){
-              navigate("/login");
-              alert("User registered. Login Now!");
+          const axiosRegisterPost = async () => {
+            try{
+              const response = await axios.post('http://localhost:8080/register', {email, pass, dob, name, tag, post});
+              console.log(response);
+
+              if(response.data === "Created account"){
+                navigate("/login");
+                alert("User registered. Login Now!");
+              }
+              else if(response.data === "Account already existing"){
+                console.log("Account already existing");
+              }
             }
-            else if(res.data === "Account already existing"){
-              console.log("Account already existing");
+            catch(error){
+              console.log(error);
             }
-          })  
+          }
+          axiosRegisterPost();
         }
     }
     

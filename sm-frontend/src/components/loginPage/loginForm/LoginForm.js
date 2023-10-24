@@ -56,22 +56,28 @@ export default function LoginForm() {
       console.log("Error");
     }
     else{
-      axios.post('http://localhost:8080/login', {loginEmail, loginPass})
-          .then(res => {console.log(res);
+      const axiosLoginPost = async () => {
+        try{
+            const response = await axios.post('http://localhost:8080/login', {loginEmail, loginPass});
+            console.log(response);
 
-          if(res.data.status === "There is no user record with that email"){
-            console.log("There is no user record with that email");
-          }
-          else if(res.data.status === "Incorrect password"){
-            console.log("Password doesn't match the email");
-          }
-          else if(res.data.status === "User logged"){
-            localStorage.setItem("token", res.data.user)
-            console.log("User logged");
-            navigate("/main", {state: {id: loginEmail}})
-          }
-          })
-          .catch(err => console.log(err))     
+            if(response.data.status === "There is no user record with that email"){
+              console.log("There is no user record with that email");
+            }
+            else if(response.data.status === "Incorrect password"){
+              console.log("Password doesn't match the email");
+            }
+            else if(response.data.status === "User logged"){
+              localStorage.setItem("token", response.data.user)
+              console.log("User logged");
+              navigate("/main")
+            }
+        }
+        catch(error){
+          console.log(error);
+        }
+      }
+      axiosLoginPost(); 
     }
   }
   return (

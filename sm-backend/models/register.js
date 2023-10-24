@@ -33,6 +33,10 @@ const User = new mongoose.Schema({
     date_of_birth:{
         type: Date,
         required: true
+    },
+
+    post: {
+        type: String
     }
 }, {collection: 'user-data'})
 
