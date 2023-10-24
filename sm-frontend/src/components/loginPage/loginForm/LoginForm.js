@@ -15,7 +15,6 @@ export default function LoginForm() {
   const [errorMsg, setErrorMsg] = useState({});
   const [loginData, setLoginData] = useState({loginEmail: null, loginPass: null});
 
-
   const validation = (loginData) => {
     let error = {};
     const emailRegex = /\S+@\S+\.\S+/;
@@ -67,6 +66,7 @@ export default function LoginForm() {
             console.log("Password doesn't match the email");
           }
           else if(res.data.status === "User logged"){
+            localStorage.setItem("token", res.data.user)
             console.log("User logged");
             navigate("/main", {state: {id: loginEmail}})
           }
