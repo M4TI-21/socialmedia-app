@@ -6,55 +6,25 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import './loginFormStyle.css';
 import NavbarComp from "../../elements/Navbar";
+import LoginValidation from "./loginValidation";
 
 export default function LoginForm() {
 
   const navigate = useNavigate();
-  let [loginEmail, setEmail] = useState('');
-  let [loginPass, setPass] = useState('');
+  const [loginEmail, setEmail] = useState('');
+  const [loginPass, setPass] = useState('');
   const [errorMsg, setErrorMsg] = useState({});
   const [loginData, setLoginData] = useState({loginEmail: null, loginPass: null});
 
-  const validation = (loginData) => {
-    let error = {};
-    const emailRegex = /\S+@\S+\.\S+/;
-    const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
-
-    var pass = loginPass;
-    var email = loginEmail;
-
-    if(email === ""){
-      error.email = "*Enter your email";
-    }
-    else if(emailRegex.test(email) === false){
-      error.email = "*Incorrect email";
-    }
-
-    else{
-      error.email = "";
-    }
-
-    if(pass === ""){
-      error.pass = "*Enter your password"
-    }
-    else if(passRegex.test(pass) === false){
-      error.pass = "*Password doesn't match the email";
-    }
-    else{
-      error.pass = "";
-    }
-
-    return error;
-  }
-
   const submitOnClick = (e) => {
     e.preventDefault();
+    
     setLoginData(prev => ({...prev, loginEmail: loginEmail, loginPass: loginPass}));
-    const error = validation(loginData);
+    const error = LoginValidation(loginEmail, loginPass);
     setErrorMsg(error);
-
+    
     if(error.email !== "" || error.pass !== ""){
-      console.log("Error");
+      console.log("Validation error");
     }
     else{
       const axiosLoginPost = async () => {

@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './registerFormStyle.css';
 
 export default function RegisterStepOne(props) {
+
   return (
       <Form className="regform">
           <Form.Group className="emailGroup">

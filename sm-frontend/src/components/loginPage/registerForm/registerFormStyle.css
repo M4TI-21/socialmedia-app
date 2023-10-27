@@ -82,7 +82,7 @@ body{
 }
 
 .regText1{
-    font-size: 4vh;
+    font-size: calc(4vmin);
     font-weight: bold;
     margin: 0;
     color: #eee;
@@ -90,7 +90,7 @@ body{
 }
 
 .regText2{
-    font-size: 3vh;
+    font-size: calc(2.5vmin);
     color: #eee;
     text-align: center;
 }

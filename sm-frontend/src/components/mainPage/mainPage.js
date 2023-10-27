@@ -8,7 +8,6 @@ import axios from "axios";
 
 export default function MainPage() {
   const navigate = useNavigate();
-  //const [post, setPost] = useState('');
   const [name, setName] = useState('');
 
   const populateMain = () => {

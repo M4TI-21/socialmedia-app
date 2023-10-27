@@ -35,9 +35,6 @@ const User = new mongoose.Schema({
         required: true
     },
 
-    post: {
-        type: String
-    }
 }, {collection: 'user-data'})
 
 const UserDataModel = mongoose.model("UserData", User);

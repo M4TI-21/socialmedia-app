@@ -6,7 +6,7 @@ import './navbarStyle.css';
 
 export default function NavbarComp() {
     return(
-        <Navbar expand="sm" className="navbar" sticky="top" inverse collapseOnSelect>
+        <Navbar expand="sm" className="navbar" sticky="top" collapseOnSelect>
             <Container>
                 <Navbar.Brand className="d-flex flex-column align-items-center">
                     <Link className="d-flex flex-column align-items-center mainLink" to="/">

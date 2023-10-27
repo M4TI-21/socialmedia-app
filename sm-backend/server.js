@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.post("/register", async (req, res) => {
     try{
-        const {email, pass, name, dob, tag, post} = req.body;
+        const {email, pass, name, dob, tag} = req.body;
         const user = await RegisterModel.findOne({email: email})
         if(!user){
             res.json("Created account");
@@ -18,12 +18,10 @@ app.post("/register", async (req, res) => {
                 name: name,
                 date_of_birth: dob,
                 tag: tag,
-                post: post
             })
-            res.json(result)
         }
         else{
-            res.json({status: error, error: "Account already existing"});
+            res.json({status: "Account already existing"});
         }
     }
     catch(error){
@@ -35,22 +33,22 @@ app.post("/login", async (req, res) => {
     try{
         const {loginEmail, loginPass} = req.body;
         const user = await RegisterModel.findOne({email: loginEmail})
-
-        if(user){
-            if(user.password === loginPass && user.email === loginEmail){
+        if(!user){
+            res.json({status: "There is no user record with that email"});
+        }
+        else if(user){
+            if(user.password !== loginPass && user.email === loginEmail){
+                res.json({status: "Incorrect password"});
+            }
+            else if(user.password === loginPass && user.email === loginEmail){
                 const token = jwt.sign({
                     email: user.email,
                     tag: user.tag
                 }, 'secret')
                 res.json({status: "User logged", user: token});
             }
-            else if(user.password !== loginPass && user.email === loginEmail){
-                res.json({status: error, error: "Incorrect password"});
-            }
         }
-        else{
-            res.json({status: error, error: "There is no user record with that email"});
-        }
+        
     }
     catch(error){
         console.log(error)
@@ -67,7 +65,7 @@ app.get("/main", async (req, res) => {
     }
     catch(error){
         console.log(error);
-        res.json({status: error, error: "Invalid token"});
+        res.json({status: "Invalid token"});
     }
 })
 

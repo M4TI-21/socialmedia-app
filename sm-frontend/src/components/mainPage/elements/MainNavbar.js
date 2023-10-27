@@ -5,7 +5,7 @@ import './mainNavStyle.css';
 
 export default function MainNavComp(props) {
     return(
-        <Navbar expand="sm" className="mainNavbar" sticky="top" inverse collapseOnSelect>
+        <Navbar expand="sm" className="mainNavbar" sticky="top" collapseOnSelect>
             <Navbar.Brand className="d-flex flex-column align-items-center">
                 <Link className="d-flex flex-column align-items-center mainLink" to="/main">
                     <img alt="logo" src={logo} width="50"/>
