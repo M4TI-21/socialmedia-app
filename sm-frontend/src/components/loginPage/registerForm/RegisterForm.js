@@ -16,14 +16,13 @@ export default function RegisterForm() {
     const [name, setName] = useState('');
     const [tag, setTag] = useState('');
     const [pass, setPass] = useState('');
-    const [post, setPost] = useState("Essa byczku");
     const [active, setActive] = useState('StepOne');
     const [errorMsg, setErrorMsg] = useState({});
-    const [registerData, setRegisterData] = useState({email: null, dob: undefined, name: null, tag: null, pass: null, post: "Essa byczku"});
+    const [registerData, setRegisterData] = useState({email: null, dob: undefined, name: null, tag: null, pass: null});
   
     const continueOnClick = (e) => {
       e.preventDefault();
-      setRegisterData(prev => ({...prev, email: email, dob: dob, name: null, tag: null, pass: null, post: "Essa byczku"}));
+      setRegisterData(prev => ({...prev, email: email, dob: dob, name: null, tag: null, pass: null}));
       
       const error = FirstValidation(registerData);
       setErrorMsg(error);
@@ -34,7 +33,7 @@ export default function RegisterForm() {
 
     const submitOnClick = (e) => {
         e.preventDefault();
-        setRegisterData(prev => ({...prev, email: email, dob: dob, name: name, tag: tag, pass: pass, post: "Essa byczku"}));
+        setRegisterData(prev => ({...prev, email: email, dob: dob, name: name, tag: tag, pass: pass}));
 
         const error = SecondValidation(registerData);
         setErrorMsg(error);
@@ -44,7 +43,7 @@ export default function RegisterForm() {
         else{
           const axiosRegisterPost = async () => {
             try{
-              const response = await axios.post('http://localhost:8080/register', {email, pass, dob, name, tag, post});
+              const response = await axios.post('http://localhost:8080/register', {email, pass, dob, name, tag});
               console.log(response);
 
               if(response.data === "Created account"){
@@ -64,19 +63,20 @@ export default function RegisterForm() {
     }
     
   return (
-    <div className="d-flex flex-column align-items-center">
+    <div className="d-flex flex-column align-items-center pb-4">
       <NavbarComp />
       <div className="pageContent">
-        <div className="regFormArea">
+        <div className="regFormArea mt-2">
           <h1 className="title">Register new account</h1>
             {active === "StepOne" && <RegisterStepOne setEmail = {setEmail} setDob = {setDob} errorMsg = {errorMsg} continueOnClick = {continueOnClick}/>}
             {active === "StepTwo" && <RegisterStepTwo setName = {setName} setTag = {setTag} setPass = {setPass} errorMsg = {errorMsg} submitOnClick = {submitOnClick} setActive = {setActive}/>}
         </div>
         <div className="rightArea">
           <p className="regText1 d-flex align-items-center justify-content-center">Why join us?</p>
-          <ul className="regText2 d-flex flex-column align-items-start">
-            <li>IDK</li>
-            <li>IDK</li>
+          <ul className="d-flex flex-column align-items-start m-4">
+            <li className="regText2 mb-3">Easy access to your every note</li>
+            <li className="regText2 mb-3">Free for everyone, everywhere</li>
+            <li className="regText2 mb-3">Simple and convenient design</li>
           </ul>
         </div>
       </div>

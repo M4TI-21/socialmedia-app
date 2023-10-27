@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function WelcomePage() {
   return (
-    <div className="page">
+    <div className="page pb-4">
         <NavbarComp />
         <div className="contentArea">
             <div className="quoteArea">

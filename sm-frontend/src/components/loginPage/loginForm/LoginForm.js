@@ -20,8 +20,8 @@ export default function LoginForm() {
     const emailRegex = /\S+@\S+\.\S+/;
     const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
 
-    var pass = loginData.loginPass;
-    var email = loginData.loginEmail;
+    var pass = loginPass;
+    var email = loginEmail;
 
     if(email === ""){
       error.email = "*Enter your email";
@@ -29,6 +29,7 @@ export default function LoginForm() {
     else if(emailRegex.test(email) === false){
       error.email = "*Incorrect email";
     }
+
     else{
       error.email = "";
     }
@@ -81,10 +82,10 @@ export default function LoginForm() {
     }
   }
   return (
-    <div className="d-flex flex-column align-items-center">
+    <div className="d-flex flex-column align-items-center pb-4">
       <NavbarComp />
       <div className="pageContent">
-        <div className="loginFormArea">
+        <div className="loginFormArea mt-4">
           <h1 className="title">Login to your account</h1>
             <Form className="form">
                 <Form.Group className="emailGroup">

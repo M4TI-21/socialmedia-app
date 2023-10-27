@@ -1,35 +1,30 @@
-import { useLocation } from "react-router-dom";
 import MainNavComp from "./elements/MainNavbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./mainPageStyle.css";
 import jwt_decode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function MainPage() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const [post, setPost] = useState('');
+  //const [post, setPost] = useState('');
   const [name, setName] = useState('');
 
-  async function populateMain(){
-    const request = await fetch("http://localhost:8080/main", {
+  const populateMain = () => {
+    axios.get("http://localhost:8080/main", {
       headers: {
         "x-access-token": localStorage.getItem("token")
       }
     })
-    
-    const data = request.json();
-
-    if (data.status === "Data fetched successfully"){
-      setPost(data.post);
-      setName(data.name);
-    }
-    else{
-      console.log(data.error);
-    }
+    .then((res) => {
+      setName(res.data.name)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
   }
-
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if(token){
@@ -44,16 +39,20 @@ export default function MainPage() {
     }
   })
 
+  const logOut = () => {
+    console.log("logout")
+    localStorage.removeItem("token");
+  }
+
   return (
     <div className="mainPageContent d-flex flex-column align-items-center">
       <div className="topPage">
-        <MainNavComp />
+        <MainNavComp logOut = {logOut}/>
       </div>
       <div className="mainPageContent d-flex flex-column align-items-center">
-        <h1>Elo, {name}</h1>
-        <p>{post || "Your post will appear here."}</p>
+        <h1>Hello, {name}</h1>
+        <p>Your notes will appear here.</p>
       </div>
-      
     </div>
   );
 }
