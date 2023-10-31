@@ -19,7 +19,7 @@ export default function FirstRegValidation(email, dob, setRegisterData){
     }
     else{
         error.dob = "";
-        setRegisterData(prev => ({...prev, dob: dob}));
+        setRegisterData(prev => ({...prev, dob: dob.slice(11)}));
     }
 
     return error;

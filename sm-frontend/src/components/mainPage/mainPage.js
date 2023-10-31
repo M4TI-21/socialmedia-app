@@ -1,4 +1,5 @@
 import MainNavComp from "./elements/MainNavbar";
+import AddNote from "./elements/AddNote";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./mainPageStyle.css";
 import jwt_decode from "jwt-decode";
@@ -17,10 +18,10 @@ export default function MainPage() {
       }
     })
     .then((res) => {
-      setName(res.data.name)
+      setName(res.data.name);
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
     })
   }
   
@@ -44,13 +45,14 @@ export default function MainPage() {
   }
 
   return (
-    <div className="mainPageContent d-flex flex-column align-items-center">
+    <div className="mainPage d-flex flex-column align-items-center">
       <div className="topPage">
         <MainNavComp logOut = {logOut}/>
       </div>
       <div className="mainPageContent d-flex flex-column align-items-center">
         <h1>Hello, {name}</h1>
         <p>Your notes will appear here.</p>
+        <AddNote />
       </div>
     </div>
   );

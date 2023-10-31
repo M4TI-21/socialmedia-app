@@ -31,7 +31,7 @@ const User = new mongoose.Schema({
     },
     
     date_of_birth:{
-        type: Date,
+        type: String,
         required: true
     },
 
