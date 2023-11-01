@@ -1,7 +1,6 @@
 const mysql =  require("mysql");
 const express = require("express");
 const cors = require("cors");
-const RegisterModel = require("./models/register");
 const app = express();
 const jwt = require("jsonwebtoken");
 app.use(cors());
@@ -67,7 +66,6 @@ app.post("/login", async (req, res) => {
         console.log(error)
     }
 })
-
 
 //fetch logged user data
 app.get("/main", async (req, res) => {

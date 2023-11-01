@@ -10,8 +10,9 @@ import axios from "axios";
 export default function MainPage() {
   const navigate = useNavigate();
   const [name, setName] = useState('');
+  const [addNoteActive, setAddNoteActive] = useState("Inactive");
 
-  const populateMain = () => {
+  const populateMainData = () => {
     axios.get("http://localhost:8080/main", {
       headers: {
         "x-access-token": localStorage.getItem("token")
@@ -34,10 +35,20 @@ export default function MainPage() {
         navigate("/");
       }
       else{
-        populateMain();
+        populateMainData();
       }
     }
   })
+
+  const addNoteActiveOnClick = (e) => {
+    e.preventDefault();
+    if(addNoteActive === "Active"){
+      setAddNoteActive("Inactive");
+    }
+    else{
+      setAddNoteActive("Active");
+    }
+  }
 
   const logOut = () => {
     console.log("logout")
@@ -47,12 +58,12 @@ export default function MainPage() {
   return (
     <div className="mainPage d-flex flex-column align-items-center">
       <div className="topPage">
-        <MainNavComp logOut = {logOut}/>
+        <MainNavComp logOut = {logOut} addNoteActiveOnClick={addNoteActiveOnClick} />
       </div>
+      {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick}/>}
       <div className="mainPageContent d-flex flex-column align-items-center">
         <h1>Hello, {name}</h1>
         <p>Your notes will appear here.</p>
-        <AddNote />
       </div>
     </div>
   );

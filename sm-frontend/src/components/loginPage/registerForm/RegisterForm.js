@@ -11,12 +11,12 @@ import './registerFormStyle.css';
 
 export default function RegisterForm(props) {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [dob, setDob] = useState();
-  const [name, setName] = useState('');
-  const [tag, setTag] = useState('');
-  const [pass, setPass] = useState('');
-  const [active, setActive] = useState('StepOne');
+  const [name, setName] = useState("");
+  const [tag, setTag] = useState("");
+  const [pass, setPass] = useState("");
+  const [active, setActive] = useState("StepOne");
   const [errorMsg, setErrorMsg] = useState({});
   const [registerData, setRegisterData] = useState({email: null, dob: undefined, name: null, tag: null, pass: null});
 
@@ -71,9 +71,9 @@ export default function RegisterForm(props) {
       <div className="pageContent">
         <div className="regFormArea mt-2">
           <h1 className="title">Register new account</h1>
-            {active === "StepOne" && <RegisterStepOne continueOnClick = {continueOnClick} errorMsg = {errorMsg} setActive = {setActive} 
+            {active === "StepOne" && <RegisterStepOne continueOnClick = {continueOnClick} errorMsg = {errorMsg} 
             setEmail = {setEmail} setDob = {setDob}  />}
-            {active === "StepTwo" && <RegisterStepTwo submitOnClick = {submitOnClick} setActive = {setActive} errorMsg = {errorMsg} 
+            {active === "StepTwo" && <RegisterStepTwo submitOnClick = {submitOnClick} errorMsg = {errorMsg} 
             setPass = {setPass} setName = {setName} setTag = {setTag} />}
         </div>
         <div className="rightArea">
