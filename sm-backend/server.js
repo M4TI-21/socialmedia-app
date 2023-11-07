@@ -79,11 +79,47 @@ app.get("/main", async (req, res) => {
             }
             else{
                 res.json({ status: "Data fetched successfully",
+                user_id: data[0].user_id,
                 email: data[0].email,
                 name: data[0].name,
                 tag: data[0].tag,
-                date_of_birth: data[0].date_of_birth
-            })
+                date_of_birth: data[0].date_of_birth})
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+        res.json({status: "Invalid token"});
+    }
+})
+
+//create note
+app.post("/main", async (req, res) => {
+    const dateNow = new Date();
+    const dateValue = dateNow.toISOString().split('T')[0] + ' ' + dateNow.toTimeString().split(' ')[0];
+
+    const values = [req.body.email, "Title", "Enter your note", dateValue, dateValue];
+    try{
+        await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date) VALUES (?)", [values]);
+        res.json({status: "Note created successfully"});
+    }
+    catch(error){
+        console.log(error);
+    }
+})
+
+//fetch notes for user
+app.get("/main", async (req,res) => {
+    const token = req.headers["x-access-token"];
+    try{
+        const decoded = jwt.verify(token, "secret");
+        const email = decoded.email;
+        await db.query("SELECT * FROM notes WHERE user_email = ?", email, (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                res.json({ status: "Data fetched successfully"})
             }
         })
     }
