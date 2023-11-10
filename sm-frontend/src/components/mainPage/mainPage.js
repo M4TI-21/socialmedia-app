@@ -14,6 +14,8 @@ export default function MainPage() {
   const [email, setEmail] = useState('');
   const [addNoteActive, setAddNoteActive] = useState("Inactive");
   const [notes, setNotes] = useState([]);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
   const populateMainData = () => {
     axios.get("http://localhost:8080/main", {
@@ -59,6 +61,24 @@ export default function MainPage() {
     }
   }
 
+  const showNoteType1 =  async () => {
+    await axios.get("http://localhost:8080/main", {
+      headers: {
+        "x-access-token": localStorage.getItem("token")
+      }
+    })
+    .then((res) => {
+      setTitle();
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  useEffect(() => {
+    showNoteType1();
+  }, []);
+
   const addNoteType1OnClick = (e) => {
     e.preventDefault();
     console.log("Add note type 1");
@@ -69,7 +89,8 @@ export default function MainPage() {
           const response = await axios.post('http://localhost:8080/main', {email});
           console.log(response);
           if(response.data.status === "Note created successfully"){
-            setNotes([...notes, {email, }])
+            showNoteType1();
+            console.log({notes})
           }
       }
       catch(error){
@@ -79,14 +100,24 @@ export default function MainPage() {
     addNoteType1(); 
   }
 
+
+
   return (
     <div className="mainPage d-flex flex-column align-items-center">
       <div className="topPage">
-        <MainNavComp logOut = {logOut} addNoteActiveOnClick={addNoteActiveOnClick} />
+        <MainNavComp logOut = {logOut} addNoteActiveOnClick={addNoteActiveOnClick} name={name}/>
       </div>
       {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} addNoteType1OnClick={addNoteType1OnClick}/>}
       <div className="mainPageContent d-flex flex-column align-items-center">
-        <h1>Hello, {name}</h1>
+        <ul>
+        {notes && notes.map((e) => (
+          <li key={e.note_id}>
+            <p>{e.title}</p>
+            <p>{e.content}</p>
+          </li> 
+          )
+        )}
+        </ul>
       </div>
     </div>
   );
