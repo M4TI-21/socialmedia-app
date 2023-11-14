@@ -68,7 +68,7 @@ app.post("/login", async (req, res) => {
 })
 
 //fetch logged user data
-app.get("/main", async (req, res) => {
+app.get("/main/user", async (req, res) => {
     const token = req.headers["x-access-token"];
     try{
         const decoded = jwt.verify(token, "secret");
@@ -110,28 +110,28 @@ app.post("/main", async (req, res) => {
 })
 
 //fetch notes for user
-app.get("/main", async (req, res2) => {
+app.get("/main/notes", async (req, res) => {
     const token = req.headers["x-access-token"];
     try{
         const decoded = jwt.verify(token, "secret");
         const email = decoded.email;
-        await db.query("SELECT * FROM notes WHERE user_email = ?", email, (error, noteData) => {
+        await db.query("SELECT * FROM notes WHERE user_email = ?", email, (error, data) => {
             if(error){
-                res2.json({status: error});
+                res.json({status: error});
             }
             else{
-                res2.json({ status: "Note data fetched successfully",
-                noteID: noteData[0].note_id,
-                title: noteData[0].title,
-                content: noteData[0].content,
-                creationDate: noteData[0].creation_date,
-                updateDate: noteData[0].update_date})
+                res.json({ status: "Note data fetched successfully",
+                noteID: data.note_id,
+                title: data.title,
+                content: data.content,
+                creationDate: data.creation_date,
+                updateDate: data.update_date})
             }
         })
     }
     catch(error){
         console.log(error);
-        res2.json({status: "Invalid token"});
+        res.json({status: "Invalid token"});
     }
 })
 

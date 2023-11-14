@@ -18,7 +18,7 @@ export default function MainPage() {
   const [userNotes, setUserNotes] = useState([]);
 
   const populateMainData = () => {
-    axios.get("http://localhost:8080/main", {
+    axios.get("http://localhost:8080/main/user", {
       headers: {
         "x-access-token": localStorage.getItem("token")
       }
@@ -67,18 +67,18 @@ export default function MainPage() {
     setAddNoteActive("Inactive");
 
     const showNote =  async () => {
-      await axios.get("http://localhost:8080/main", {
+      await axios.get("http://localhost:8080/main/notes", {
         headers: {
           "x-access-token": localStorage.getItem("token")
         }
       })
       .then((res) => {
         setNotes([...notes, {
-          noteID: res.noteData.noteID, 
-          title: res.noteData.title, 
-          content: res.noteData.content, 
-          creationDate: res.noteData.creationDate, 
-          updateDate: res.noteData.updateDate
+          noteID: res.data.noteID, 
+          title: res.data.title, 
+          content: res.data.content, 
+          creationDate: res.data.creationDate, 
+          updateDate: res.data.updateDate
         }]);
         
         console.log(res.data);
@@ -86,7 +86,7 @@ export default function MainPage() {
         notes.forEach(e => {
           noteList.push(
               <li className="trip" key={e.noteID}>
-                <p>essa</p>
+                <p>Tu bedzie notatka</p>
               </li>
           )
         })
