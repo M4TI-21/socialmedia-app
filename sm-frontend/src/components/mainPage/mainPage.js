@@ -13,9 +13,9 @@ export default function MainPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [addNoteActive, setAddNoteActive] = useState("Inactive");
-  const [notes, setNotes] = useState([]);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+
+  const [notes, setNotes]= useState([{noteID: null, title: null, content: null, creationDate: null, updateDate: null}]);
+  const [userNotes, setUserNotes] = useState([]);
 
   const populateMainData = () => {
     axios.get("http://localhost:8080/main", {
@@ -61,45 +61,57 @@ export default function MainPage() {
     }
   }
 
-  const showNoteType1 =  async () => {
-    await axios.get("http://localhost:8080/main", {
-      headers: {
-        "x-access-token": localStorage.getItem("token")
-      }
-    })
-    .then((res) => {
-      setTitle();
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
-
-  useEffect(() => {
-    showNoteType1();
-  }, []);
-
-  const addNoteType1OnClick = (e) => {
+  const addNoteOnClick = (e) => {
     e.preventDefault();
-    console.log("Add note type 1");
+    console.log("Note added");
     setAddNoteActive("Inactive");
 
-    const addNoteType1 = async () => {
+    const showNote =  async () => {
+      await axios.get("http://localhost:8080/main", {
+        headers: {
+          "x-access-token": localStorage.getItem("token")
+        }
+      })
+      .then((res) => {
+        setNotes([...notes, {
+          noteID: res.noteData.noteID, 
+          title: res.noteData.title, 
+          content: res.noteData.content, 
+          creationDate: res.noteData.creationDate, 
+          updateDate: res.noteData.updateDate
+        }]);
+        
+        console.log(res.data);
+        let noteList = [];
+        notes.forEach(e => {
+          noteList.push(
+              <li className="trip" key={e.noteID}>
+                <p>essa</p>
+              </li>
+          )
+        })
+        setUserNotes([...noteList]);
+        setNotes('');
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
+
+    const addNote = async () => {
       try{
           const response = await axios.post('http://localhost:8080/main', {email});
           console.log(response);
           if(response.data.status === "Note created successfully"){
-            showNoteType1();
-            console.log({notes})
+            showNote();
           }
       }
       catch(error){
         console.log(error);
       }
     }
-    addNoteType1(); 
+    addNote(); 
   }
-
 
 
   return (
@@ -107,16 +119,10 @@ export default function MainPage() {
       <div className="topPage">
         <MainNavComp logOut = {logOut} addNoteActiveOnClick={addNoteActiveOnClick} name={name}/>
       </div>
-      {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} addNoteType1OnClick={addNoteType1OnClick}/>}
+      {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} addNoteOnClick={addNoteOnClick}/>}
       <div className="mainPageContent d-flex flex-column align-items-center">
         <ul>
-        {notes && notes.map((e) => (
-          <li key={e.note_id}>
-            <p>{e.title}</p>
-            <p>{e.content}</p>
-          </li> 
-          )
-        )}
+          {userNotes}
         </ul>
       </div>
     </div>

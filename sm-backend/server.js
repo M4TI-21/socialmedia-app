@@ -102,6 +102,7 @@ app.post("/main", async (req, res) => {
     try{
         await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date) VALUES (?)", [values]);
         res.json({status: "Note created successfully"});
+        console.log("Note created successfully");
     }
     catch(error){
         console.log(error);
@@ -109,23 +110,28 @@ app.post("/main", async (req, res) => {
 })
 
 //fetch notes for user
-app.get("/main", async (req,res) => {
+app.get("/main", async (req, res2) => {
     const token = req.headers["x-access-token"];
     try{
         const decoded = jwt.verify(token, "secret");
         const email = decoded.email;
-        await db.query("SELECT * FROM notes WHERE user_email = ?", email, (error, data) => {
+        await db.query("SELECT * FROM notes WHERE user_email = ?", email, (error, noteData) => {
             if(error){
-                res.json({status: error});
+                res2.json({status: error});
             }
             else{
-                res.json({ status: "Data fetched successfully"})
+                res2.json({ status: "Note data fetched successfully",
+                noteID: noteData[0].note_id,
+                title: noteData[0].title,
+                content: noteData[0].content,
+                creationDate: noteData[0].creation_date,
+                updateDate: noteData[0].update_date})
             }
         })
     }
     catch(error){
         console.log(error);
-        res.json({status: "Invalid token"});
+        res2.json({status: "Invalid token"});
     }
 })
 

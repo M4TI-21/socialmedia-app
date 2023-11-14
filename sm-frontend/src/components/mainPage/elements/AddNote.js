@@ -13,7 +13,7 @@ export default function AddNote(props) {
                         border="1px solid black" borderRadius="30px" pos="relative" mb="2%">
                         <Heading size="lg" fontWeight="bold">Classic note</Heading>
                         <Text fontSize="xl" mr="3vw">What can we say? Just type some text, maybe attach some media or files? Feel free, you decide!</Text>
-                        <Button onClick={props.addNoteType1OnClick} size="md" rightIcon={<ArrowForwardIcon />} colorScheme="green" pos="absolute" bottom="5%" right="5%">Use</Button>
+                        <Button onClick={props.addNoteOnClick} size="md" rightIcon={<ArrowForwardIcon />} colorScheme="green" pos="absolute" bottom="5%" right="5%">Use</Button>
                     </Box>
                     
                     <Box className="noteType type2"  maxW="30vw" minW="30vw" minH="30vh" pl="3%" pr="1%" pt="1%" pb="1%"
