@@ -73,17 +73,12 @@ app.get("/main/user", async (req, res) => {
     try{
         const decoded = jwt.verify(token, "secret");
         const email = decoded.email;
-        await db.query("SELECT * FROM user_data WHERE email = ?", email, (error, data) => {
+        await db.query("SELECT * FROM user_data WHERE email = ?", [email], (error, data) => {
             if(error){
                 res.json({status: error});
             }
             else{
-                res.json({ status: "Data fetched successfully",
-                user_id: data[0].user_id,
-                email: data[0].email,
-                name: data[0].name,
-                tag: data[0].tag,
-                date_of_birth: data[0].date_of_birth})
+                res.json(data[0]);
             }
         })
     }
@@ -94,7 +89,7 @@ app.get("/main/user", async (req, res) => {
 })
 
 //create note
-app.post("/main", async (req, res) => {
+app.post("/main/createnote", async (req, res) => {
     const dateNow = new Date();
     const dateValue = dateNow.toISOString().split('T')[0] + ' ' + dateNow.toTimeString().split(' ')[0];
 
@@ -109,23 +104,48 @@ app.post("/main", async (req, res) => {
     }
 })
 
-//fetch notes for user
 app.get("/main/notes", async (req, res) => {
+    await db.query("SELECT * FROM notes", (error, data) => {
+        if(error){
+            res.json({status: error});
+        }
+        else{
+            res.json(data)
+        }
+    })
+})
+
+
+//fetch notes for user
+app.get("/main/usernotes", async (req, res) => {
     const token = req.headers["x-access-token"];
     try{
         const decoded = jwt.verify(token, "secret");
         const email = decoded.email;
-        await db.query("SELECT * FROM notes WHERE user_email = ?", email, (error, data) => {
+        await db.query("SELECT * FROM notes WHERE user_email = ?", [email], (error, data) => {
             if(error){
                 res.json({status: error});
             }
             else{
-                res.json({ status: "Note data fetched successfully",
-                noteID: data.note_id,
-                title: data.title,
-                content: data.content,
-                creationDate: data.creation_date,
-                updateDate: data.update_date})
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+        res.json({status: "Invalid token"});
+    }
+})
+
+//delete note
+app.get("/main/deletenote", async (req, res) => {
+    try{
+        await db.query("DELETE FROM notes WHERE note_id = ?", [req.body.noteID], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
             }
         })
     }

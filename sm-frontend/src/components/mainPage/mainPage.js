@@ -1,21 +1,20 @@
 import MainNavComp from "./elements/MainNavbar";
 import AddNote from "./elements/AddNote";
 import NoteType1 from "./elements/NoteType1";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import "./mainPageStyle.css";
 import jwt_decode from "jwt-decode";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import {Flex} from "@chakra-ui/react";
 
 export default function MainPage() {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
+  const [userData, setUserData] = useState([]);
   const [email, setEmail] = useState('');
   const [addNoteActive, setAddNoteActive] = useState("Inactive");
 
-  const [notes, setNotes]= useState([{noteID: null, title: null, content: null, creationDate: null, updateDate: null}]);
-  const [userNotes, setUserNotes] = useState([]);
+  const [notes, setNotes] = useState([]);
 
   const populateMainData = () => {
     axios.get("http://localhost:8080/main/user", {
@@ -24,7 +23,7 @@ export default function MainPage() {
       }
     })
     .then((res) => {
-      setName(res.data.name);
+      setUserData(res.data);
       setEmail(res.data.email);
     })
     .catch((err) => {
@@ -61,70 +60,54 @@ export default function MainPage() {
     }
   }
 
-  const addNoteOnClick = (e) => {
-    e.preventDefault();
-    console.log("Note added");
-    setAddNoteActive("Inactive");
-
-    const showNote =  async () => {
-      await axios.get("http://localhost:8080/main/notes", {
-        headers: {
-          "x-access-token": localStorage.getItem("token")
-        }
-      })
-      .then((res) => {
-        setNotes([...notes, {
-          noteID: res.data.noteID, 
-          title: res.data.title, 
-          content: res.data.content, 
-          creationDate: res.data.creationDate, 
-          updateDate: res.data.updateDate
-        }]);
-        
-        console.log(res.data);
-        let noteList = [];
-        notes.forEach(e => {
-          noteList.push(
-              <li className="trip" key={e.noteID}>
-                <p>Tu bedzie notatka</p>
-              </li>
-          )
-        })
-        setUserNotes([...noteList]);
-        setNotes('');
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-    }
-
-    const addNote = async () => {
-      try{
-          const response = await axios.post('http://localhost:8080/main', {email});
-          console.log(response);
-          if(response.data.status === "Note created successfully"){
-            showNote();
-          }
+  const fetchAllNotes = async () => {
+    axios.get("http://localhost:8080/main/usernotes", {
+      headers: {
+        "x-access-token": localStorage.getItem("token")
       }
-      catch(error){
-        console.log(error);
-      }
-    }
-    addNote(); 
+    })
+    .then((res) => {
+      setNotes(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
   }
 
+  useEffect(() => {
+    fetchAllNotes();
+  }, [])
+
+  const addNote = async () => {
+    axios.post('http://localhost:8080/main/createnote', {email})
+    .then((res) => {
+      if(res.data.status === "Note created successfully"){
+        console.log("Note created");
+        fetchAllNotes();
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  const addNoteOnClick = (e) => {
+    e.preventDefault();
+    setAddNoteActive("Inactive");
+    addNote(); 
+  }
 
   return (
     <div className="mainPage d-flex flex-column align-items-center">
       <div className="topPage">
-        <MainNavComp logOut = {logOut} addNoteActiveOnClick={addNoteActiveOnClick} name={name}/>
+        <MainNavComp logOut={logOut} addNoteActiveOnClick={addNoteActiveOnClick} name={userData.name}/>
       </div>
       {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} addNoteOnClick={addNoteOnClick}/>}
-      <div className="mainPageContent d-flex flex-column align-items-center">
-        <ul>
-          {userNotes}
-        </ul>
-      </div>
+      <Flex w="100%" minH="80vh" flexDirection="row" flexWrap="wrap" p="5%">
+          {notes.map(e => (
+            <NoteType1 key={e.note_id} note_id={e.note_id} title={e.title} content={e.content} notes={notes}/>
+          ))}
+      </Flex>
     </div>
   );
 }
