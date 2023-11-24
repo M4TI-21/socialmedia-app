@@ -12,7 +12,7 @@ export default function RegisterStepOne(props) {
           </Form.Group>
 
           <Form.Group className="dobGroup">
-              <Form.Control className="input dob" placeholder="Date of birth" type="date" onChange={e => props.setDob(e.target.value)}/>
+              <Form.Control className="input dob" type="date" onChange={e => props.setDob(e.target.value)}/>
               {props.errorMsg.dob && <Form.Text className="errorMessage">{props.errorMsg.dob}</Form.Text>}
           </Form.Group>
           
@@ -20,4 +20,3 @@ export default function RegisterStepOne(props) {
       </Form>
   );
 }
-    

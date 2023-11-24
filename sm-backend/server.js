@@ -78,7 +78,7 @@ app.get("/main/user", async (req, res) => {
                 res.json({status: error});
             }
             else{
-                res.json(data[0]);
+                return res.json(data[0]);
             }
         })
     }
@@ -92,7 +92,6 @@ app.get("/main/user", async (req, res) => {
 app.post("/main/createnote", async (req, res) => {
     const dateNow = new Date();
     const dateValue = dateNow.toISOString().split('T')[0] + ' ' + dateNow.toTimeString().split(' ')[0];
-
     const values = [req.body.email, "Title", "Enter your note", dateValue, dateValue];
     try{
         await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date) VALUES (?)", [values]);
@@ -138,14 +137,15 @@ app.get("/main/usernotes", async (req, res) => {
 })
 
 //delete note
-app.get("/main/deletenote", async (req, res) => {
+app.delete("/main/deletenote/:id", async (req, res) => {
+    const id = req.body.noteID;
     try{
-        await db.query("DELETE FROM notes WHERE note_id = ?", [req.body.noteID], (error, data) => {
+        await db.query("DELETE FROM notes WHERE note_id = ?", [id], (error, data) => {
             if(error){
                 res.json({status: error});
             }
             else{
-                return res.json(data);
+                return res.json({status: "Note created successfully", data});
             }
         })
     }

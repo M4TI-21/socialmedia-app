@@ -71,6 +71,7 @@ export default function RegisterForm(props) {
       <div className="pageContent">
         <div className="regFormArea mt-2">
           <h1 className="title">Register new account</h1>
+          <h4>Enter your data</h4>
             {active === "StepOne" && <RegisterStepOne continueOnClick = {continueOnClick} errorMsg = {errorMsg} 
             setEmail = {setEmail} setDob = {setDob}  />}
             {active === "StepTwo" && <RegisterStepTwo submitOnClick = {submitOnClick} errorMsg = {errorMsg} 

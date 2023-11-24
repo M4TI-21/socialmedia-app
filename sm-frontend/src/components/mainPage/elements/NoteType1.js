@@ -3,22 +3,21 @@ import { Heading, Text, Box, Flex, Button } from "@chakra-ui/react";
 import { BiEditAlt, BiTrash } from "react-icons/bi";
 
 export default function NoteType1(props) {
-    
-    const deleteNote = async () => {
-        const noteID = props.note_id;
-        axios.delete('http://localhost:8080/main/deletenote', {noteID})
-        .then((res) => {
-        if(res.data.status === "Note deleted successfully"){
-            console.log("Note deleted");
-        }
-        })
-        .catch((err) => {
-        console.log(err);
-        })
+
+    const deleteNoteOnClick = (id) => {
+        deleteNote(id);
     }
 
-    const deleteNoteOnClick = () => {
-        deleteNote();
+    const deleteNote = async (id) => {
+        const noteID = id;
+        axios.delete(`http://localhost:8080/main/deletenote/${noteID}`, {data: {noteID: noteID}})
+        .then((res) => {
+            console.log("Note deleted");
+            props.fetchAllNotes();
+        })
+        .catch((err) => {
+            console.log(err);
+        })
     }
 
     return(
@@ -31,7 +30,7 @@ export default function NoteType1(props) {
             </Flex>
             <Flex className="noteActions" justifyContent="space-evenly" alignItems="center" w="100%" h="20%">
                 <Button leftIcon={<BiEditAlt />} colorScheme="green" size="md">Edit</Button>
-                <Button leftIcon={<BiTrash />} colorScheme="red" size="md" onClick={() => deleteNoteOnClick()}>Delete</Button>
+                <Button leftIcon={<BiTrash />} colorScheme="red" size="md" onClick={() => deleteNoteOnClick(props.note_id)}>Delete</Button>
             </Flex>
         </Box>
     );
