@@ -1,6 +1,6 @@
 import MainNavComp from "./elements/MainNavbar";
 import AddNote from "./elements/AddNote";
-import NoteType1 from "./elements/NoteType1";
+import NoteType1 from "./elements/noteTypes/NoteType1";
 import "./mainPageStyle.css";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
@@ -81,32 +81,15 @@ export default function MainPage() {
     fetchAllNotes();
   }, [])
 
-  const addNote = async () => {
-    axios.post('http://localhost:8080/main/createnote', {email})
-    .then((res) => {
-      if(res.data.status === "Note created successfully"){
-        console.log("Note created");
-        fetchAllNotes();
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
 
-  const addNoteOnClick = (e) => {
-    e.preventDefault();
-    setAddNoteActive("Inactive");
-    addNote(); 
-  }
 
   return (
     <div className="mainPage d-flex flex-column align-items-center">
       <div className="topPage">
         <MainNavComp logOut={logOut} addNoteActiveOnClick={addNoteActiveOnClick} name={name}/>
       </div>
-      {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} addNoteOnClick={addNoteOnClick}/>}
-      <Flex w="100%" minH="80vh" flexDirection="row" flexWrap="wrap" p="5%">
+      {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} email={email}  fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}
+      <Flex w="100%" minH="80vh" flexDirection="row" flexWrap="wrap" pl="3%" pr="3%" pt="0%">
           {notes.map(e => (
             <NoteType1 key={e.note_id} note_id={e.note_id} title={e.title} content={e.content} notes={notes} fetchAllNotes={fetchAllNotes}/>
           ))}

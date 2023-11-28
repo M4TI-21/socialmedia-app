@@ -21,11 +21,11 @@ export default function NoteType1(props) {
     }
 
     return(
-        <Box className="noteContainer" bg="#dfe1e2" minW="20%" maxW="20%" minH="400px" maxH="500px" pr="1%" pl="1%" borderRadius="50px" ml="2vw" mr="2vw" mb="2vh">
-            <Flex className="noteHeader" justifyContent="center" alignItems="center" w="100%" h="20%">
-                <Heading size="xl">{props.title}</Heading>
+        <Box className="noteContainer" bg="#dfe1e2" minW="20%" maxW="50%" minH="400px" maxH="500px" pr="1%" pl="1%" borderRadius="50px" ml="1vw" mr="1vw" mb="2vh">
+            <Flex className="noteHeader" justifyContent="center" alignItems="center" w="inherit" h="20%">
+                <Heading size="lg">{props.title}</Heading>
             </Flex>
-            <Flex className="noteBody" w="100%" h="60%">
+            <Flex className="noteBody" maxW="100%" h="60%">
                 <Text fontSize="lg">{props.content}</Text>
             </Flex>
             <Flex className="noteActions" justifyContent="space-evenly" alignItems="center" w="100%" h="20%">

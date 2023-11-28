@@ -92,7 +92,7 @@ app.get("/main/user", async (req, res) => {
 app.post("/main/createnote", async (req, res) => {
     const dateNow = new Date();
     const dateValue = dateNow.toISOString().split('T')[0] + ' ' + dateNow.toTimeString().split(' ')[0];
-    const values = [req.body.email, "Title", "Enter your note", dateValue, dateValue];
+    const values = [req.body.email, req.body.title, req.body.content, dateValue, dateValue];
     try{
         await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date) VALUES (?)", [values]);
         res.json({status: "Note created successfully"});
