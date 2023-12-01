@@ -1,11 +1,32 @@
 import { useState } from "react";
 import axios from "axios";
-import { Heading, Container, Flex, Button, IconButton, Textarea } from "@chakra-ui/react"
+import { Heading, Container, Flex, Button, IconButton, Textarea, Text } from "@chakra-ui/react"
 import { CloseIcon } from "@chakra-ui/icons"
 
 export default function CreateNote1(props) {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const [errorMsg, setErrorMsg] = useState([]);
+
+    const noteValidation = () => {
+        let error = {};
+    
+        if(title === ""){
+          error.title = "*Set note's title";
+        }
+        else{
+          error.title = "";
+        }
+    
+        if(content === ""){
+          error.content = "*Enter your note"
+        }
+        else{
+          error.content = "";
+        }
+    
+        return error;
+      }
 
     const email = props.email;
     const addNote = async () => {
@@ -23,9 +44,17 @@ export default function CreateNote1(props) {
     
     const addNoteOnClick = (e) => {
         e.preventDefault();
-        props.setActive1("Inactive");
-        props.setAddNoteActive("Inactive");
-        addNote(); 
+        const error = noteValidation(title, content);
+        setErrorMsg(error);
+
+        if(error.title !== "" || error.content !== ""){
+            console.log("Error");
+        }
+        else{
+            props.setActive1("Inactive");
+            props.setAddNoteActive("Inactive");
+            addNote(); 
+        }
     }
 
     return(
@@ -33,13 +62,20 @@ export default function CreateNote1(props) {
             <Container pos="absolute" minW="30%" maxW="40%" minH="80%" maxH="80%"
                 bg="#dfe1e2" mt="10vh" borderRadius="50px" p="1%">
                 <Heading size="2xl" textAlign="center">Create your note:</Heading>
-                <Flex mt="3%" justifyContent="space-evenly" flexDirection="row" flexWrap="wrap">
+                <Flex mt="3%" justifyContent="space-evenly" alignItems="center" flexDirection="column" flexWrap="wrap">
 
-                    <Textarea onChange={e => setTitle(e.target.value)} resize="none" placeholder="Title your note!" fontSize="2xl" 
-                    textAlign="center" maxLength="60" w="90%" h="10vh"/>
+                    <Flex flexDirection="column" alignItems="center" w="90%" h="10vh">
+                        <Textarea onChange={e => setTitle(e.target.value)} resize="none" placeholder="Title your note!" fontSize="2xl" 
+                        textAlign="center" maxLength="60" w="inherit" h="inherit"/>
 
-                    <Textarea onChange={e => setContent(e.target.value)} resize="none" placeholder="Input your note here." fontSize="xl" 
-                    textAlign="start" w="90%" h="50vh" mt="2%"/>
+                        {errorMsg.title && <Text>{errorMsg.title}</Text>}
+                    </Flex>
+                    
+                    <Flex flexDirection="column" alignItems="center" w="90%" h="50vh">
+                        <Textarea onChange={e =>  setContent(e.target.value)} resize="none" placeholder="Input your note here." fontSize="xl" 
+                        textAlign="start" w="inherit" h="inherit" mt="2%"/>
+                        {errorMsg.content && <Text>{errorMsg.content}</Text>}
+                    </Flex>
 
                     <Button onClick={addNoteOnClick} colorScheme="green" w="40%" h="5vh" aria-label="Submit note" mt="3%">Submit</Button>
                 </Flex>

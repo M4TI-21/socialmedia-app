@@ -39,7 +39,7 @@ export default function AddNote(props) {
             setActive3("Active");
         }
     }
-
+    
     return(
         <Container pos="absolute" zIndex="99" minW="100vw" minH="100vh" centerContent bg="blackAlpha.700">
             <Container className="addNoteOptions" pos="absolute" minW="70%" maxW="70%" minH="80%" maxH="80%"
