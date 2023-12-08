@@ -14,6 +14,10 @@ const db = mysql.createConnection({
     database: "note_app_db"
 })
 
+app.listen(8080, (req, res) => {
+    console.log("Listening");
+});
+
 //insert register data to db
 app.post("/register", async (req, res) => {
     try{
@@ -155,6 +159,20 @@ app.delete("/main/deletenote/:id", async (req, res) => {
     }
 })
 
-app.listen(8080, (req, res) => {
-    console.log("Listening");
-});
+app.post("/main/editnote/:id", async (req, res) => {
+    const id = req.body.noteID;
+
+    const dateNow = new Date();
+    const dateValue = dateNow.toISOString().split('T')[0] + ' ' + dateNow.toTimeString().split(' ')[0];
+
+    const values = [req.body.title, req.body.content, dateValue, id];
+    try{
+        
+        await db.query("UPDATE notes SET title = ?, content = ?, update_date = ? WHERE note_id = ?", [values]);
+        res.json({status: "Note updated successfully"});
+        console.log("Note updated successfully");
+    }
+    catch(error){
+        console.log(error);
+    }
+})
