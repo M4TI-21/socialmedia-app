@@ -89,7 +89,7 @@ export default function MainPage() {
         <MainNavComp logOut={logOut} addNoteActiveOnClick={addNoteActiveOnClick} name={name}/>
       </div>
       {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} email={email}  fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}
-      <Flex w="100%" minH="80vh" flexDirection="row" flexWrap="wrap" pl="3%" pr="3%" pt="0%">
+      <Flex maxW="100%" minH="80vh" flexDirection="row" flexWrap="wrap" pl="3%" pr="3%" pt="0%">
           {notes.map(e => (
             <NoteType1 key={e.note_id} note_id={e.note_id} title={e.title} content={e.content} notes={notes} fetchAllNotes={fetchAllNotes}/>
           ))}

@@ -100,7 +100,6 @@ app.post("/main/createnote", async (req, res) => {
     try{
         await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date) VALUES (?)", [values]);
         res.json({status: "Note created successfully"});
-        console.log("Note created successfully");
     }
     catch(error){
         console.log(error);
@@ -149,7 +148,7 @@ app.delete("/main/deletenote/:id", async (req, res) => {
                 res.json({status: error});
             }
             else{
-                return res.json({status: "Note created successfully", data});
+                return res.json({status: "Note created successfully"});
             }
         })
     }
@@ -159,18 +158,23 @@ app.delete("/main/deletenote/:id", async (req, res) => {
     }
 })
 
-app.post("/main/editnote/:id", async (req, res) => {
+//edit note
+app.put("/main/editnote/:id", async (req, res) => {
     const id = req.body.noteID;
-
+    const title = req.body.title;
+    const content = req.body.content;
     const dateNow = new Date();
     const dateValue = dateNow.toISOString().split('T')[0] + ' ' + dateNow.toTimeString().split(' ')[0];
 
-    const values = [req.body.title, req.body.content, dateValue, id];
     try{
-        
-        await db.query("UPDATE notes SET title = ?, content = ?, update_date = ? WHERE note_id = ?", [values]);
-        res.json({status: "Note updated successfully"});
-        console.log("Note updated successfully");
+        await db.query("UPDATE notes SET title = ?, content = ?, update_date = ? WHERE note_id = ?", [title, content, dateValue, id], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json({status: "Note updated successfully"});
+            }
+        })
     }
     catch(error){
         console.log(error);
