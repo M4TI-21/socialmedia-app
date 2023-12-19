@@ -96,9 +96,9 @@ app.get("/main/user", async (req, res) => {
 app.post("/main/createnote", async (req, res) => {
     const dateNow = new Date();
     const dateValue = dateNow.toISOString().split('T')[0] + ' ' + dateNow.toTimeString().split(' ')[0];
-    const values = [req.body.email, req.body.title, req.body.content, dateValue, dateValue];
+    const values = [req.body.email, req.body.title, req.body.content, dateValue, dateValue, req.body.type];
     try{
-        await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date) VALUES (?)", [values]);
+        await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date, type) VALUES (?)", [values]);
         res.json({status: "Note created successfully"});
     }
     catch(error){
@@ -106,25 +106,37 @@ app.post("/main/createnote", async (req, res) => {
     }
 })
 
-app.get("/main/notes", async (req, res) => {
-    await db.query("SELECT * FROM notes", (error, data) => {
-        if(error){
-            res.json({status: error});
-        }
-        else{
-            res.json(data)
-        }
-    })
-})
-
-
-//fetch notes for user
-app.get("/main/usernotes", async (req, res) => {
+//fetch basic notes
+app.get("/main/basicnotes", async (req, res) => {
     const token = req.headers["x-access-token"];
     try{
         const decoded = jwt.verify(token, "secret");
         const email = decoded.email;
-        await db.query("SELECT * FROM notes WHERE user_email = ?", [email], (error, data) => {
+        const type = "Basic Note";
+        await db.query("SELECT * FROM notes WHERE user_email = ? AND type = ?", [email, type], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+        res.json({status: "Invalid token"});
+    }
+})
+
+
+//fetch todo notes
+app.get("/main/basicnotes", async (req, res) => {
+    const token = req.headers["x-access-token"];
+    try{
+        const decoded = jwt.verify(token, "secret");
+        const email = decoded.email;
+        const type = "Todo Note";
+        await db.query("SELECT * FROM notes WHERE user_email = ? AND type = ?", [email, type], (error, data) => {
             if(error){
                 res.json({status: error});
             }

@@ -1,6 +1,7 @@
 import MainNavComp from "./elements/MainNavbar";
 import AddNote from "./elements/AddNote";
 import NoteType1 from "./elements/noteTypes/NoteType1";
+import NoteType2 from "./elements/noteTypes/NoteType2";
 import "./mainPageStyle.css";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
@@ -15,7 +16,9 @@ export default function MainPage() {
   const [tag, setTag] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [addNoteActive, setAddNoteActive] = useState("Inactive");
-  const [notes, setNotes] = useState([]);
+  const [basicNotes, setBasicNotes] = useState([]);
+  const [todoNotes, setTodoNotes] = useState([]);
+  const [allNotes, setAllNotes] = useState([]);
 
   const populateMainData = () => {
     axios.get("http://localhost:8080/main/user", {
@@ -64,13 +67,26 @@ export default function MainPage() {
   }
 
   const fetchAllNotes = async () => {
-    axios.get("http://localhost:8080/main/usernotes", {
+    axios.get("http://localhost:8080/main/basicnotes", {
       headers: {
         "x-access-token": localStorage.getItem("token")
       }
     })
     .then((res) => {
-      setNotes(res.data);
+      setBasicNotes(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+
+    axios.get("http://localhost:8080/main/todonotes", {
+      headers: {
+        "x-access-token": localStorage.getItem("token")
+      }
+    })
+    .then((res) => {
+      setTodoNotes(res.data);
+      
     })
     .catch((err) => {
       console.log(err);
@@ -81,8 +97,6 @@ export default function MainPage() {
     fetchAllNotes();
   }, [])
 
-
-
   return (
     <div className="mainPage d-flex flex-column align-items-center">
       <div className="topPage">
@@ -90,9 +104,12 @@ export default function MainPage() {
       </div>
       {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} email={email}  fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}
       <Flex maxW="100%" minH="80vh" flexDirection="row" flexWrap="wrap" pl="3%" pr="3%" pt="0%">
-          {notes.map(e => (
-            <NoteType1 key={e.note_id} note_id={e.note_id} title={e.title} content={e.content} notes={notes} fetchAllNotes={fetchAllNotes}/>
+          {basicNotes.map(e => (
+            <NoteType1 key={e.note_id} note_id={e.note_id} title={e.title} content={e.content} basicNotes={basicNotes} fetchAllNotes={fetchAllNotes}/>
           ))}
+          {todoNotes.map(e => {
+            <NoteType2 key={e.note_id} note_id={e.note_id} title={e.title} todoNotes={todoNotes} fetchAllNotes={fetchAllNotes}/>
+          })}
       </Flex>
     </div>
   );

@@ -1,21 +1,74 @@
-import { Heading, Text, Container, Box, Flex, Button, IconButton } from "@chakra-ui/react"
-import { ArrowForwardIcon, CloseIcon } from "@chakra-ui/icons"
+import { useState } from "react";
+import axios from "axios";
+import { Heading, Container, Flex, Button, IconButton, Textarea, Text, Input } from "@chakra-ui/react"
+import { CloseIcon } from "@chakra-ui/icons"
 
-export default function CreateNote2(props) {
+export default function CreateNote1(props) {
+    const [title, setTitle] = useState("");
+    const [errorMsg, setErrorMsg] = useState([]);
+
+    const noteValidation = () => {
+        let error = {};
+    
+        if(title === ""){
+          error.title = "*Set note's title";
+        }
+        else{
+          error.title = "";
+        }
+    
+        return error;
+      }
+
+    const email = props.email;
+    const type = "Todo Note";
+    const content = "";
+    const addNote = async () => {
+        axios.post('http://localhost:8080/main/createnote', {email, title, content, type})
+        .then((res) => {
+            if(res.data.status === "Note created successfully"){
+            console.log("Note created");
+            props.fetchAllNotes();
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+    
+    const addNoteOnClick = (e) => {
+        e.preventDefault();
+        const error = noteValidation(title);
+        setErrorMsg(error);
+
+        if(error.title !== ""){
+            console.log("Error");
+        }
+        else{
+            props.setActive1("Inactive");
+            props.setAddNoteActive("Inactive");
+            addNote(); 
+        }
+    }
+
     return(
         <Container pos="absolute" zIndex="99" minW="100vw" minH="100vh" centerContent bg="blackAlpha.700">
-            <Container className="addNoteOptions" pos="absolute" minW="70%" maxW="70%" minH="80%" maxH="80%"
+            <Container pos="absolute" minW="30%" maxW="40%" minH="35%" maxH="40%"
                 bg="#dfe1e2" mt="10vh" borderRadius="50px" p="1%">
                 <Heading size="2xl" textAlign="center">Create your note:</Heading>
-                <Flex className="notesList" mt="3%" justifyContent="space-evenly" flexDirection="row" flexWrap="wrap">
+                <Flex mt="3%" justifyContent="space-evenly" alignItems="center" flexDirection="column" flexWrap="wrap">
 
-                    <Box className="noteType type1" maxW="30vw" minW="30vw" minH="30vh" pl="3%" pr="1%" pt="1%" pb="1%"
-                        border="1px solid black" borderRadius="30px" pos="relative" mb="2%">
-                        <Heading size="lg" fontWeight="bold">Classic note</Heading>
-                        <Text fontSize="xl" mr="3vw">What can we say? Just type some text, maybe attach some media or files? Feel free, you decide!</Text>
-                        <Button onClick={props.addNoteOnClick} size="md" rightIcon={<ArrowForwardIcon />} colorScheme="green" pos="absolute" bottom="5%" right="5%">Use</Button>
-                    </Box>
+                    <Flex flexDirection="column" alignItems="center" w="90%" h="10vh">
+                        <Textarea onChange={e => setTitle(e.target.value)} resize="none" placeholder="Title your note!" fontSize="2xl" 
+                        textAlign="center" maxLength="60" w="inherit" h="inherit"/>
+                        {errorMsg.title && <Text>{errorMsg.title}</Text>}
+                    </Flex>
                     
+                    <Flex flexDirection="column" alignItems="center" w="90%" h="5vh">
+                        <Text fontSize="xl" mt="3%">You will be allowed to add your tasks after creating the note</Text>
+                    </Flex>
+
+                    <Button onClick={addNoteOnClick} colorScheme="green" w="40%" h="5vh" aria-label="Submit note" mt="3%">Submit</Button>
                 </Flex>
                 <IconButton size="sm" icon={<CloseIcon />} onClick={props.closeOnClick} colorScheme="red" pos="absolute" top="4%" right="3%" aria-label="Close window"></IconButton>
             </Container>

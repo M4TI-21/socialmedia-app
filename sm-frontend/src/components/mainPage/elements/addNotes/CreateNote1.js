@@ -29,8 +29,9 @@ export default function CreateNote1(props) {
       }
 
     const email = props.email;
+    const type = "Basic Note";
     const addNote = async () => {
-        axios.post('http://localhost:8080/main/createnote', {email, title, content})
+        axios.post('http://localhost:8080/main/createnote', {email, title, content, type})
         .then((res) => {
             if(res.data.status === "Note created successfully"){
             console.log("Note created");
