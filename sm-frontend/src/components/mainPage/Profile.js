@@ -6,9 +6,9 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Container, Flex, Menu, MenuButton, MenuItem, Text, Button, MenuList} from "@chakra-ui/react";
+import {Flex} from "@chakra-ui/react";
 
-export default function MainPage() {
+export default function Profile() {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -16,8 +16,6 @@ export default function MainPage() {
   //const [dateOfBirth, setDateOfBirth] = useState('');
   const [addNoteActive, setAddNoteActive] = useState("Inactive");
   const [basicNotes, setBasicNotes] = useState([]);
-  const [noteCount, setNoteCount] = useState();
-  const [sort, setSort] = useState("date-desc");
 
   const populateMainData = () => {
     axios.get("http://localhost:8080/main/user", {
@@ -83,37 +81,12 @@ export default function MainPage() {
     fetchAllNotes();
   }, [])
 
-  const sortNotes = () => {
-    if(sort === "date-desc"){
-      setSort("date-asc");
-    }
-    else if(sort === "date-asc"){
-      setSort("fav");
-    }
-    else if(sort === "fav"){
-      setSort("date-desc");
-    }
-  }
-
   return (
     <div className="mainPage d-flex flex-column align-items-center">
       <div className="topPage">
         <MainNavComp logOut={logOut} addNoteActiveOnClick={addNoteActiveOnClick} name={name}/>
       </div>
-      <Flex flexDirection="row" alignItems="baseline" justifyContent="center">
-        <Text>ilosc notatek</Text>
-        {sort === "date-desc" && <Button onClick={() => sortNotes()}>Sorting: by date descending</Button>}
-        {sort === "date-asc" && <Button onClick={() => sortNotes()}>Sorting: by date ascending</Button>}
-        {sort === "fav" && <Button onClick={() => sortNotes()}>Sorting: by favorites</Button>}
-        <Menu>
-            <MenuButton aria-label="options"/>
-            <MenuList>
-                <MenuItem>Favorite</MenuItem>
-                <MenuItem>Other</MenuItem>
-            </MenuList>
-        </Menu>
-      </Flex>
-      {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} email={email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}
+      {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} email={email}  fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}
       <Flex maxW="100%" minH="80vh" flexDirection="row" flexWrap="wrap" pl="3%" pr="3%">
           {basicNotes.map(e => (
             <NoteType1 key={e.note_id} note_id={e.note_id} title={e.title} content={e.content} basicNotes={basicNotes} fetchAllNotes={fetchAllNotes}/>

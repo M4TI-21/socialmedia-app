@@ -1,11 +1,12 @@
 import axios from "axios";
-import { Heading, Text, Box, Flex, Button, Textarea, Container } from "@chakra-ui/react";
+import { Heading, Text, Box, Flex, Button, Textarea } from "@chakra-ui/react";
 import { BiEditAlt, BiTrash } from "react-icons/bi";
 import { useState } from "react";
 
 
 export default function NoteType1(props) {
-    const [edit, setEdit] = useState(false)
+    const [edit, setEdit] = useState(false);
+    const [favorite, setFavorite] = useState(false);
     const [updatedTitle, setUpdatedTitle] = useState(props.title);
     const [updatedContent, setUpdatedContent] = useState(props.content);
 
@@ -49,8 +50,44 @@ export default function NoteType1(props) {
         }
     }
 
+    const favoriteNote = (id) => {
+        if(favorite === false){
+            setFavorite(true);
+            addToFavorites(id)
+        }
+        else if(favorite === true){
+            setFavorite(false);
+            deleteFromFavorites(id)
+        }
+    }
+
+    const addToFavorites = async (id) => {
+        const noteID = id;
+        axios.put(`http://localhost:8080/main/addfav/${noteID}`, {noteID})
+        .then((res) => {
+            props.fetchAllNotes();
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+
+    const deleteFromFavorites = async (id) => {
+        const noteID = id;
+        axios.put(`http://localhost:8080/main/deletefav/${noteID}`, {noteID})
+        .then((res) => {
+            props.fetchAllNotes();
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+
     return(
-        <Box bg="#dfe1e2" minW="20%" maxW="50%"  h="450px" pr="1%" pl="1%" borderRadius="50px" ml="1vw" mr="1vw" mb="2vh">
+        <Box bg="#dfe1e2" minW="16vw" maxW="52vw" h="45vh" pr="1%" pl="1%" pt="2%" pb="1%" borderRadius="50px" ml="1vw" mr="1vw" mb="2vh">
+            {favorite === false && <Button colorScheme="white" position="relative" float="right" onClick={() => favoriteNote(props.note_id)}>Favorite</Button>}
+            {favorite === true && <Button colorScheme="yellow" position="relative" float="right" onClick={() => favoriteNote(props.note_id)}>Favorite</Button>}
+
             {edit === false && <>
             <Flex justifyContent="center" alignItems="center" maxW="100%" h="20%">
                 <Heading size="lg" wordBreak="break-all" textAlign="center">{props.title}</Heading>
@@ -68,7 +105,7 @@ export default function NoteType1(props) {
             </>}
             
             {edit === true && <>
-                <Flex className="noteHeader" w="inherit" h="20%" pt="5%">
+                <Flex className="noteHeader" h="20%" pt="5%">
                     <Textarea onChange={e =>setUpdatedTitle(e.target.value)} 
                     fontSize="3xl" resize="none" border="none" _focusVisible={false} textAlign="center" maxLength="60" >
                     {props.title}</Textarea>
@@ -80,9 +117,9 @@ export default function NoteType1(props) {
                     >{props.content}</Textarea>
                 </Flex>
 
-                <Flex className="noteActions" justifyContent="space-evenly" alignItems="center" w="100%" h="20%">
+                <Flex className="noteActions" justifyContent="space-evenly" alignItems="center" h="20%">
                     <Button leftIcon={<BiEditAlt />} colorScheme="green" size="md" onClick={() => editNoteOnClick(props.note_id)}>Submit changes</Button>
-                    <Button colorScheme="red" size="md">Cancel</Button>
+                    <Button colorScheme="red" size="md" onClick={() => editNoteOnClick(props.note_id)}>Cancel</Button>
                 </Flex>
             </>}
         </Box>

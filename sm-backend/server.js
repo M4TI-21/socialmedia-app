@@ -96,9 +96,9 @@ app.get("/main/user", async (req, res) => {
 app.post("/main/createnote", async (req, res) => {
     const dateNow = new Date();
     const dateValue = dateNow.toISOString().split('T')[0] + ' ' + dateNow.toTimeString().split(' ')[0];
-    const values = [req.body.email, req.body.title, req.body.content, dateValue, dateValue, req.body.type];
+    const values = [req.body.email, req.body.title, req.body.content, dateValue, dateValue, req.body.type, false];
     try{
-        await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date, type) VALUES (?)", [values]);
+        await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date, type, favorite) VALUES (?)", [values]);
         res.json({status: "Note created successfully"});
     }
     catch(error){
@@ -185,6 +185,42 @@ app.put("/main/editnote/:id", async (req, res) => {
             }
             else{
                 return res.json({status: "Note updated successfully"});
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+    }
+})
+
+//add to favorites
+app.put("/main/addfav/:id", async (req, res) => {
+    const id = req.body.noteID;
+    try{
+        await db.query("UPDATE notes SET favorite = ? WHERE note_id = ?", [true, id], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json();
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+    }
+})
+
+//delete from favorites
+app.put("/main/deletefav/:id", async (req, res) => {
+    const id = req.body.noteID;
+    try{
+        await db.query("UPDATE notes SET favorite = ? WHERE note_id = ?", [false, id], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json();
             }
         })
     }
