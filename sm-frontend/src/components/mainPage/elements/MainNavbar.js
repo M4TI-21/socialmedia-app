@@ -13,7 +13,7 @@ export default function MainNavComp(props) {
                     <Text fontWeight="700" fontSize="xl">Sigma</Text>
                 </Flex>
 
-                <Input type="text" ml="10%" mr="10%" placeholder="Search your notes..." border="1px solid #bbb" borderRadius="20px"/>
+                
                 <Spacer />
                 <Flex flexDir="row" alignItems="center" maxW="20vw" minW="18vw" maxH="20vh">
                     <Button size="md" leftIcon={<BiPlusCircle />} colorScheme="green" onClick={props.addNoteActiveOnClick}>ADD NOTE</Button>

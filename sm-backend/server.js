@@ -107,36 +107,12 @@ app.post("/main/createnote", async (req, res) => {
 })
 
 //fetch basic notes
-app.get("/main/basicnotes", async (req, res) => {
+app.get("/main/notes", async (req, res) => {
     const token = req.headers["x-access-token"];
     try{
         const decoded = jwt.verify(token, "secret");
         const email = decoded.email;
-        const type = "Basic Note";
-        await db.query("SELECT * FROM notes WHERE user_email = ? AND type = ?", [email, type], (error, data) => {
-            if(error){
-                res.json({status: error});
-            }
-            else{
-                return res.json(data);
-            }
-        })
-    }
-    catch(error){
-        console.log(error);
-        res.json({status: "Invalid token"});
-    }
-})
-
-
-//fetch todo notes
-app.get("/main/basicnotes", async (req, res) => {
-    const token = req.headers["x-access-token"];
-    try{
-        const decoded = jwt.verify(token, "secret");
-        const email = decoded.email;
-        const type = "Todo Note";
-        await db.query("SELECT * FROM notes WHERE user_email = ? AND type = ?", [email, type], (error, data) => {
+        await db.query("SELECT * FROM notes WHERE user_email = ? ORDER BY update_date DESC", [email], (error, data) => {
             if(error){
                 res.json({status: error});
             }
@@ -228,3 +204,75 @@ app.put("/main/deletefav/:id", async (req, res) => {
         console.log(error);
     }
 })
+
+//note search
+app.post("/main/searchnotes", async (req, res) => {
+    const token = req.body.headers["x-access-token"];
+    try{
+        const decoded = jwt.verify(token, "secret");
+        const email = decoded.email;
+        const search = req.body.search;
+        await db.query("SELECT * FROM notes WHERE user_email = ? AND content LIKE ? OR title LIKE ? ORDER BY update_date DESC", [email, '%'+search+'%', '%'+search+'%'], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+        res.json({status: "Invalid token"});
+    }
+})
+
+//sorting notes
+// app.get("/main/sortnotes", async (req, res) => {
+//     const token = req.headers["x-access-token"];
+//     try{
+//         const decoded = jwt.verify(token, "secret");
+//         const email = decoded.email;
+//         const sort = req.body.sort
+//         console.log("sorting:", sort)
+//         switch(sort){
+//             case "date-desc":
+//                 return(
+//                     await db.query("SELECT * FROM notes WHERE user_email = ? ORDER BY update_date DESC", [email], (error, data) => {
+//                         if(error){
+//                             res.json({status: error});
+//                         }
+//                         else{
+//                             return res.json(data);
+//                         }
+//                     })
+//                 )
+//             case "date-asc":
+//                 return(
+//                     await db.query("SELECT * FROM notes WHERE user_email = ? ORDER BY update_date ASC", [email], (error, data) => {
+//                         if(error){
+//                             res.json({status: error});
+//                         }
+//                         else{
+//                             return res.json(data);
+//                         }
+//                     })
+//                 )
+//             case "fav":
+//                 return(
+//                     await db.query("SELECT * FROM notes WHERE user_email = ? AND favorite = `1` ORDER BY update_date ASC", [email], (error, data) => {
+//                         if(error){
+//                             res.json({status: error});
+//                         }
+//                         else{
+//                             return res.json(data);
+//                         }
+//                     })
+//                 )
+//         }
+//     }
+//     catch(error){
+//         console.log(error);
+//         res.json({status: "Invalid token"});
+//     }
+// })

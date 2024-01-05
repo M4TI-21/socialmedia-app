@@ -6,7 +6,7 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Container, Flex, Menu, MenuButton, MenuItem, Text, Button, MenuList} from "@chakra-ui/react";
+import {Flex, Text, Button, Input} from "@chakra-ui/react";
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -15,9 +15,9 @@ export default function MainPage() {
   //const [tag, setTag] = useState('');
   //const [dateOfBirth, setDateOfBirth] = useState('');
   const [addNoteActive, setAddNoteActive] = useState("Inactive");
-  const [basicNotes, setBasicNotes] = useState([]);
-  const [noteCount, setNoteCount] = useState();
+  const [notes, setNotes] = useState([]);
   const [sort, setSort] = useState("date-desc");
+  const [search, setSearch] = useState("");
 
   const populateMainData = () => {
     axios.get("http://localhost:8080/main/user", {
@@ -65,25 +65,7 @@ export default function MainPage() {
     }
   }
 
-  const fetchAllNotes = async () => {
-    axios.get("http://localhost:8080/main/basicnotes", {
-      headers: {
-        "x-access-token": localStorage.getItem("token")
-      }
-    })
-    .then((res) => {
-      setBasicNotes(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
-
-  useEffect(() => {
-    fetchAllNotes();
-  }, [])
-
-  const sortNotes = () => {
+  const sortNotesBtn = () => {
     if(sort === "date-desc"){
       setSort("date-asc");
     }
@@ -95,28 +77,60 @@ export default function MainPage() {
     }
   }
 
+  const fetchAllNotes = async () => {
+    axios.get("http://localhost:8080/main/notes", {
+      headers: {
+        "x-access-token": localStorage.getItem("token")
+      }
+    })
+    .then((res) => {
+      setNotes(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  const fetchSearchedNotes = async () => {
+    axios.post("http://localhost:8080/main/searchnotes", {search,
+      headers: {
+        "x-access-token": localStorage.getItem("token")
+      }
+    })
+    .then((res) => {
+      setNotes(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  useEffect(() =>{
+    if(search == ""){
+      fetchAllNotes();
+    }
+    else{
+      fetchSearchedNotes();
+    }
+  }, [search])
+
+
   return (
     <div className="mainPage d-flex flex-column align-items-center">
       <div className="topPage">
         <MainNavComp logOut={logOut} addNoteActiveOnClick={addNoteActiveOnClick} name={name}/>
       </div>
-      <Flex flexDirection="row" alignItems="baseline" justifyContent="center">
-        <Text>ilosc notatek</Text>
-        {sort === "date-desc" && <Button onClick={() => sortNotes()}>Sorting: by date descending</Button>}
-        {sort === "date-asc" && <Button onClick={() => sortNotes()}>Sorting: by date ascending</Button>}
-        {sort === "fav" && <Button onClick={() => sortNotes()}>Sorting: by favorites</Button>}
-        <Menu>
-            <MenuButton aria-label="options"/>
-            <MenuList>
-                <MenuItem>Favorite</MenuItem>
-                <MenuItem>Other</MenuItem>
-            </MenuList>
-        </Menu>
+      <Flex flexDirection="row" alignItems="baseline" justifyContent="space-around" w="100%" mb="3%">
+      <Input onChange={(e) => {setSearch(e.target.value); console.log(e.target.value)}} type="text" ml="10%" mr="10%" placeholder="Search your notes..." border="1px solid #bbb" borderRadius="20px" w="50%"/>
+        {sort === "date-desc" && <Button onClick={() => sortNotesBtn()} w="20%">Sorting: by date descending</Button>}
+        {sort === "date-asc" && <Button onClick={() => sortNotesBtn()} w="20%">Sorting: by date ascending</Button>}
+        {sort === "fav" && <Button onClick={() => sortNotesBtn()} w="20%">Sorting: by favorites</Button>}
+
       </Flex>
       {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} email={email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}
       <Flex maxW="100%" minH="80vh" flexDirection="row" flexWrap="wrap" pl="3%" pr="3%">
-          {basicNotes.map(e => (
-            <NoteType1 key={e.note_id} note_id={e.note_id} title={e.title} content={e.content} basicNotes={basicNotes} fetchAllNotes={fetchAllNotes}/>
+          {notes.map(e => (
+            <NoteType1 key={e.note_id} note_id={e.note_id} title={e.title} content={e.content} notes={notes} fetchAllNotes={fetchAllNotes}/>
           ))}
       </Flex>
     </div>

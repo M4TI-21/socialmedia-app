@@ -105,19 +105,19 @@ export default function NoteType1(props) {
             </>}
             
             {edit === true && <>
-                <Flex className="noteHeader" h="20%" pt="5%">
+                <Flex className="noteHeader" h="20%" pt="5%" maxW="inherit">
                     <Textarea onChange={e =>setUpdatedTitle(e.target.value)} 
-                    fontSize="3xl" resize="none" border="none" _focusVisible={false} textAlign="center" maxLength="60" >
-                    {props.title}</Textarea>
+                    fontSize="3xl" resize="none" border="none" _focusVisible={false} textAlign="center" maxLength="60" w="inherit"
+                    >{props.title}</Textarea>
                 </Flex>
 
-                <Flex className="noteBody" w="inherit" h="60%">
+                <Flex className="noteBody" maxW="inherit" h="60%">
                     <Textarea onChange={e =>setUpdatedContent(e.target.value)}
-                    fontSize="lg" resize="none" border="none" _focusVisible={false} h="100%"
+                    fontSize="lg" resize="none" border="none" _focusVisible={false} h="100%" w="inherit"
                     >{props.content}</Textarea>
                 </Flex>
 
-                <Flex className="noteActions" justifyContent="space-evenly" alignItems="center" h="20%">
+                <Flex className="noteActions" justifyContent="space-evenly" alignItems="center" h="20%" w="inherit" >
                     <Button leftIcon={<BiEditAlt />} colorScheme="green" size="md" onClick={() => editNoteOnClick(props.note_id)}>Submit changes</Button>
                     <Button colorScheme="red" size="md" onClick={() => editNoteOnClick(props.note_id)}>Cancel</Button>
                 </Flex>
