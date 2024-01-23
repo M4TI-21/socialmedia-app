@@ -11,7 +11,7 @@ const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     pass: "",
-    database: "note_app_db"
+    database: "notes_app"
 })
 
 app.listen(8080, (req, res) => {
@@ -32,7 +32,7 @@ app.post("/register", async (req, res) => {
             }
             else{
                 res.json("Created account");
-                db.query("INSERT INTO user_data (email, name, tag, date_of_birth, password) VALUES (?)", [values]);
+                db.query("INSERT INTO user_data (email, name, tag, date_of_birth, pass) VALUES (?)", [values]);
             }
         })
     }
@@ -45,15 +45,15 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
     try{
         const {loginEmail, loginPass} = req.body;
-        await db.query("SELECT email, password, tag FROM user_data WHERE email = ?", loginEmail, (error, data) => {
+        await db.query("SELECT email, pass FROM user_data WHERE email = ?", loginEmail, (error, data) => {
             if(error){
                 res.json({status: error});
             }
             if(data.length > 0){
-                if(data[0].email === loginEmail && data[0].password !== loginPass){
+                if(data[0].email === loginEmail && data[0].pass !== loginPass){
                     res.json({status: "Incorrect password"});
                 }
-                else if(data[0].email === loginEmail && data[0].password ===loginPass){
+                else if(data[0].email === loginEmail && data[0].pass ===loginPass){
                     const token = jwt.sign({
                         email: data[0].email,
                         tag: data[0].tag
@@ -106,8 +106,8 @@ app.post("/main/createnote", async (req, res) => {
     }
 })
 
-//fetch basic notes
-app.get("/main/notes", async (req, res) => {
+//fetch notes
+app.get("/main/notes/fetch_date_desc", async (req, res) => {
     const token = req.headers["x-access-token"];
     try{
         const decoded = jwt.verify(token, "secret");
@@ -126,6 +126,7 @@ app.get("/main/notes", async (req, res) => {
         res.json({status: "Invalid token"});
     }
 })
+
 
 //delete note
 app.delete("/main/deletenote/:id", async (req, res) => {
@@ -228,51 +229,51 @@ app.post("/main/searchnotes", async (req, res) => {
 })
 
 //sorting notes
-// app.get("/main/sortnotes", async (req, res) => {
-//     const token = req.headers["x-access-token"];
-//     try{
-//         const decoded = jwt.verify(token, "secret");
-//         const email = decoded.email;
-//         const sort = req.body.sort
-//         console.log("sorting:", sort)
-//         switch(sort){
-//             case "date-desc":
-//                 return(
-//                     await db.query("SELECT * FROM notes WHERE user_email = ? ORDER BY update_date DESC", [email], (error, data) => {
-//                         if(error){
-//                             res.json({status: error});
-//                         }
-//                         else{
-//                             return res.json(data);
-//                         }
-//                     })
-//                 )
-//             case "date-asc":
-//                 return(
-//                     await db.query("SELECT * FROM notes WHERE user_email = ? ORDER BY update_date ASC", [email], (error, data) => {
-//                         if(error){
-//                             res.json({status: error});
-//                         }
-//                         else{
-//                             return res.json(data);
-//                         }
-//                     })
-//                 )
-//             case "fav":
-//                 return(
-//                     await db.query("SELECT * FROM notes WHERE user_email = ? AND favorite = `1` ORDER BY update_date ASC", [email], (error, data) => {
-//                         if(error){
-//                             res.json({status: error});
-//                         }
-//                         else{
-//                             return res.json(data);
-//                         }
-//                     })
-//                 )
-//         }
-//     }
-//     catch(error){
-//         console.log(error);
-//         res.json({status: "Invalid token"});
-//     }
-// })
+app.get("/main/sortnotes", async (req, res) => {
+    const token = req.headers["x-access-token"];
+    try{
+        const decoded = jwt.verify(token, "secret");
+        const email = decoded.email;
+        const sort = req.body.sort
+        console.log("sorting:", sort)
+        switch(sort){
+            case "date-desc":
+                return(
+                    await db.query("SELECT * FROM notes WHERE user_email = ? ORDER BY update_date DESC", [email], (error, data) => {
+                        if(error){
+                            res.json({status: error});
+                        }
+                        else{
+                            return res.json(data);
+                        }
+                    })
+                )
+            case "date-asc":
+                return(
+                    await db.query("SELECT * FROM notes WHERE user_email = ? ORDER BY update_date ASC", [email], (error, data) => {
+                        if(error){
+                            res.json({status: error});
+                        }
+                        else{
+                            return res.json(data);
+                        }
+                    })
+                )
+            case "fav":
+                return(
+                    await db.query("SELECT * FROM notes WHERE user_email = ? AND favorite = `1` ORDER BY update_date ASC", [email], (error, data) => {
+                        if(error){
+                            res.json({status: error});
+                        }
+                        else{
+                            return res.json(data);
+                        }
+                    })
+                )
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.json({status: "Invalid token"});
+    }
+})

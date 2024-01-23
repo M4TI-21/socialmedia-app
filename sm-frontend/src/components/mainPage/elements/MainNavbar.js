@@ -1,5 +1,5 @@
 import { Container, Flex, MenuButton, Menu, Image, Text, IconButton, MenuItem, MenuList, Button, Spacer, Input } from "@chakra-ui/react";
-import { BiMenu, BiLogOut, BiSlider, BiPlusCircle, BiIdCard } from "react-icons/bi";
+import { BiMenu, BiLogOut, BiSlider, BiIdCard } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import logo from "../../../images/sigmaLogo.png";   
 
@@ -13,13 +13,10 @@ export default function MainNavComp(props) {
                     <Text fontWeight="700" fontSize="xl">Sigma</Text>
                 </Flex>
 
-                
                 <Spacer />
-                <Flex flexDir="row" alignItems="center" maxW="20vw" minW="18vw" maxH="20vh">
-                    <Button size="md" leftIcon={<BiPlusCircle />} colorScheme="green" onClick={props.addNoteActiveOnClick}>ADD NOTE</Button>
-                    <Spacer />
-                    <Button leftIcon={<BiIdCard />} as={Link} to="/profile">Profile</Button>
-                    <Spacer />
+                <Flex flexDir="row" w="14vw" maxH="20vh" mr="1%">
+                    <Button leftIcon={<BiIdCard />} as={Link} to="/profile" w="60%">Profile</Button>
+                    <Spacer/>
                     <Menu>
                         <MenuButton as={IconButton} aria-label="options" icon={<BiMenu />} />
                         <MenuList>

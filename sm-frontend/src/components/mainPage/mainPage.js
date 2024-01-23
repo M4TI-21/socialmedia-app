@@ -7,6 +7,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {Flex, Text, Button, Input} from "@chakra-ui/react";
+import { BiPlusCircle } from "react-icons/bi";
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ export default function MainPage() {
   }
 
   const fetchAllNotes = async () => {
-    axios.get("http://localhost:8080/main/notes", {
+    axios.get("http://localhost:8080/main/notes/fetch_date_desc", {
       headers: {
         "x-access-token": localStorage.getItem("token")
       }
@@ -121,10 +122,11 @@ export default function MainPage() {
         <MainNavComp logOut={logOut} addNoteActiveOnClick={addNoteActiveOnClick} name={name}/>
       </div>
       <Flex flexDirection="row" alignItems="baseline" justifyContent="space-around" w="100%" mb="3%">
-      <Input onChange={(e) => {setSearch(e.target.value); console.log(e.target.value)}} type="text" ml="10%" mr="10%" placeholder="Search your notes..." border="1px solid #bbb" borderRadius="20px" w="50%"/>
-        {sort === "date-desc" && <Button onClick={() => sortNotesBtn()} w="20%">Sorting: by date descending</Button>}
-        {sort === "date-asc" && <Button onClick={() => sortNotesBtn()} w="20%">Sorting: by date ascending</Button>}
-        {sort === "fav" && <Button onClick={() => sortNotesBtn()} w="20%">Sorting: by favorites</Button>}
+      <Input onChange={(e) => {setSearch(e.target.value)}} type="text" ml="10%" mr="10%" placeholder="Search your notes..." border="1px solid #bbb" borderRadius="20px" w="50%"/>
+      <Button size="md" leftIcon={<BiPlusCircle />} colorScheme="green" onClick={addNoteActiveOnClick} w="8%">ADD NOTE</Button>
+      {sort === "date-desc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date descending</Button>}
+      {sort === "date-asc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date ascending</Button>}
+      {sort === "fav" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by favorites</Button>}
 
       </Flex>
       {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} email={email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}

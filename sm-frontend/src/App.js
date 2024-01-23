@@ -2,7 +2,7 @@ import './App.css';
 import LoginForm from './components/loginPage/loginForm/LoginForm';
 import RegisterForm from './components/loginPage/registerForm/RegisterForm';
 import MainPage from './components/mainPage/MainPage';
-import WelcomePage from './components/welcomePage/WelcomePage';
+import WelcomePage from './components/welcomePage/welcomePage';
 import Profile from './components/mainPage/Profile';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
