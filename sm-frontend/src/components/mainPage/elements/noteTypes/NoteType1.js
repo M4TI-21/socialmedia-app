@@ -50,6 +50,12 @@ export default function NoteType1(props) {
         }
     }
 
+    const cancelEditOnClick = (id) => {
+        if(edit === true){
+            setEdit(false);
+        }
+    }
+
     const favoriteNote = (id) => {
         if(favorite === false){
             setFavorite(true);
@@ -122,7 +128,7 @@ export default function NoteType1(props) {
 
                     <Flex className="noteActions" justifyContent="space-evenly" alignItems="center" h="20%" w="inherit">
                         <Button leftIcon={<BiEditAlt />} colorScheme="green" size="md" onClick={() => editNoteOnClick(props.note_id)}>Submit changes</Button>
-                        <Button colorScheme="red" size="md" onClick={() => editNoteOnClick(props.note_id)}>Cancel</Button>
+                        <Button colorScheme="red" size="md" onClick={() => cancelEditOnClick(props.note_id)}>Cancel</Button>
                     </Flex>
                 </Box>
         }

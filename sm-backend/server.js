@@ -11,7 +11,7 @@ const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     pass: "",
-    database: "notes_app"
+    database: "note_app"
 })
 
 app.listen(8080, (req, res) => {

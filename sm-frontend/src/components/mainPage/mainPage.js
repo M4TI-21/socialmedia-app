@@ -6,7 +6,7 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Flex, Text, Button, Input} from "@chakra-ui/react";
+import {Flex, Text, Button, Input, Menu, MenuButton, IconButton, Link, MenuList} from "@chakra-ui/react";
 import { BiPlusCircle } from "react-icons/bi";
 
 export default function MainPage() {
@@ -123,6 +123,13 @@ export default function MainPage() {
       </div>
       <Flex flexDirection="row" alignItems="baseline" justifyContent="space-around" w="100%" mb="3%">
       <Input onChange={(e) => {setSearch(e.target.value)}} type="text" ml="10%" mr="10%" placeholder="Search your notes..." border="1px solid #bbb" borderRadius="20px" w="50%"/>
+      <Menu>
+          <MenuButton as={IconButton} aria-label="options" icon={<BiMenu />} />
+          <MenuList>
+              <MenuItem icon={<BiSlider />}>SETTINGS</MenuItem>
+              <MenuItem icon={<BiLogOut />} as={Link} to="/" onClick={() => props.logOut()}>LOG OUT</MenuItem>
+          </MenuList>
+      </Menu>
       <Button size="md" leftIcon={<BiPlusCircle />} colorScheme="green" onClick={addNoteActiveOnClick} w="8%">ADD NOTE</Button>
       {sort === "date-desc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date descending</Button>}
       {sort === "date-asc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date ascending</Button>}
@@ -131,8 +138,8 @@ export default function MainPage() {
       </Flex>
       {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} email={email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}
       <Flex maxW="100%" minH="80vh" flexDirection="row" flexWrap="wrap" pl="3%" pr="3%">
-          {notes.map(e => (
-            <NoteType1 key={e.note_id} note_id={e.note_id} title={e.title} content={e.content} notes={notes} fetchAllNotes={fetchAllNotes}/>
+      {notes.map(e => (
+          <NoteType1 key={e.note_id} note_id={e.note_id} title={e.title} content={e.content} notes={notes} fetchAllNotes={fetchAllNotes}/>
           ))}
       </Flex>
     </div>
