@@ -1,6 +1,6 @@
 import MainNavComp from "./elements/MainNavbar";
 import AddNote from "./elements/AddNote";
-import NoteType1 from "./elements/noteTypes/NoteType1";
+import Note from "./Note";
 import "./mainPageStyle.css";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
@@ -12,8 +12,6 @@ export default function Profile() {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  //const [tag, setTag] = useState('');
-  //const [dateOfBirth, setDateOfBirth] = useState('');
   const [addNoteActive, setAddNoteActive] = useState("Inactive");
   const [basicNotes, setBasicNotes] = useState([]);
 
@@ -26,8 +24,6 @@ export default function Profile() {
     .then((res) => {
       setName(res.data.name);
       setEmail(res.data.email);
-      //setTag(res.data.tag);
-      //setDateOfBirth(res.data.date_of_birth);
     })
     .catch((err) => {
       console.log(err);
@@ -89,7 +85,7 @@ export default function Profile() {
       {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} email={email}  fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}
       <Flex maxW="100%" minH="80vh" flexDirection="row" flexWrap="wrap" pl="3%" pr="3%">
           {basicNotes.map(e => (
-            <NoteType1 key={e.note_id} note_id={e.note_id} title={e.title} content={e.content} basicNotes={basicNotes} fetchAllNotes={fetchAllNotes}/>
+            <Note key={e.note_id} note_id={e.note_id} type={e.type} title={e.title} content={e.content} basicNotes={basicNotes} fetchAllNotes={fetchAllNotes}/>
           ))}
       </Flex>
     </div>

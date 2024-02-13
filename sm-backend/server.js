@@ -170,6 +170,27 @@ app.put("/main/editnote/:id", async (req, res) => {
     }
 })
 
+//insert todo task
+app.put("/main/inserttodo/:id", async (req, res) => {
+    const id = req.body.noteID;
+    const content = req.body.content;
+    const token = req.headers["x-access-token"];
+    try{
+        const decoded = jwt.verify(token, "secret");
+        const email = decoded.email;
+        await db.query("INSERT INTO todo VALUES (?)", [id, email, content, dateValue], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json({status: "Task inserted successfully"});
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+    }
+})
 //add to favorites
 app.put("/main/addfav/:id", async (req, res) => {
     const id = req.body.noteID;
