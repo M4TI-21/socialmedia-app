@@ -170,37 +170,19 @@ app.put("/main/editnote/:id", async (req, res) => {
     }
 })
 
-//insert todo task
+//insert todo tasks
 app.put("/main/inserttodo/:id", async (req, res) => {
     const id = req.body.noteID;
     const content = req.body.content;
-    const token = req.headers["x-access-token"];
+    const email = req.body.email;
+    const values = [id, email, content, 0];
     try{
-        const decoded = jwt.verify(token, "secret");
-        const email = decoded.email;
-        await db.query("INSERT INTO todo VALUES (?)", [id, email, content, dateValue], (error, data) => {
+        await db.query("INSERT INTO todo (note_id, user_email, todo_content, finished) VALUES (?)", [values] , (error, data) => {
             if(error){
                 res.json({status: error});
             }
             else{
-                return res.json({status: "Task inserted successfully"});
-            }
-        })
-    }
-    catch(error){
-        console.log(error);
-    }
-})
-//add to favorites
-app.put("/main/addfav/:id", async (req, res) => {
-    const id = req.body.noteID;
-    try{
-        await db.query("UPDATE notes SET favorite = ? WHERE note_id = ?", [true, id], (error, data) => {
-            if(error){
-                res.json({status: error});
-            }
-            else{
-                return res.json();
+                return res.json(data);
             }
         })
     }
@@ -209,23 +191,62 @@ app.put("/main/addfav/:id", async (req, res) => {
     }
 })
 
-//delete from favorites
-app.put("/main/deletefav/:id", async (req, res) => {
-    const id = req.body.noteID;
+//fetch todo tasks
+app.get("/main/notes/fetch_todo_tasks", async (req, res) => {
+    const email = req.query.email;
+    const id = req.query.noteID;
+    const values = [id, email]
     try{
-        await db.query("UPDATE notes SET favorite = ? WHERE note_id = ?", [false, id], (error, data) => {
+        await db.query("SELECT * FROM notes WHERE note_id = ? AND user_email = ?", [values], (error, data) => {
             if(error){
                 res.json({status: error});
             }
             else{
-                return res.json();
+                return res.json(data);
             }
         })
     }
     catch(error){
         console.log(error);
+        res.json({status: "Invalid token"});
     }
 })
+
+//add to favorites
+// app.put("/main/addfav/:id", async (req, res) => {
+//     const id = req.body.noteID;
+//     try{
+//         await db.query("UPDATE notes SET favorite = ? WHERE note_id = ?", [true, id], (error, data) => {
+//             if(error){
+//                 res.json({status: error});
+//             }
+//             else{
+//                 return res.json();
+//             }
+//         })
+//     }
+//     catch(error){
+//         console.log(error);
+//     }
+// })
+
+// //delete from favorites
+// app.put("/main/deletefav/:id", async (req, res) => {
+//     const id = req.body.noteID;
+//     try{
+//         await db.query("UPDATE notes SET favorite = ? WHERE note_id = ?", [false, id], (error, data) => {
+//             if(error){
+//                 res.json({status: error});
+//             }
+//             else{
+//                 return res.json();
+//             }
+//         })
+//     }
+//     catch(error){
+//         console.log(error);
+//     }
+// })
 
 //note search
 app.post("/main/searchnotes", async (req, res) => {

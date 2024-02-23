@@ -1,16 +1,17 @@
 import axios from "axios";
 import { Heading, Text, Box, Flex, Button, Textarea, Input } from "@chakra-ui/react";
 import { BiEditAlt, BiTrash } from "react-icons/bi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
 export default function Note(props) {
     const [edit, setEdit] = useState(false);
-    const [favorite, setFavorite] = useState(false);
+    //const [favorite, setFavorite] = useState(false);
     const [updatedTitle, setUpdatedTitle] = useState(props.title);
     const [updatedContent, setUpdatedContent] = useState(props.content);
     const [todoContent, setTodoContent] = useState("")
     const [noteType, setNoteType] = useState(props.type)
+    const [tasks, setTasks] = useState([]);
 
     const deleteNote = async (id) => {
         const noteID = id;
@@ -55,15 +56,39 @@ export default function Note(props) {
     const insertTodoTasks = async (id) => {
         const content = todoContent;
         const noteID = id;
-        axios.put(`http://localhost:8080/main/inserttodo/${noteID}`, {noteID, content, headers: {"x-access-token": localStorage.getItem("token")}})
+        const email = props.email;
+        axios.put(`http://localhost:8080/main/inserttodo/${noteID}`, {
+            email,
+            noteID, 
+            content, 
+            headers: {"x-access-token": localStorage.getItem("token")}
+        })
         .then((res) => {
-            console.log("Task inserted");
             props.fetchAllNotes();
+            fetchTodoTasks();
         })
         .catch((err) => {
             console.log(err);
         })
     }
+
+    const fetchTodoTasks = async (id) => {
+        axios.get("http://localhost:8080/main/notes/fetch_todo_tasks", {
+            params: {
+                "noteID": id,
+                "email": props.email
+            }
+        })
+        .then((res) => {
+            setTasks(res.data);
+            console.log(tasks)
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+
+
 
     const cancelEditOnClick = (id) => {
         if(edit === true){
@@ -157,7 +182,9 @@ export default function Note(props) {
                 </Flex>
 
                 <Flex width="calc(100%)" h="65%">
-                    <Text fontSize="lg" overflow="hidden" textOverflow="ellipsis" wordBreak="break-all">{props.content}</Text>
+                    {tasks.map(e => (
+                        <p>{e.content}</p>
+                    ))}
                 </Flex>
                 
                 <Flex justifyContent="space-evenly" alignItems="center" w="100%" h="20%">

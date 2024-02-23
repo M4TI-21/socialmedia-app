@@ -89,10 +89,9 @@ export default function MainPage() {
   }
 
   const fetchSearchedNotes = async () => {
-    axios.post("http://localhost:8080/main/searchnotes", {search,
-      headers: {
-        "x-access-token": localStorage.getItem("token")
-      }
+    axios.post("http://localhost:8080/main/searchnotes", {
+      search,
+      headers: {"x-access-token": localStorage.getItem("token")}
     })
     .then((res) => {
       setNotes(res.data);
@@ -111,8 +110,6 @@ export default function MainPage() {
     }
   }, [search])
 
-  console.log(notes)
-
   return (
     <div className="mainPage d-flex flex-column align-items-center">
       <div className="topPage">
@@ -130,7 +127,7 @@ export default function MainPage() {
       {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} email={email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}
       <Flex maxW="100%" minH="80vh" flexDirection="row" flexWrap="wrap" pl="3%" pr="3%">
       {notes.map(e => (
-        <Note key={e.note_id} note_id={e.note_id} type={e.type} title={e.title} content={e.content} notes={notes} fetchAllNotes={fetchAllNotes}/>
+        <Note key={e.note_id} note_id={e.note_id} type={e.type} title={e.title} content={e.content} email={email} notes={notes} fetchAllNotes={fetchAllNotes}/>
       ))}
       </Flex>
     </div>
