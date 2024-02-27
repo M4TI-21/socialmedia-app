@@ -127,7 +127,6 @@ app.get("/main/notes/fetch_date_desc", async (req, res) => {
     }
 })
 
-
 //delete note
 app.delete("/main/deletenote/:id", async (req, res) => {
     const id = req.body.noteID;
@@ -137,7 +136,12 @@ app.delete("/main/deletenote/:id", async (req, res) => {
                 res.json({status: error});
             }
             else{
-                return res.json({status: "Note created successfully"});
+                return res.json({status: "Note deleted successfully"});
+            }
+        })
+        await db.query("DELETE FROM todo WHERE note_id = ?", [id], (error, data) => {
+            if(error){
+                res.json({status: error});
             }
         })
     }
@@ -197,7 +201,7 @@ app.get("/main/notes/fetch_todo_tasks", async (req, res) => {
     const id = req.query.noteID;
     const values = [id, email]
     try{
-        await db.query("SELECT * FROM notes WHERE note_id = ? AND user_email = ?", [values], (error, data) => {
+        await db.query("SELECT * FROM todo WHERE note_id = ?", id, (error, data) => {
             if(error){
                 res.json({status: error});
             }

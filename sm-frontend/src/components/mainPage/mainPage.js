@@ -82,6 +82,7 @@ export default function MainPage() {
     })
     .then((res) => {
       setNotes(res.data);
+      
     })
     .catch((err) => {
       console.log(err);

@@ -1,8 +1,7 @@
-import { Form, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { FormControl, Button, FormLabel, FormHelperText, Input, Text, Flex, Box } from "@chakra-ui/react";
+import { useNavigate, Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { useState } from "react";
 import './loginFormStyle.css';
 import NavbarComp from "../../elements/Navbar";
@@ -82,29 +81,34 @@ export default function LoginForm() {
     }
   }
   return (
-    <div className="d-flex flex-column align-items-center pb-4">
+    <Flex flexDir="column" alignItems="center" pb="4">
       <NavbarComp />
-      <div className="pageContent">
-        <div className="loginFormArea mt-4">
-          <h1 className="title">Login to your account</h1>
-            <Form className="form">
-                <Form.Group className="emailGroup">
-                    <Form.Control className="input email" placeholder="Email" type="text" onChange={e => setEmail(e.target.value)}/>
-                    {errorMsg.email && <Form.Text className="errorMessage">{errorMsg.email}</Form.Text>}
-                </Form.Group>
-                <Form.Group className="passGroup">
-                    <Form.Control className="input pass" placeholder="Password" type="password" onChange={e => setPass(e.target.value)}/>
-                    {errorMsg.pass && <Form.Text className="errorMessage">{errorMsg.pass}</Form.Text>}
-                </Form.Group>
-            </Form>
-            <Button className="submitBtn d-flex align-items-center justify-content-center" onClick={submitOnClick}>Sign in</Button>
-        </div>
-        <div className="registerArea">
-          <p className="regText1 d-flex align-items-center justify-content-center">Don't have an account?</p>
-          <p className="regText2 d-flex align-items-center justify-content-center">Sign up now!</p>
-          <Button as={Link} className="registerBtn d-flex align-items-center justify-content-center" to="/register">Create new account</Button>
-        </div>
-      </div>
-    </div>
+      <Box className="pageContent">
+        <Flex w="45vw" h="inherit" flexDir="column" alignItems="center" justifyContent="space-around">
+          <Text fontSize="5xl" fontWeight="bold" textAlign="center">Login to your account</Text>
+            <FormControl ml="20vw">
+                <FormLabel fontSize="2xl">Email:</FormLabel>
+                <Input placeholder="example@mail.com" type="text" w="25vw" h="5vh" fontSize="lg" border="1px" borderColor="#888"
+                onChange={e => setEmail(e.target.value)}/>
+                {errorMsg.email && <FormHelperText color="red" fontSize="md">{errorMsg.email}</FormHelperText>}
+            </FormControl>
+
+            <FormControl ml="20vw">
+                <FormLabel fontSize="2xl">Password:</FormLabel>
+                <Input placeholder="Password123" type="password" w="25vw" h="5vh" fontSize="lg" border="1px" borderColor="#888" 
+                onChange={e => setPass(e.target.value)}/>
+                {errorMsg.pass && <FormHelperText color="red" fontSize="md">{errorMsg.pass}</FormHelperText>}
+            </FormControl>
+
+            <Button size="lg" w="10vw"colorScheme="blue" onClick={submitOnClick}>Sign in</Button>
+        </Flex>
+
+        <Flex className="registerArea" flexDir="column" alignItems="center" justifyContent="center">
+          <Text fontSize="2xl" fontWeight="bold" color="#EEE" textAlign="center">Don't have an account?</Text>
+          <Text fontSize="5xl" fontWeight="bold" color="#EEE" textAlign="center">Sign up now!</Text>
+          <Button size="lg" w="10vw" colorScheme="blue" as={Link} to="/register" textAlign="center">Create new account</Button>
+        </Flex>
+      </Box>
+    </Flex>
   );
 }

@@ -1,4 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Text, Flex, Box, UnorderedList, ListItem } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -34,6 +34,17 @@ export default function RegisterForm(props) {
     }
   }
 
+  const returnOnClick = (e) => {
+    e.preventDefault();
+
+    setEmail(null);
+    setDob(undefined);
+    setName(null);
+    setTag(null);
+    setPass(null);
+    setActive("StepOne");
+  }
+
   const submitOnClick = (e) => {
       e.preventDefault();
 
@@ -66,26 +77,28 @@ export default function RegisterForm(props) {
   }
     
   return (
-    <div className="d-flex flex-column align-items-center pb-4">
+    <Flex flexDir="column" alignItems="center" pb="4">
       <NavbarComp />
-      <div className="pageContent">
-        <div className="regFormArea mt-2">
-          <h1 className="title">Register new account</h1>
-          <h4>Enter your data</h4>
+      <Box className="pageContent">
+
+        <Flex w="45vw" h="inherit" flexDir="column" alignItems="center" justifyContent="space-around" mt="2">
+          <Text fontSize="5xl" fontWeight="bold" mt="6">Register new account</Text>
             {active === "StepOne" && <RegisterStepOne continueOnClick = {continueOnClick} errorMsg = {errorMsg} 
-            setEmail = {setEmail} setDob = {setDob}  />}
+            setEmail = {setEmail} setDob = {setDob}/>}
             {active === "StepTwo" && <RegisterStepTwo submitOnClick = {submitOnClick} errorMsg = {errorMsg} 
-            setPass = {setPass} setName = {setName} setTag = {setTag} />}
-        </div>
-        <div className="rightArea">
-          <p className="regText1 d-flex align-items-center justify-content-center">Why join us?</p>
-          <ul className="d-flex flex-column align-items-start m-4">
-            <li className="regText2">Easy access to your every note</li>
-            <li className="regText2">Free for everyone, everywhere</li>
-            <li className="regText2">Simple and convenient design</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+            setPass = {setPass} setName = {setName} setTag = {setTag} returnOnClick={returnOnClick}/>}
+        </Flex>
+        
+        <Flex w="25vw" h="inherit" flexDir="column" alignItems="center" justifyContent="center" className="rightArea">
+          <Text fontSize="4xl" color="#EEE" fontWeight="bold">Why join us?</Text>
+          <UnorderedList>
+            <ListItem fontSize="2xl" color="#EEE" textAlign="center">Easy access to your every note</ListItem>
+            <ListItem fontSize="2xl" color="#EEE" textAlign="center">Free for everyone, everywhere</ListItem>
+            <ListItem fontSize="2xl" color="#EEE" textAlign="center">Simple and convenient design</ListItem>
+          </UnorderedList>
+        
+        </Flex>
+      </Box>
+    </Flex>
   );
 }

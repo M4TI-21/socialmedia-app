@@ -1,29 +1,35 @@
-import { Form, Button } from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { FormControl, Button, FormLabel, FormHelperText, Input, Flex } from "@chakra-ui/react";
 import './registerFormStyle.css';
 
 export default function RegisterStepTwo(props) {
 
   return (
-      <Form className="regform">
-          <Form.Group className="nameGroup">
-            <Form.Control className="input name mx-auto" placeholder="Name" type="text" onChange={e => props.setName(e.target.value)}/>
-            {props.errorMsg.name && <Form.Text className="errorMessage">{props.errorMsg.name}</Form.Text>}
-          </Form.Group>
+    <Flex flexDir="column" justifyContent="space-around" alignItems="center" w="45vw" h="inherit" mt="5">
+        <FormControl ml="20vw">
+          <FormLabel fontSize="2xl">Name:</FormLabel>
+          <Input placeholder="John" type="text" w="25vw" h="5vh" fontSize="lg" border="1px" borderColor="#888" 
+          onChange={e => props.setName(e.target.value)}/>
+          {props.errorMsg.name && <FormHelperText className="errorMessage">{props.errorMsg.name}</FormHelperText>}
+        </FormControl>
 
-          <Form.Group className="tagGroup">
-            <Form.Control className="input tag mx-auto" placeholder="User tag" type="text" onChange={e => props.setTag(e.target.value)}/>
-            {props.errorMsg.tag && <Form.Text className="errorMessage">{props.errorMsg.tag}</Form.Text>} 
-          </Form.Group>
+        <FormControl ml="20vw">
+        <FormLabel fontSize="2xl">User tag:</FormLabel>
+          <Input placeholder="john21" type="text" w="25vw" h="5vh" fontSize="lg" border="1px" borderColor="#888" 
+          onChange={e => props.setTag(e.target.value)}/>
+          {props.errorMsg.tag && <FormHelperText className="errorMessage">{props.errorMsg.tag}</FormHelperText>} 
+        </FormControl>
 
-          <Form.Group className="passGroup">
-            <Form.Control className="input pass mx-auto" placeholder="Password" type="password" onChange={e => props.setPass(e.target.value)}/>
-            {props.errorMsg.pass && <Form.Text className="errorMessage">{props.errorMsg.pass}</Form.Text>}
-          </Form.Group>
-          <Form.Group className="btnGroup">
-            <Button className="submitBtn d-flex align-items-center justify-content-center" onClick={props.submitOnClick}>Register</Button>
-            <Button variant="danger" onClick={()=> props.setActive("StepOne")}>Back</Button>
-          </Form.Group>
-      </Form>
+        <FormControl ml="20vw">
+        <FormLabel fontSize="2xl">Password:</FormLabel>
+          <Input placeholder="Pass123" type="password" w="25vw" h="5vh" fontSize="lg" border="1px" borderColor="#888"
+          onChange={e => props.setPass(e.target.value)}/>
+          {props.errorMsg.pass && <FormHelperText className="errorMessage">{props.errorMsg.pass}</FormHelperText>}
+        </FormControl>
+
+        <Flex w="30vw" flexDir="row" alignItems="center" justifyContent="space-evenly">
+          <Button size="lg" w="10vw" colorScheme="red" onClick={props.returnOnClick}>Back</Button>
+          <Button size="lg" w="10vw" colorScheme="blue" onClick={props.submitOnClick}>Register</Button>
+        </Flex>
+    </Flex>
   );
 }

@@ -1,23 +1,23 @@
 import React from "react";
 import NavbarComp from "../elements/Navbar";
 import './welcomePageStyle.css';
-import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { Button, Flex, Text } from "@chakra-ui/react"
 
 export default function WelcomePage() {
   return (
-    <div className="page pb-4">
+    <Flex flexDir="column" alignItems="center" pb="4">
         <NavbarComp />
-        <div className="contentArea">
-            <div className="quoteArea">
-                <p className="quote">Imagination <br /> rules <br /> the World.</p>
-                <p className="signature">Napoleon Bonaparte</p>
-            </div>
-            <div className="sloganArea">
-                <p className="slogan">Be part of something <br /> special today! Register <br /> right now.</p>
-                <Button as={Link} className="getstartedBtn d-flex align-items-center justify-content-center" to="/register">GET STARTED!</Button>
-            </div>
-        </div>
-    </div>
+        <Flex bg="#EEE" borderRadius="30px" w="80vw" h="70vh" flexDir="row" alignItems="center" p="7vw">
+            <Flex h="inherit" w="45vw" textAlign="start" flexDir="column" justifyContent="center">
+                <Text fontSize="7xl" fontWeight="bold">Imagination <br /> rules the World.</Text>
+                <Text fontSize="3xl" textAlign="center">Napoleon Bonaparte</Text>
+            </Flex>
+            <Flex className="sloganArea" w="35vw" h="inherit" flexDir="column" alignItems="center" justifyContent="center">
+                <Text fontSize="3xl">Be part of something <br /> special today! Register <br /> right now.</Text>
+                <Button size="lg" w="10vw" colorScheme="blue" as={Link} to="/register">GET STARTED!</Button>
+            </Flex>
+        </Flex>
+    </Flex>
   );
 }
