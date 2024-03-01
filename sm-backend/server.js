@@ -92,13 +92,15 @@ app.get("/main/user", async (req, res) => {
     }
 })
 
+//NOTES QUERIES
+
 //create note
 app.post("/main/createnote", async (req, res) => {
     const dateNow = new Date();
     const dateValue = dateNow.toISOString().split('T')[0] + ' ' + dateNow.toTimeString().split(' ')[0];
-    const values = [req.body.email, req.body.title, req.body.content, dateValue, dateValue, req.body.type, false];
+    const values = [req.body.email, req.body.title, req.body.content, dateValue, dateValue, false];
     try{
-        await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date, type, favorite) VALUES (?)", [values]);
+        await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date,, favorite) VALUES (?)", [values]);
         res.json({status: "Note created successfully"});
     }
     catch(error){
@@ -139,11 +141,6 @@ app.delete("/main/deletenote/:id", async (req, res) => {
                 return res.json({status: "Note deleted successfully"});
             }
         })
-        await db.query("DELETE FROM todo WHERE note_id = ?", [id], (error, data) => {
-            if(error){
-                res.json({status: error});
-            }
-        })
     }
     catch(error){
         console.log(error);
@@ -174,83 +171,6 @@ app.put("/main/editnote/:id", async (req, res) => {
     }
 })
 
-//insert todo tasks
-app.put("/main/inserttodo/:id", async (req, res) => {
-    const id = req.body.noteID;
-    const content = req.body.content;
-    const email = req.body.email;
-    const values = [id, email, content, 0];
-    try{
-        await db.query("INSERT INTO todo (note_id, user_email, todo_content, finished) VALUES (?)", [values] , (error, data) => {
-            if(error){
-                res.json({status: error});
-            }
-            else{
-                return res.json(data);
-            }
-        })
-    }
-    catch(error){
-        console.log(error);
-    }
-})
-
-//fetch todo tasks
-app.get("/main/notes/fetch_todo_tasks", async (req, res) => {
-    const email = req.query.email;
-    const id = req.query.noteID;
-    const values = [id, email]
-    try{
-        await db.query("SELECT * FROM todo WHERE note_id = ?", id, (error, data) => {
-            if(error){
-                res.json({status: error});
-            }
-            else{
-                return res.json(data);
-            }
-        })
-    }
-    catch(error){
-        console.log(error);
-        res.json({status: "Invalid token"});
-    }
-})
-
-//add to favorites
-// app.put("/main/addfav/:id", async (req, res) => {
-//     const id = req.body.noteID;
-//     try{
-//         await db.query("UPDATE notes SET favorite = ? WHERE note_id = ?", [true, id], (error, data) => {
-//             if(error){
-//                 res.json({status: error});
-//             }
-//             else{
-//                 return res.json();
-//             }
-//         })
-//     }
-//     catch(error){
-//         console.log(error);
-//     }
-// })
-
-// //delete from favorites
-// app.put("/main/deletefav/:id", async (req, res) => {
-//     const id = req.body.noteID;
-//     try{
-//         await db.query("UPDATE notes SET favorite = ? WHERE note_id = ?", [false, id], (error, data) => {
-//             if(error){
-//                 res.json({status: error});
-//             }
-//             else{
-//                 return res.json();
-//             }
-//         })
-//     }
-//     catch(error){
-//         console.log(error);
-//     }
-// })
 
 //note search
 app.post("/main/searchnotes", async (req, res) => {
@@ -265,6 +185,7 @@ app.post("/main/searchnotes", async (req, res) => {
             }
             else{
                 return res.json(data);
+                
             }
         })
     }
@@ -274,52 +195,126 @@ app.post("/main/searchnotes", async (req, res) => {
     }
 })
 
-//sorting notes
-app.get("/main/sortnotes", async (req, res) => {
-    const token = req.headers["x-access-token"];
+//TASKS QUERIES
+
+//create tasks
+app.put("/main/inserttodo/:id", async (req, res) => {
+    const content = req.body.content;
+    const email = req.body.email;
+    const values = [email, content, 0];
     try{
-        const decoded = jwt.verify(token, "secret");
-        const email = decoded.email;
-        const sort = req.body.sort
-        console.log("sorting:", sort)
-        switch(sort){
-            case "date-desc":
-                return(
-                    await db.query("SELECT * FROM notes WHERE user_email = ? ORDER BY update_date DESC", [email], (error, data) => {
-                        if(error){
-                            res.json({status: error});
-                        }
-                        else{
-                            return res.json(data);
-                        }
-                    })
-                )
-            case "date-asc":
-                return(
-                    await db.query("SELECT * FROM notes WHERE user_email = ? ORDER BY update_date ASC", [email], (error, data) => {
-                        if(error){
-                            res.json({status: error});
-                        }
-                        else{
-                            return res.json(data);
-                        }
-                    })
-                )
-            case "fav":
-                return(
-                    await db.query("SELECT * FROM notes WHERE user_email = ? AND favorite = `1` ORDER BY update_date ASC", [email], (error, data) => {
-                        if(error){
-                            res.json({status: error});
-                        }
-                        else{
-                            return res.json(data);
-                        }
-                    })
-                )
-        }
+        await db.query("INSERT INTO todo (user_email, todo_content, finished) VALUES (?)", [values] , (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+    }
+})
+
+//delete task
+app.delete("/main/deletetask/:id", async (req, res) => {
+    const id = req.body.taskID;
+    try{
+        await db.query("DELETE FROM todo WHERE todo_id = ?", [id], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json({status: "Task deleted successfully"});
+            }
+        })
     }
     catch(error){
         console.log(error);
         res.json({status: "Invalid token"});
+    }
+})
+
+//fetch todo tasks
+app.get("/main/notes/fetch_todo_tasks", async (req, res) => {
+    const token = req.headers["x-access-token"];
+    try{
+        const decoded = jwt.verify(token, "secret");
+        const email = decoded.email;
+        await db.query("SELECT * FROM todo WHERE user_email = ?", [email], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+        res.json({status: "Invalid token"});
+    }
+})
+
+//edit task
+app.put("/main/edittask/:id", async (req, res) => {
+    const id = req.body.taskID;
+    const content = req.body.content;
+
+    try{
+        await db.query("UPDATE todo SET todo_content = ? WHERE todo_id = ?", [content, id], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json({status: "Task updated successfully"});
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+    }
+})
+
+//task search
+app.post("/main/searchtasks", async (req, res) => {
+    const token = req.body.headers["x-access-token"];
+    try{
+        const decoded = jwt.verify(token, "secret");
+        const email = decoded.email;
+        const search = req.body.search;
+        await db.query("SELECT * FROM todo WHERE user_email = ? AND todo_content LIKE ?", [email, '%'+search+'%'], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+        res.json({status: "Invalid token"});
+    }
+})
+
+
+//complete task
+app.put("/main/completetask/:id", async (req, res) => {
+    const id = req.body.taskID;
+    const isFinished = req.body.finished;
+    try{
+        await db.query("UPDATE todo SET finished = ? WHERE todo_id = ?", [isFinished, id], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json({status: "Task updated successfully"});
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
     }
 })

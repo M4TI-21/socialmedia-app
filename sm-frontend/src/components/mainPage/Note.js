@@ -1,7 +1,7 @@
 import axios from "axios";
-import { Heading, Text, Box, Flex, Button, Textarea, Input, UnorderedList, ListItem } from "@chakra-ui/react";
+import { Heading, Text, Box, Flex, Button, Textarea } from "@chakra-ui/react";
 import { BiEditAlt, BiTrash } from "react-icons/bi";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 
 export default function Note(props) {
@@ -9,9 +9,6 @@ export default function Note(props) {
     //const [favorite, setFavorite] = useState(false);
     const [updatedTitle, setUpdatedTitle] = useState(props.title);
     const [updatedContent, setUpdatedContent] = useState(props.content);
-    const [todoContent, setTodoContent] = useState("")
-    const [noteType, setNoteType] = useState(props.type)
-    const [tasks, setTasks] = useState([]);
 
     const deleteNote = async (id) => {
         const noteID = id;
@@ -42,7 +39,6 @@ export default function Note(props) {
         .then((res) => {
             console.log("Note updated");
             props.fetchAllNotes(id);
-            fetchTodoTasks(id);
         })
         .catch((err) => {
             console.log(err);
@@ -57,54 +53,6 @@ export default function Note(props) {
             setEdit(false);
             editNote(id);
         }
-    }
-
-    const editTodoNoteOnClick = (id) => {
-        if(edit === false){
-            setEdit(true);
-        }
-        else if(edit === true){
-            setEdit(false);
-        }
-    }
-
-    const fetchTodoTasks = async (id) => {
-        axios.get("http://localhost:8080/main/notes/fetch_todo_tasks", {
-            params: {
-                "email": props.email,
-                "noteID": id
-            }
-        })
-        .then((res) => {
-            setTasks(res.data);
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-    }
-
-    props.notes.forEach(e => {
-        if(e.type == "Todo Note"){
-            
-        }
-    });
-
-    const insertTodoTasks = async (id) => {
-        const content = todoContent;
-        const noteID = id;
-        const email = props.email;
-        axios.put(`http://localhost:8080/main/inserttodo/${noteID}`, {
-            email,
-            noteID, 
-            content, 
-            headers: {"x-access-token": localStorage.getItem("token")}
-        })
-        .then((res) => {
-            fetchTodoTasks(id);
-        })
-        .catch((err) => {
-            console.log(err);
-        })
     }
 
     const cancelEditOnClick = (id) => {
@@ -151,7 +99,7 @@ export default function Note(props) {
         //{favorite === true && <Button colorScheme="yellow" position="relative" float="right" onClick={() => favoriteNote(props.note_id)}>Favorite</Button>}
 
         <>
-        {noteType === "Basic Note" && edit === false &&
+        {edit === false &&
             <Box bg="#dfe1e2" minW="16vw" maxW="52vw" h="45vh" pr="1%" pl="1%" pt="2%" pb="1%" borderRadius="50px" ml="1vw" mr="1vw" mb="2vh">
                 <Flex justifyContent="center" alignItems="center" maxW="100%" h="20%">
                     <Heading size="lg" wordBreak="break-all" textAlign="center">{props.title}</Heading>
@@ -168,7 +116,7 @@ export default function Note(props) {
                 </Flex>
             </Box>
         }
-        {noteType === "Basic Note" && edit === true &&
+        {edit === true &&
 
                 <Box bg="#dfe1e2" w="inherit" h="45vh" borderRadius="50px" pt="1%" pb="1%"  ml="1vw" mr="1vw" mb="2vh">
                     <Flex className="noteHeader" h="20%" pt="5%">
@@ -190,58 +138,6 @@ export default function Note(props) {
                 </Box>
         }
 
-        {noteType === "Todo Note" && edit === false &&
-            
-            <Box bg="#dfe1e2" minW="16vw" maxW="52vw" h="45vh" pr="1%" pl="1%" pt="2%" pb="1%" borderRadius="50px" ml="1vw" mr="1vw" mb="2vh">
-                <Flex justifyContent="center" alignItems="center" maxW="100%" h="20%">
-                    <Heading size="lg" wordBreak="break-all" textAlign="center">{props.title}</Heading>
-                </Flex>
-
-                <Flex width="calc(100%)" h="65%">
-                    <UnorderedList>
-                        {tasks.map(e => (
-                            <ListItem key={e.todo_id}>{e.todo_content}</ListItem>
-                        ))}
-                    </UnorderedList>
-                </Flex>
-                
-                <Flex justifyContent="space-evenly" alignItems="center" w="100%" h="20%">
-                    
-                    <Button leftIcon={<BiEditAlt />} colorScheme="green" size="md" onClick={() => editNoteOnClick(props.note_id)}>Edit</Button>
-                    <Button leftIcon={<BiTrash />} colorScheme="red" size="md" onClick={() => deleteNoteOnClick(props.note_id)}>Delete</Button>
-                </Flex>
-            </Box>
-        }
-        
-        {noteType === "Todo Note" && edit === true &&
-            
-            <Box bg="#dfe1e2" minW="16vw" maxW="52vw" h="45vh" pr="1%" pl="1%" pt="2%" pb="1%" borderRadius="50px" ml="1vw" mr="1vw" mb="2vh">
-                <Flex className="noteHeader" h="20%" pt="5%">
-                    <Textarea onChange={e =>setUpdatedTitle(e.target.value)} 
-                    fontSize="3xl" resize="none" border="none" _focusVisible={false} textAlign="center" maxLength="60" w="inherit" fontWeight="bold"
-                    >{props.title}</Textarea>
-                </Flex>
-
-                <Flex width="calc(100%)" h="65%" flexDir="column">
-                    <Flex flexDir="row">
-                        <Input type="text" placeholder="Input new tasks" onChange={e => setTodoContent(e.target.value)} />
-                        <Button onClick={() => insertTodoTasks(props.note_id)}>Insert</Button>
-                    </Flex>
-                    <Flex flexDir="column">
-                        <UnorderedList>
-                            {tasks.map(e => (
-                                <ListItem key={e.todo_id}>{e.todo_content}</ListItem>
-                            ))}
-                        </UnorderedList>
-                    </Flex>
-                </Flex>
-                
-                <Flex className="noteActions" justifyContent="space-evenly" alignItems="center" h="20%" w="inherit">
-                    <Button leftIcon={<BiEditAlt />} colorScheme="green" size="md" onClick={() => editTodoNoteOnClick(props.note_id)}>Submit changes</Button>
-                    <Button colorScheme="red" size="md" onClick={() => cancelEditOnClick(props.note_id)}>Cancel</Button>
-                 </Flex>
-            </Box>
-        }
 
         </>
     );

@@ -1,4 +1,4 @@
-import { Container, Flex, MenuButton, Menu, Image, Text, IconButton, MenuItem, MenuList, Button, Spacer, Input } from "@chakra-ui/react";
+import { Container, Flex, MenuButton, Menu, Image, Text, IconButton, MenuItem, MenuList, Button, Spacer } from "@chakra-ui/react";
 import { BiMenu, BiLogOut, BiSlider, BiIdCard } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import logo from "../../../images/sigmaLogo.png";   
@@ -14,8 +14,10 @@ export default function MainNavComp(props) {
                 </Flex>
 
                 <Spacer />
-                <Flex flexDir="row" w="14vw" maxH="20vh" mr="1%">
-                    <Button leftIcon={<BiIdCard />} as={Link} to="/profile" w="60%">Profile</Button>
+                <Flex flexDir="row" w="30vw" maxH="20vh" mr="1%">
+                    <Button leftIcon={<BiIdCard />} as={Link} to="/todo" w="8vw">Check ToDos</Button>
+                    <Spacer/>
+                    <Button leftIcon={<BiIdCard />} as={Link} to="/profile" w="8vw">Profile</Button>
                     <Spacer/>
                     <Menu>
                         <MenuButton as={IconButton} aria-label="options" icon={<BiMenu />} />

@@ -11,11 +11,10 @@ import { BiPlusCircle } from "react-icons/bi";
 
 export default function MainPage() {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [addNoteActive, setAddNoteActive] = useState("Inactive");
   const [notes, setNotes] = useState([]);
-  const [sort, setSort] = useState("date-desc");
+  // const [sort, setSort] = useState("date-desc");
   const [search, setSearch] = useState("");
 
   const populateMainData = () => {
@@ -25,7 +24,6 @@ export default function MainPage() {
       }
     })
     .then((res) => {
-      setName(res.data.name);
       setEmail(res.data.email);
     })
     .catch((err) => {
@@ -62,17 +60,17 @@ export default function MainPage() {
     }
   }
 
-  const sortNotesBtn = () => {
-    if(sort === "date-desc"){
-      setSort("date-asc");
-    }
-    else if(sort === "date-asc"){
-      setSort("fav");
-    }
-    else if(sort === "fav"){
-      setSort("date-desc");
-    }
-  }
+  // const sortNotesBtn = () => {
+  //   if(sort === "date-desc"){
+  //     setSort("date-asc");
+  //   }
+  //   else if(sort === "date-asc"){
+  //     setSort("fav");
+  //   }
+  //   else if(sort === "fav"){
+  //     setSort("date-desc");
+  //   }
+  // }
 
   const fetchAllNotes = async () => {
     axios.get("http://localhost:8080/main/notes/fetch_date_desc", {
@@ -82,7 +80,6 @@ export default function MainPage() {
     })
     .then((res) => {
       setNotes(res.data);
-      
     })
     .catch((err) => {
       console.log(err);
@@ -111,18 +108,19 @@ export default function MainPage() {
     }
   }, [search])
 
+
   return (
     <div className="mainPage d-flex flex-column align-items-center">
       <div className="topPage">
-        <MainNavComp logOut={logOut} addNoteActiveOnClick={addNoteActiveOnClick} name={name}/>
+        <MainNavComp logOut={logOut}/>
       </div>
       <Flex flexDirection="row" alignItems="baseline" justifyContent="space-around" w="100%" mb="3%">
-      <Input onChange={(e) => {setSearch(e.target.value)}} type="text" ml="10%" mr="10%" placeholder="Search your notes..." border="1px solid #bbb" borderRadius="20px" w="50%"/>
+        <Input onChange={(e) => {setSearch(e.target.value)}} type="text" ml="10%" mr="10%" placeholder="Search your notes..." border="1px solid #bbb" borderRadius="20px" w="50%"/>
 
-      <Button size="md" leftIcon={<BiPlusCircle />} colorScheme="green" onClick={addNoteActiveOnClick} w="8%">ADD NOTE</Button>
-      {sort === "date-desc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date descending</Button>}
-      {sort === "date-asc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date ascending</Button>}
-      {sort === "fav" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by favorites</Button>}
+        <Button size="md" leftIcon={<BiPlusCircle />} colorScheme="green" onClick={addNoteActiveOnClick} w="8%">ADD NOTE</Button>
+        {/* {sort === "date-desc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date descending</Button>}
+        {sort === "date-asc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date ascending</Button>}
+        {sort === "fav" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by favorites</Button>} */}
 
       </Flex>
       {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} email={email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}
