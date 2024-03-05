@@ -1,21 +1,18 @@
 import MainNavComp from "./elements/MainNavbar";
-import AddNote from "./elements/AddNote";
-import Note from "./Note";
+import TodoPage from "./TodoPage";
+import ProfilePage from "./ProfilePage";
+import NotePage from "./NotePage";
 import "./mainPageStyle.css";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Flex, Button, Input } from "@chakra-ui/react";
-import { BiPlusCircle } from "react-icons/bi";
+import { Flex, Box } from "@chakra-ui/react";
 
 export default function MainPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
-  const [addNoteActive, setAddNoteActive] = useState("Inactive");
-  const [notes, setNotes] = useState([]);
-  // const [sort, setSort] = useState("date-desc");
-  const [search, setSearch] = useState("");
+  const [activePage, setActivePage] = useState("note")
 
   const populateMainData = () => {
     axios.get("http://localhost:8080/main/user", {
@@ -50,85 +47,26 @@ export default function MainPage() {
     localStorage.removeItem("token");
   }
 
-  const addNoteActiveOnClick = (e) => {
-    e.preventDefault();
-    if(addNoteActive === "Active"){
-      setAddNoteActive("Inactive");
-    }
-    else{
-      setAddNoteActive("Active");
-    }
-  }
-
-  // const sortNotesBtn = () => {
-  //   if(sort === "date-desc"){
-  //     setSort("date-asc");
-  //   }
-  //   else if(sort === "date-asc"){
-  //     setSort("fav");
-  //   }
-  //   else if(sort === "fav"){
-  //     setSort("date-desc");
-  //   }
-  // }
-
-  const fetchAllNotes = async () => {
-    axios.get("http://localhost:8080/main/notes/fetch_date_desc", {
-      headers: {
-        "x-access-token": localStorage.getItem("token")
-      }
-    })
-    .then((res) => {
-      setNotes(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
-
-  const fetchSearchedNotes = async () => {
-    axios.post("http://localhost:8080/main/searchnotes", {
-      search,
-      headers: {"x-access-token": localStorage.getItem("token")}
-    })
-    .then((res) => {
-      setNotes(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
-
-  useEffect(() =>{
-    if(search === ""){
-      fetchAllNotes();
-    }
-    else{
-      fetchSearchedNotes();
-    }
-  }, [search])
-
-
   return (
-    <div className="mainPage d-flex flex-column align-items-center">
-      <div className="topPage">
-        <MainNavComp logOut={logOut}/>
-      </div>
-      <Flex flexDirection="row" alignItems="baseline" justifyContent="space-around" w="100%" mb="3%">
-        <Input onChange={(e) => {setSearch(e.target.value)}} type="text" ml="10%" mr="10%" placeholder="Search your notes..." border="1px solid #bbb" borderRadius="20px" w="50%"/>
-
-        <Button size="md" leftIcon={<BiPlusCircle />} colorScheme="green" onClick={addNoteActiveOnClick} w="8%">ADD NOTE</Button>
-        {/* {sort === "date-desc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date descending</Button>}
-        {sort === "date-asc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date ascending</Button>}
-        {sort === "fav" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by favorites</Button>} */}
-
-      </Flex>
-      {addNoteActive === "Active" && <AddNote addNoteActiveOnClick={addNoteActiveOnClick} email={email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}
-      <Flex maxW="100%" minH="80vh" flexDirection="row" flexWrap="wrap" pl="3%" pr="3%">
-      {notes.map(e => (
-        <Note key={e.note_id} note_id={e.note_id} type={e.type} title={e.title} content={e.content} email={email} notes={notes} fetchAllNotes={fetchAllNotes}/>
-      ))}
-      </Flex>
-    </div>
+    <Flex flexDir="column" alignItems="center">
+      <Box w="100%" h="20vh" bg="FFF">
+        <MainNavComp logOut={logOut} activePage={activePage} setActivePage={setActivePage}/>
+      </Box>
+      {activePage === "note" &&
+        <>
+          <NotePage email={email}/>
+        </>
+      }
+      {activePage === "todo" &&
+        <>
+          <TodoPage email={email}/>
+        </>
+      }
+      {activePage === "profile" &&
+        <>
+          <ProfilePage/>
+        </>
+      }
+    </Flex>
   );
 }

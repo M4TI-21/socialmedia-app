@@ -6,13 +6,3 @@ body{
     margin: 0;
     padding: 0;
 }
-
-.mainPageContent{
-    background-color: none;
-}
-
-.topPage{
-    width: 100%;
-    background-color: #fff;
-    height: 20vh;
-}

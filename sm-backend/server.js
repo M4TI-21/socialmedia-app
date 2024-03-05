@@ -100,7 +100,7 @@ app.post("/main/createnote", async (req, res) => {
     const dateValue = dateNow.toISOString().split('T')[0] + ' ' + dateNow.toTimeString().split(' ')[0];
     const values = [req.body.email, req.body.title, req.body.content, dateValue, dateValue, false];
     try{
-        await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date,, favorite) VALUES (?)", [values]);
+        await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date, favorite) VALUES (?)", [values]);
         res.json({status: "Note created successfully"});
     }
     catch(error){
@@ -198,7 +198,7 @@ app.post("/main/searchnotes", async (req, res) => {
 //TASKS QUERIES
 
 //create tasks
-app.put("/main/inserttodo/:id", async (req, res) => {
+app.put("/main/inserttodo", async (req, res) => {
     const content = req.body.content;
     const email = req.body.email;
     const values = [email, content, 0];

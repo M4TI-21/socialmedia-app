@@ -1,10 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
-import { Heading, Container, Flex, Button, IconButton, Textarea, Text, Input } from "@chakra-ui/react"
+import { Heading, Container, Flex, Button, IconButton, Textarea, Text } from "@chakra-ui/react"
 import { CloseIcon } from "@chakra-ui/icons"
 
-export default function CreateNote1(props) {
+export default function CreateNote(props) {
     const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
     const [errorMsg, setErrorMsg] = useState([]);
 
     const noteValidation = () => {
@@ -17,19 +18,21 @@ export default function CreateNote1(props) {
           error.title = "";
         }
     
+        if(content === ""){
+          error.content = "*Enter your note"
+        }
+        else{
+          error.content = "";
+        }
+    
         return error;
       }
 
-    const email = props.email;
-    const type = "Todo Note";
-    const content = "";
     const addNote = async () => {
-        axios.post('http://localhost:8080/main/createnote', {email, title, content, type})
+        const email = props.email;
+        axios.post('http://localhost:8080/main/createnote', {email, title, content})
         .then((res) => {
-            if(res.data.status === "Note created successfully"){
-            console.log("Note created");
             props.fetchAllNotes();
-            }
         })
         .catch((err) => {
             console.log(err);
@@ -38,14 +41,13 @@ export default function CreateNote1(props) {
     
     const addNoteOnClick = (e) => {
         e.preventDefault();
-        const error = noteValidation(title);
+        const error = noteValidation(title, content);
         setErrorMsg(error);
 
-        if(error.title !== ""){
+        if(error.title !== "" || error.content !== ""){
             console.log("Error");
         }
         else{
-            props.setActive1("Inactive");
             props.setAddNoteActive("Inactive");
             addNote(); 
         }
@@ -53,7 +55,7 @@ export default function CreateNote1(props) {
 
     return(
         <Container pos="absolute" zIndex="99" minW="100vw" minH="100vh" centerContent bg="blackAlpha.700">
-            <Container pos="absolute" minW="30%" maxW="40%" minH="35%" maxH="40%"
+            <Container pos="absolute" minW="30%" maxW="40%" minH="80%" maxH="80%"
                 bg="#dfe1e2" mt="10vh" borderRadius="50px" p="1%">
                 <Heading size="2xl" textAlign="center">Create your note:</Heading>
                 <Flex mt="3%" justifyContent="space-evenly" alignItems="center" flexDirection="column" flexWrap="wrap">
@@ -61,16 +63,19 @@ export default function CreateNote1(props) {
                     <Flex flexDirection="column" alignItems="center" w="90%" h="10vh">
                         <Textarea onChange={e => setTitle(e.target.value)} resize="none" placeholder="Title your note!" fontSize="2xl" 
                         textAlign="center" maxLength="60" w="inherit" h="inherit"/>
-                        {errorMsg.title && <Text>{errorMsg.title}</Text>}
+
+                        {errorMsg.title && <Text color="red">{errorMsg.title}</Text>}
                     </Flex>
                     
-                    <Flex flexDirection="column" alignItems="center" w="90%" h="5vh">
-                        <Text fontSize="xl" mt="3%">You will be allowed to add your tasks after creating the note</Text>
+                    <Flex flexDirection="column" alignItems="center" w="90%" h="50vh">
+                        <Textarea onChange={e => setContent(e.target.value)} resize="none" placeholder="Input your note here." fontSize="xl" 
+                        textAlign="start" w="inherit" h="inherit" mt="2%"/>
+                        {errorMsg.content && <Text color="red">{errorMsg.content}</Text>}
                     </Flex>
 
                     <Button onClick={addNoteOnClick} colorScheme="green" w="40%" h="5vh" aria-label="Submit note" mt="3%">Submit</Button>
                 </Flex>
-                <IconButton size="sm" icon={<CloseIcon />} onClick={props.closeOnClick} colorScheme="red" pos="absolute" top="4%" right="3%" aria-label="Close window"></IconButton>
+                <IconButton size="sm" icon={<CloseIcon />} onClick={props.addNoteActiveOnClick} colorScheme="red" pos="absolute" top="4%" right="3%" aria-label="Close window"></IconButton>
             </Container>
         </Container>
     );

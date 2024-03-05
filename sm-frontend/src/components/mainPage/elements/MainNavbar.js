@@ -8,16 +8,31 @@ export default function MainNavComp(props) {
         <Container bg="#dfe1e2" minW="100vw" minH="14vh" maxH="14vh" pos="sticky" flexDir="row" alignContent="flex-start">
             <Flex flexDir="row" w="100%" minH="14vh" maxH="14vh" alignItems="center">
 
-                <Flex as={Link} to="/main" flexDir="column" alignItems="center" maxW="8vw" maxH="14vh" pt="1vh">
+                <Flex onClick={() => props.setActivePage("note")} flexDir="column" alignItems="center" maxW="8vw" maxH="14vh" pt="1vh">
                     <Image alt="logo" src={logo} boxSize='60px'/>
                     <Text fontWeight="700" fontSize="xl">Sigma</Text>
                 </Flex>
 
                 <Spacer />
-                <Flex flexDir="row" w="30vw" maxH="20vh" mr="1%">
-                    <Button leftIcon={<BiIdCard />} as={Link} to="/todo" w="8vw">Check ToDos</Button>
-                    <Spacer/>
-                    <Button leftIcon={<BiIdCard />} as={Link} to="/profile" w="8vw">Profile</Button>
+                <Flex flexDir="row" w="20vw" maxH="20vh" mr="1%">
+                    {props.activePage === "note" &&
+                        <>
+                        <Button colorScheme="blue" onClick={() => props.setActivePage("todo")} w="8vw">Check ToDos</Button>
+                        </>
+                    }
+                    {props.activePage === "todo" &&
+                        <>
+                        <Button colorScheme="blue" onClick={() => props.setActivePage("note")} w="8vw">Return to notes</Button>
+                        </>
+                    }
+                    {props.activePage === "profile" &&
+                        <>
+                        <Button colorScheme="blue" onClick={() => props.setActivePage("note")} w="8vw">Return to notes</Button>
+                        </>
+                    }
+                    <Spacer />
+                    
+                    <Button leftIcon={<BiIdCard />} onClick={() => props.setActivePage("profile")} w="8vw">Profile</Button>
                     <Spacer/>
                     <Menu>
                         <MenuButton as={IconButton} aria-label="options" icon={<BiMenu />} />

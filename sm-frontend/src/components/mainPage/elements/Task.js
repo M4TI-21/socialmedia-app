@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Text, Flex, Button, Input, Textarea } from "@chakra-ui/react";
+import { Text, Flex, Button, Textarea } from "@chakra-ui/react";
 import { BiEditAlt, BiTrash } from "react-icons/bi";
 import { useState } from "react";
 
@@ -125,10 +125,10 @@ export default function Task(props) {
         }
 
         {props.finished === 1 &&
-           <Flex flexDir="row" alignItems="center" pr="2%" pl="2%" bg="#dfe1e2" w="50vw" minH="5vh" borderRadius="50px" m="2vh">
+           <Flex flexDir="row" alignItems="center" pr="2%" pl="2%" bg="#8B8C8C" w="50vw" minH="5vh" borderRadius="50px" m="2vh">
 
                 <Flex flexDir="row" alignItems="center" w="40vw">
-                    <Text fontSize="md" fontWeight="bold" as="del">{props.content}</Text>
+                    <Text fontSize="md" fontWeight="bold" as="del" color="#4D4D4D">{props.content}</Text>
                 </Flex>
 
                 <Flex flexDir="row" justifyContent="space-between" w="14vw">
