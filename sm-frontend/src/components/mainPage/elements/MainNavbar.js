@@ -14,25 +14,25 @@ export default function MainNavComp(props) {
                 </Flex>
 
                 <Spacer />
-                <Flex flexDir="row" w="20vw" maxH="20vh" mr="1%">
+                <Flex flexDir="row" minW="20vw" maxW="100vw" maxH="20vh" mr="1%">
                     {props.activePage === "note" &&
                         <>
-                        <Button colorScheme="blue" onClick={() => props.setActivePage("todo")} w="8vw">Check ToDos</Button>
+                        <Button colorScheme="blue" onClick={() => props.setActivePage("todo")} minW="8vw">Check ToDos</Button>
                         </>
                     }
                     {props.activePage === "todo" &&
                         <>
-                        <Button colorScheme="blue" onClick={() => props.setActivePage("note")} w="8vw">Return to notes</Button>
+                        <Button colorScheme="blue" onClick={() => props.setActivePage("note")} minW="8vw">Return to notes</Button>
                         </>
                     }
                     {props.activePage === "profile" &&
                         <>
-                        <Button colorScheme="blue" onClick={() => props.setActivePage("note")} w="8vw">Return to notes</Button>
+                        <Button colorScheme="blue" onClick={() => props.setActivePage("note")} minW="8vw">Return to notes</Button>
                         </>
                     }
                     <Spacer />
                     
-                    <Button leftIcon={<BiIdCard />} onClick={() => props.setActivePage("profile")} w="8vw">Profile</Button>
+                    <Button leftIcon={<BiIdCard />} onClick={() => props.setActivePage("profile")} minW="8vw">Profile</Button>
                     <Spacer/>
                     <Menu>
                         <MenuButton as={IconButton} aria-label="options" icon={<BiMenu />} />

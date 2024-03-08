@@ -101,9 +101,8 @@ export default function TodoPage(props) {
         }
         <Flex flexDir="row" alignItems="center" justifyContent="space-between" mb="4vh" w="25%">
             <Textarea onChange={e => setTodoContent(e.target.value)} type="text" placeholder="Create new task" border="1px solid #bbb" borderRadius="20px" w="20vw" h="5vh" resize="none"/>
-            <Button onClick={addTask} >Submit</Button>
+            <Button onClick={addTask}>Submit</Button>
         </Flex>
-        
 
     <OrderedList alignItems="center">
         {tasks.map(e => (

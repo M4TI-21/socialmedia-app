@@ -12,7 +12,8 @@ import { Flex, Box } from "@chakra-ui/react";
 export default function MainPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
-  const [activePage, setActivePage] = useState("note")
+  const [tag, setTag] = useState('');
+  const [activePage, setActivePage] = useState("note");
 
   const populateMainData = () => {
     axios.get("http://localhost:8080/main/user", {
@@ -22,6 +23,7 @@ export default function MainPage() {
     })
     .then((res) => {
       setEmail(res.data.email);
+      setTag(res.data.tag);
     })
     .catch((err) => {
       console.log(err);
@@ -54,7 +56,7 @@ export default function MainPage() {
       </Box>
       {activePage === "note" &&
         <>
-          <NotePage email={email}/>
+          <NotePage email={email} tag={tag}/>
         </>
       }
       {activePage === "todo" &&

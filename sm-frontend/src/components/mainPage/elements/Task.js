@@ -132,7 +132,7 @@ export default function Task(props) {
                 </Flex>
 
                 <Flex flexDir="row" justifyContent="space-between" w="14vw">
-                <Button colorScheme="blue" size="sm" w="8vw" onClick={() => resetFinished(props.todo_id)}>Reset completed</Button>
+                <Button colorScheme="blue" size="sm" w="8vw" onClick={() => resetFinished(props.todo_id)}>Reset</Button>
                 <Button leftIcon={<BiTrash />} colorScheme="red" size="sm" w="4vw" onClick={() => deleteTaskOnClick(props.todo_id)}>Delete</Button>
                 </Flex>
             </Flex>
