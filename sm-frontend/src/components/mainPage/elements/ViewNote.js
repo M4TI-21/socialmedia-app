@@ -10,20 +10,22 @@ export default function ViewNote(props) {
     const [edit, setEdit] = useState(false);
     const [updatedTitle, setUpdatedTitle] = useState(props.title);
     const [updatedContent, setUpdatedContent] = useState(props.content);
+    const [updatedColor, setUpdatedColor] = useState(props.color);
     const [deleteAlertActive, setDeleteAlertActive] = useState("Inactive")
 
     const editNote = async (id) => {
         const title = updatedTitle;
         const content = updatedContent;
+        const color = updatedColor;
         const noteID = id;
         axios.put(`http://localhost:8080/main/editnote/${noteID}`, 
         {
             noteID, 
             title, 
-            content
+            content,
+            color
         })
-        .then((res) => {
-            console.log("Note updated");
+        .then(() => {
             props.fetchAllNotes(id);
         })
         .catch((err) => {
@@ -80,12 +82,11 @@ export default function ViewNote(props) {
                         <Text fontWeight="bold" color="#666">Created: <Moment color="#666" format="DD MMM YYYY HH:mm">{props.creationDate}</Moment></Text>
                         <Text fontWeight="bold" color="#666">Last update: <Moment color="#666" format="DD MMM YYYY HH:mm">{props.updateDate}</Moment></Text>
                         <Flex flexDir="row">
-                            <Text fontWeight="bold" color="#666">Author: &nbsp;s</Text>
+                            <Text fontWeight="bold" color="#666">Author: &nbsp;</Text>
                             <Text fontWeight="bold">{props.tag}</Text>
                         </Flex>
                         
                     </Flex>
-
                 </Container>
             </Container>
             {deleteAlertActive === "Active" && <DeleteNote note_id={props.note_id} fetchAllNotes={props.fetchAllNotes} deleteAlert={deleteAlert}/>}
@@ -98,17 +99,22 @@ export default function ViewNote(props) {
                    
                     <Flex mb="5%" pt="5%" textAlign="center" w="36vw">
                         <Textarea onChange={e =>setUpdatedTitle(e.target.value)} bg="#eee" fontSize="2xl" resize="none" border="none" textAlign="center" maxLength="60" 
-                        fontWeight="bold">{props.title}</Textarea>
+                        fontWeight="bold" defaultValue={props.content}/>
                     </Flex>
 
-                    <Flex justifyContent="space-evenly" alignItems="center" flexDirection="column" flexWrap="wrap" h="45vh" maxW="36vw" >
-                        <Textarea onChange={e =>setUpdatedContent(e.target.value)} fontSize="lg" resize="none" border="none" _focusVisible={false} h="100%" bg="#eee"
-                        >{props.content}</Textarea>
+                    <Flex justifyContent="space-evenly" alignItems="center" flexDirection="column" flexWrap="wrap" h="40vh" maxW="36vw" >
+                        <Textarea onChange={e =>setUpdatedContent(e.target.value)} fontSize="lg" resize="none" border="none" _focusVisible={false} h="100%" bg="#eee" defaultValue={props.content}/>
+                        
+                    </Flex>
+                    
+                    <Flex h="5vh" w="36vw" justifyContent="flex-start" alignItems="center">
+                        <Text fontSize="lg" fontWeight="semibold" mt="auto" mb="auto">Select new backgroud color:&nbsp;&nbsp;&nbsp;</Text>
+                        <input type="color" onChange={e =>setUpdatedColor(e.target.value)} defaultValue={props.color} />
                     </Flex>
 
                     <Flex justifyContent="space-evenly" alignItems="center" h="20%" w="inherit">
-                        <Button leftIcon={<BiEditAlt />} colorScheme="green" size="md" onClick={() => editNoteOnClick(props.note_id)}>Submit changes</Button>
                         <Button colorScheme="red" size="md" onClick={() => cancelEditOnClick(props.note_id)}>Cancel</Button>
+                        <Button leftIcon={<BiEditAlt />} colorScheme="green" size="md" onClick={() => editNoteOnClick(props.note_id)}>Submit changes</Button>
                     </Flex>
                 </Container>
             </Container>

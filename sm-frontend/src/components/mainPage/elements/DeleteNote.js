@@ -7,7 +7,6 @@ export default function DeleteNote(props) {
         const noteID = id;
         axios.delete(`http://localhost:8080/main/deletenote/${noteID}`, {data: {noteID: noteID}})
         .then((res) => {
-            console.log("Note deleted");
             props.fetchAllNotes();
         })
         .catch((err) => {

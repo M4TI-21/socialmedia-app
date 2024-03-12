@@ -3,7 +3,7 @@ import CreateNote from "./elements/CreateNote";
 import "./mainPageStyle.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import {Flex, Button, Input } from "@chakra-ui/react";
+import {Flex, Button, Input, Text } from "@chakra-ui/react";
 import { BiPlusCircle } from "react-icons/bi";
 
 export default function NotePage(props) {
@@ -69,10 +69,14 @@ export default function NotePage(props) {
 
     </Flex>
     {addNoteActive === "Active" && <CreateNote addNoteActiveOnClick={addNoteActiveOnClick} email={props.email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}
-
-    <Flex maxW="100%" minH="40vh" flexDirection="row" justifyContent="center" flexWrap="wrap" pl="3%" pr="3%">
+    <Flex justifyContent="flex-start" w="95%">
+        <Text>Number of notes: {notes.length}</Text>
+    </Flex>
+    
+    <Flex w="100%" minH="40vh" flexDirection="row" justifyContent="center" flexWrap="wrap" pl="3%" pr="3%">
         {notes.map(e => (
-        <Note key={e.note_id} note_id={e.note_id} tag={props.tag} title={e.title} creationDate = {e.creation_date} updateDate={e.update_date} content={e.content} email={props.email} notes={notes} fetchAllNotes={fetchAllNotes}/>
+        <Note key={e.note_id} note_id={e.note_id} tag={props.tag} title={e.title} creationDate={e.creation_date} updateDate={e.update_date} content={e.content} email={props.email}
+        color={e.color} favorite={e.favorite} notes={notes} fetchAllNotes={fetchAllNotes}/>
         ))}
     </Flex>
     

@@ -98,9 +98,12 @@ app.get("/main/user", async (req, res) => {
 app.post("/main/createnote", async (req, res) => {
     const dateNow = new Date();
     const dateValue = dateNow.toISOString().split('T')[0] + ' ' + dateNow.toTimeString().split(' ')[0];
-    const values = [req.body.email, req.body.title, req.body.content, dateValue, dateValue, false];
+    const noteColors = ['#ff7eb9', "#ff65a3", "#7afcff", "#feff9c", "#fff740", "#e4a8b9", "#e4eeff", "#cdfc93", "#ffc14a", "#46c45a"];
+    const randomColor = noteColors[Math.floor(Math.random() * noteColors.length)];
+
+    const values = [req.body.email, req.body.title, req.body.content, dateValue, dateValue, false, randomColor];
     try{
-        await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date, favorite) VALUES (?)", [values]);
+        await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date, favorite, color) VALUES (?)", [values]);
         res.json({status: "Note created successfully"});
     }
     catch(error){
@@ -138,7 +141,7 @@ app.delete("/main/deletenote/:id", async (req, res) => {
                 res.json({status: error});
             }
             else{
-                return res.json({status: "Note deleted successfully"});
+                return res.json(data);
             }
         })
     }
@@ -155,14 +158,15 @@ app.put("/main/editnote/:id", async (req, res) => {
     const content = req.body.content;
     const dateNow = new Date();
     const dateValue = dateNow.toISOString().split('T')[0] + ' ' + dateNow.toTimeString().split(' ')[0];
+    const color = req.body.color;
 
     try{
-        await db.query("UPDATE notes SET title = ?, content = ?, update_date = ? WHERE note_id = ?", [title, content, dateValue, id], (error, data) => {
+        await db.query("UPDATE notes SET title = ?, content = ?, update_date = ?, color = ? WHERE note_id = ?", [title, content, dateValue, color, id], (error, data) => {
             if(error){
                 res.json({status: error});
             }
             else{
-                return res.json({status: "Note updated successfully"});
+                return res.json(data);
             }
         })
     }
@@ -171,6 +175,62 @@ app.put("/main/editnote/:id", async (req, res) => {
     }
 })
 
+//set favorite
+app.put("/main/setfavorite/:id", async (req, res) => {
+    const id = req.body.noteID;
+    try{
+        await db.query("UPDATE notes SET favorite = ? WHERE note_id = ?", [1, id], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+    }
+})
+
+//unset favorite
+app.put("/main/unsetfavorite/:id", async (req, res) => {
+    const id = req.body.noteID;
+    try{
+        await db.query("UPDATE notes SET favorite = ? WHERE note_id = ?", [0, id], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+    }
+})
+
+//fetch favorite notes
+app.get("/main/notes/fetch_fav", async (req, res) => {
+    const token = req.headers["x-access-token"];
+    try{
+        const decoded = jwt.verify(token, "secret");
+        const email = decoded.email;
+        await db.query("SELECT * FROM notes WHERE user_email = ? AND favorite = ? ORDER BY update_date DESC", [email, true], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+        res.json({status: "Invalid token"});
+    }
+})
 
 //note search
 app.post("/main/searchnotes", async (req, res) => {
@@ -226,7 +286,7 @@ app.delete("/main/deletetask/:id", async (req, res) => {
                 res.json({status: error});
             }
             else{
-                return res.json({status: "Task deleted successfully"});
+                return res.json(data);
             }
         })
     }
@@ -268,7 +328,7 @@ app.put("/main/edittask/:id", async (req, res) => {
                 res.json({status: error});
             }
             else{
-                return res.json({status: "Task updated successfully"});
+                return res.json(data);
             }
         })
     }
@@ -310,7 +370,7 @@ app.put("/main/completetask/:id", async (req, res) => {
                 res.json({status: error});
             }
             else{
-                return res.json({status: "Task updated successfully"});
+                return res.json(data);
             }
         })
     }

@@ -66,7 +66,7 @@ export default function MainPage() {
       }
       {activePage === "profile" &&
         <>
-          <ProfilePage/>
+          <ProfilePage email={email} tag={tag}/>
         </>
       }
     </Flex>
