@@ -17,17 +17,17 @@ export default function MainNavComp(props) {
                 <Flex flexDir="row" minW="20vw" maxW="100vw" maxH="20vh" mr="1%">
                     {props.activePage === "note" &&
                         <>
-                        <Button colorScheme="blue" onClick={() => props.setActivePage("todo")} minW="8vw">Check ToDos</Button>
+                        <Button bg="#333" color='white' _hover={{ bg: "#555"}}  onClick={() => props.setActivePage("todo")} minW="8vw">Check ToDos</Button>
                         </>
                     }
                     {props.activePage === "todo" &&
                         <>
-                        <Button colorScheme="blue" onClick={() => props.setActivePage("note")} minW="8vw">Return to notes</Button>
+                        <Button bg="#333" color='white' _hover={{ bg: "#555"}}  onClick={() => props.setActivePage("note")} minW="8vw">Return to notes</Button>
                         </>
                     }
                     {props.activePage === "profile" &&
                         <>
-                        <Button colorScheme="blue" onClick={() => props.setActivePage("note")} minW="8vw">Return to notes</Button>
+                        <Button bg="#333" color='white' _hover={{ bg: "#555"}}  onClick={() => props.setActivePage("note")} minW="8vw">Return to notes</Button>
                         </>
                     }
                     <Spacer />

@@ -2,7 +2,8 @@ import Task from "./elements/Task";
 import "./mainPageStyle.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Flex, OrderedList, Input, Button, Textarea, Text } from "@chakra-ui/react";
+import { Flex, OrderedList, Input, Button, Textarea, Text, InputGroup, InputLeftAddon } from "@chakra-ui/react";
+import { SearchIcon } from '@chakra-ui/icons'
 
 export default function TodoPage(props) {
   const [tasks, setTasks] = useState([]);
@@ -91,8 +92,13 @@ export default function TodoPage(props) {
   return (
     <>
     <Flex flexDir="column" alignItems="center" w="100%">
-        <Flex flexDir="row" w="100%">
-            <Input onChange={(e) => {setSearch(e.target.value)}} type="text" mb="4vh" placeholder="Search task..." border="1px solid #bbb" borderRadius="20px" w="40vw" ml="30%"/>
+        <Flex>
+        <InputGroup>
+            <InputLeftAddon>
+            <SearchIcon />
+            </InputLeftAddon>
+            <Input onChange={(e) => {setSearch(e.target.value)}} type="text" mb="4vh" placeholder="Search task..." w="40vw"/>
+        </InputGroup>
         </Flex>
         {errorMsg.todoContent && 
             <Flex bg="#ffbaba" border="1px" borderColor="#a70000" w="15%" h="4vh" borderRadius="10px" justifyContent="center" mb="1%">

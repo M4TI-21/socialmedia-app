@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Heading, Container, Flex, IconButton, Text, Button, Textarea } from "@chakra-ui/react"
+import { Heading, Container, Flex, IconButton, Text, Button, Textarea, Menu, MenuItem, MenuList, MenuButton } from "@chakra-ui/react"
 import { CloseIcon } from "@chakra-ui/icons"
-import { BiEditAlt, BiTrash } from "react-icons/bi";
+import { BiEditAlt, BiTrash, BiMenu } from "react-icons/bi";
 import axios from "axios";
 import DeleteNote from "./DeleteNote";
 import Moment from 'react-moment';
@@ -12,6 +12,8 @@ export default function ViewNote(props) {
     const [updatedContent, setUpdatedContent] = useState(props.content);
     const [updatedColor, setUpdatedColor] = useState(props.color);
     const [deleteAlertActive, setDeleteAlertActive] = useState("Inactive")
+    const [bmList, setBmList] = useState(props.bookmarks)
+    const [bookmark, setBookmark] = useState("")
 
     const editNote = async (id) => {
         const title = updatedTitle;
@@ -49,7 +51,6 @@ export default function ViewNote(props) {
         }
     }
 
-
     const deleteAlert = (e) => {
         e.preventDefault();
         if(deleteAlertActive === "Active"){
@@ -60,24 +61,51 @@ export default function ViewNote(props) {
         }
     }
 
+    const addBookmark = async (id) => {
+        const noteID = id;
+        axios.put(`http://localhost:8080/main/addbookmark/${noteID}`, 
+        {
+            noteID,
+            bookmark
+        })
+        .then(() => {
+            props.fetchAllNotes(id);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+
     return(
         <>
         {edit === false &&
             <>
-            <Container pos="fixed" zIndex="99" minW="100vw" minH="100vh"  centerContent bg="blackAlpha.700" top="0">
+            <Container pos="fixed" zIndex="97" minW="100vw" minH="100vh"  centerContent bg="blackAlpha.700" top="0">
                 <Container pos="absolute" minW="30%" maxW="40%" h="80vh" bg="#dfe1e2" mt="10vh" borderRadius="30px" p="2%">
                     <IconButton size="sm" icon={<CloseIcon />} onClick={props.displayNote} colorScheme="red" pos="absolute" top="4%" right="3%" aria-label="Close window"></IconButton>
                     
                     <Heading size="xl" textAlign="center" mb="5%">{props.title}</Heading>
 
-                    <Flex maxH="50vh" maxW="36vw" mb="5%">
+                    <Flex maxH="46vh" maxW="36vw" mb="5vh">
                         <Text fontSize="medium" maxW="36vw" h="50vh" overflow="auto">{props.content}</Text>
                     </Flex>
 
-                    <Flex flexDir="row" justifyContent="space-around" w="36vw" mb="8%">
+                    <Flex alignItems="center" justifyContent="center" mb="1vh">
+                        <Menu>
+                            <MenuButton as={Button} aria-label="options" leftIcon={<BiMenu />}>Bookmarks</MenuButton>
+                            <MenuList>
+                                {bmList.map(e => (
+                                    <MenuItem onClick={() => {setBookmark(e.bookmark_id); addBookmark(props.note_id)}} key={e.bookmark_id}>{e.bm_name}</MenuItem>
+                                ))}
+                            </MenuList>
+                        </Menu>
+                    </Flex>
+
+                    <Flex flexDir="row" justifyContent="space-around" w="36vw" mb="5%">
                         <Button leftIcon={<BiTrash />} colorScheme="red" minW="8vw" onClick={deleteAlert}>Delete</Button>
                         <Button leftIcon={<BiEditAlt />} colorScheme="green" minW="8vw" onClick={() => editNoteOnClick(props.note_id)}>Edit</Button> 
                     </Flex>
+
                     <Flex flexDir="row" justifyContent="space-evenly">
                         <Text fontWeight="bold" color="#666">Created: <Moment color="#666" format="DD MMM YYYY HH:mm">{props.creationDate}</Moment></Text>
                         <Text fontWeight="bold" color="#666">Last update: <Moment color="#666" format="DD MMM YYYY HH:mm">{props.updateDate}</Moment></Text>
@@ -104,7 +132,6 @@ export default function ViewNote(props) {
 
                     <Flex justifyContent="space-evenly" alignItems="center" flexDirection="column" flexWrap="wrap" h="40vh" maxW="36vw" >
                         <Textarea onChange={e =>setUpdatedContent(e.target.value)} fontSize="lg" resize="none" border="none" _focusVisible={false} h="100%" bg="#eee" defaultValue={props.content}/>
-                        
                     </Flex>
                     
                     <Flex h="5vh" w="36vw" justifyContent="flex-start" alignItems="center">

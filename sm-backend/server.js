@@ -255,6 +255,68 @@ app.post("/main/searchnotes", async (req, res) => {
     }
 })
 
+//fetch note bookmarks
+app.get("/main/notes/bookmarks", async (req, res) => {
+    const token = req.headers["x-access-token"];
+    try{
+        const decoded = jwt.verify(token, "secret");
+        const email = decoded.email;
+        await db.query("SELECT * FROM bookmarks WHERE bm_email = ?", [email], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+        res.json({status: "Invalid token"});
+    }
+})
+
+//set bookmark
+app.put("/main/addbookmark/:id", async (req, res) => {
+    const id = req.body.noteID;
+    const bookmark = req.body.bookmark;
+    try{
+        await db.query("UPDATE notes SET bookmark = ? WHERE note_id = ?", [bookmark, id], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+    }
+})
+
+//fetch notes with bookmark
+app.get("/main/notes/fetch_note_group", async (req, res) => {
+    const token = req.headers["x-access-token"];
+    const bookmark = req.body.bookmark
+    try{
+        const decoded = jwt.verify(token, "secret");
+        const email = decoded.email;
+        await db.query("SELECT * FROM notes WHERE user_email = ? AND bookmark = ? ORDER BY update_date DESC", [email, bookmark], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+        res.json({status: "Invalid token"});
+    }
+})
+
 //TASKS QUERIES
 
 //create tasks
