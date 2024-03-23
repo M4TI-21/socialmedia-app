@@ -3,9 +3,10 @@ import CreateNote from "./elements/CreateNote";
 import "./mainPageStyle.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import {Flex, Button, Input, Text, InputGroup, InputLeftAddon, Menu, MenuButton, MenuList, MenuItem, IconButton } from "@chakra-ui/react";
+import {Flex, Button, Input, Text, InputGroup, InputLeftAddon, Menu, MenuButton, MenuList, MenuItem, MenuDivider } from "@chakra-ui/react";
 import { SearchIcon, AddIcon } from '@chakra-ui/icons'
 import { BiMenu } from "react-icons/bi";
+import NewBookmark from "./elements/NewBookmark";
 
 export default function NotePage(props) {
   const [addNoteActive, setAddNoteActive] = useState("Inactive");
@@ -14,6 +15,7 @@ export default function NotePage(props) {
   const [search, setSearch] = useState("");
   const [bookmarks, setBookmarks] = useState([]);
   const [bookmark, setBookmark] = useState();
+  const [newBookmark, setNewBookmark] = useState("Inactive")
 
   const addNoteActiveOnClick = (e) => {
     e.preventDefault();
@@ -98,6 +100,16 @@ export default function NotePage(props) {
     fetchNoteGroup();
   }
 
+  const addNewBookmark = (e) => {
+    e.preventDefault();
+    if(newBookmark === "Active"){
+      setNewBookmark("Inactive");
+    }
+    else{
+      setNewBookmark("Active");
+    }
+  }
+
   return (
     <>
     <Flex>
@@ -112,21 +124,31 @@ export default function NotePage(props) {
         {sort === "date-asc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date ascending</Button>}
         {sort === "fav" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by favorites</Button>} */}
     <Menu>
-        <MenuButton as={IconButton} aria-label="options" icon={<BiMenu />} />
+      <MenuButton as={Button} aria-label="options" size="md" rightIcon={<BiMenu />}>Bookmarks &nbsp;</MenuButton>
         <MenuList>
             <MenuItem onClick={fetchAllNotes}>All notes</MenuItem>
             {bookmarks.map(e => (
               <MenuItem onClick={() => {setBookmark(e.bookmark_id); fetchGroup()}} key={e.bookmark_id}>{e.bm_name}</MenuItem>
             ))}
+            <MenuDivider />
+            <MenuItem onClick={addNewBookmark}>New bookmark</MenuItem>
         </MenuList>
     </Menu>
     </Flex>
-    {addNoteActive === "Active" && <CreateNote addNoteActiveOnClick={addNoteActiveOnClick} email={props.email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>}
-    <Flex justifyContent="flex-start" w="95%">
+    {addNoteActive === "Active" && 
+    <CreateNote addNoteActiveOnClick={addNoteActiveOnClick} email={props.email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>
+    }
+
+    <Flex justifyContent="center" mt="1%">
         <Text>Number of notes: {notes.length}</Text>
     </Flex>
+
     {addNoteActive === "Inactive" &&
     <Button position="fixed" zIndex="100" bottom="0" mb="2%" size="md" leftIcon={<AddIcon />} bg="#333" color='white' _hover={{ bg: "#555"}} onClick={addNoteActiveOnClick} minW="8vw">ADD NOTE</Button>
+    }
+
+    {newBookmark === "Active" &&
+    <NewBookmark />
     }
     
     <Flex w="100%" minH="40vh" flexDirection="row" justifyContent="center" flexWrap="wrap" pl="3%" pr="3%">

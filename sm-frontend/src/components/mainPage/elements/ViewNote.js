@@ -81,19 +81,22 @@ export default function ViewNote(props) {
         {edit === false &&
             <>
             <Container pos="fixed" zIndex="97" minW="100vw" minH="100vh"  centerContent bg="blackAlpha.700" top="0">
-                <Container pos="absolute" minW="30%" maxW="40%" h="80vh" bg="#dfe1e2" mt="10vh" borderRadius="30px" p="2%">
+                <Container pos="absolute" minW="30%" maxW="40%" h="80vh" bg="#dfe1e2" mt="10vh" borderRadius="20px" pt="1%" pl="2%" pr="2%">
                     <IconButton size="sm" icon={<CloseIcon />} onClick={props.displayNote} colorScheme="red" pos="absolute" top="4%" right="3%" aria-label="Close window"></IconButton>
                     
-                    <Heading size="xl" textAlign="center" mb="5%">{props.title}</Heading>
+                    <Heading size="large" textAlign="center" mb="5%">{props.title}</Heading>
 
-                    <Flex maxH="46vh" maxW="36vw" mb="5vh">
-                        <Text fontSize="medium" maxW="36vw" h="50vh" overflow="auto">{props.content}</Text>
+                    <Flex h="45vh" maxW="36vw">
+                        <Text fontSize="medium" maxW="36vw" maxH="45vh" overflow="auto">{props.content}</Text>
                     </Flex>
 
-                    <Flex alignItems="center" justifyContent="center" mb="1vh">
+                    <Flex alignItems="center" justifyContent="center" mt="3vh">
                         <Menu>
                             <MenuButton as={Button} aria-label="options" leftIcon={<BiMenu />}>Bookmarks</MenuButton>
                             <MenuList>
+                                {bmList.length === 0 && 
+                                    <MenuItem>No bookmarks</MenuItem>
+                                }
                                 {bmList.map(e => (
                                     <MenuItem onClick={() => {setBookmark(e.bookmark_id); addBookmark(props.note_id)}} key={e.bookmark_id}>{e.bm_name}</MenuItem>
                                 ))}
@@ -106,7 +109,7 @@ export default function ViewNote(props) {
                         <Button leftIcon={<BiEditAlt />} colorScheme="green" minW="8vw" onClick={() => editNoteOnClick(props.note_id)}>Edit</Button> 
                     </Flex>
 
-                    <Flex flexDir="row" justifyContent="space-evenly">
+                    <Flex flexDir="row" justifyContent="space-evenly" bottom="1">
                         <Text fontWeight="bold" color="#666">Created: <Moment color="#666" format="DD MMM YYYY HH:mm">{props.creationDate}</Moment></Text>
                         <Text fontWeight="bold" color="#666">Last update: <Moment color="#666" format="DD MMM YYYY HH:mm">{props.updateDate}</Moment></Text>
                         <Flex flexDir="row">

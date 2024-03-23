@@ -15,15 +15,14 @@ const db = mysql.createConnection({
 })
 
 app.listen(8080, (req, res) => {
-    console.log("Listening");
 });
 
 //insert register data to db
 app.post("/register", async (req, res) => {
+    const {email, name, tag, dob, pass} = req.body;
+    const values = [email, name, tag, dob, pass];
     try{
-        const {email, name, tag, dob, pass} = req.body;
-        const values = [email, name, tag, dob, pass];
-        await db.query("SELECT email FROM user_data WHERE email = ?", email, (error, data) => {
+        await db.query("SELECT email FROM user WHERE email = ?", email, (error, data) => {
             if(error){
                 res.json({status: error});
             }
@@ -32,7 +31,7 @@ app.post("/register", async (req, res) => {
             }
             else{
                 res.json("Created account");
-                db.query("INSERT INTO user_data (email, name, tag, date_of_birth, pass) VALUES (?)", [values]);
+                db.query("INSERT INTO user (email, name, tag, date_of_birth, pass) VALUES (?)", [values]);
             }
         })
     }
@@ -45,7 +44,7 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
     try{
         const {loginEmail, loginPass} = req.body;
-        await db.query("SELECT email, pass FROM user_data WHERE email = ?", loginEmail, (error, data) => {
+        await db.query("SELECT email, pass FROM user WHERE email = ?", loginEmail, (error, data) => {
             if(error){
                 res.json({status: error});
             }
@@ -74,10 +73,10 @@ app.post("/login", async (req, res) => {
 //fetch logged user data
 app.get("/main/user", async (req, res) => {
     const token = req.headers["x-access-token"];
+    const decoded = jwt.verify(token, "secret");
+    const email = decoded.email;
     try{
-        const decoded = jwt.verify(token, "secret");
-        const email = decoded.email;
-        await db.query("SELECT * FROM user_data WHERE email = ?", [email], (error, data) => {
+        await db.query("SELECT * FROM user WHERE email = ?", [email], (error, data) => {
             if(error){
                 res.json({status: error});
             }
@@ -114,9 +113,9 @@ app.post("/main/createnote", async (req, res) => {
 //fetch notes
 app.get("/main/notes/fetch_date_desc", async (req, res) => {
     const token = req.headers["x-access-token"];
+    const decoded = jwt.verify(token, "secret");
+    const email = decoded.email;
     try{
-        const decoded = jwt.verify(token, "secret");
-        const email = decoded.email;
         await db.query("SELECT * FROM notes WHERE user_email = ? ORDER BY update_date DESC", [email], (error, data) => {
             if(error){
                 res.json({status: error});
@@ -214,9 +213,10 @@ app.put("/main/unsetfavorite/:id", async (req, res) => {
 //fetch favorite notes
 app.get("/main/notes/fetch_fav", async (req, res) => {
     const token = req.headers["x-access-token"];
+    const decoded = jwt.verify(token, "secret");
+    const email = decoded.email;
     try{
-        const decoded = jwt.verify(token, "secret");
-        const email = decoded.email;
+
         await db.query("SELECT * FROM notes WHERE user_email = ? AND favorite = ? ORDER BY update_date DESC", [email, true], (error, data) => {
             if(error){
                 res.json({status: error});
@@ -235,10 +235,10 @@ app.get("/main/notes/fetch_fav", async (req, res) => {
 //note search
 app.post("/main/searchnotes", async (req, res) => {
     const token = req.body.headers["x-access-token"];
+    const decoded = jwt.verify(token, "secret");
+    const email = decoded.email;
+    const search = req.body.search;
     try{
-        const decoded = jwt.verify(token, "secret");
-        const email = decoded.email;
-        const search = req.body.search;
         await db.query("SELECT * FROM notes WHERE user_email = ? AND content LIKE ? OR title LIKE ? ORDER BY update_date DESC", [email, '%'+search+'%', '%'+search+'%'], (error, data) => {
             if(error){
                 res.json({status: error});
@@ -258,9 +258,9 @@ app.post("/main/searchnotes", async (req, res) => {
 //fetch note bookmarks
 app.get("/main/notes/bookmarks", async (req, res) => {
     const token = req.headers["x-access-token"];
+    const decoded = jwt.verify(token, "secret");
+    const email = decoded.email;
     try{
-        const decoded = jwt.verify(token, "secret");
-        const email = decoded.email;
         await db.query("SELECT * FROM bookmarks WHERE bm_email = ?", [email], (error, data) => {
             if(error){
                 res.json({status: error});
@@ -273,6 +273,22 @@ app.get("/main/notes/bookmarks", async (req, res) => {
     catch(error){
         console.log(error);
         res.json({status: "Invalid token"});
+    }
+})
+
+//create new bookmark
+app.post("/main/createbookmark", async (req, res) => {
+    const name = req.body.name
+    const color = req.body.color
+    const decoded = jwt.verify(token, "secret");
+    const email = decoded.email;
+    values = [name, email, color]
+    try{
+        await db.query("INSERT INTO bookmarks (bm_name, bm_email, color) VALUES (?)", [values]);
+        res.json({status: "Note created successfully"});
+    }
+    catch(error){
+        console.log(error);
     }
 })
 
@@ -299,9 +315,9 @@ app.put("/main/addbookmark/:id", async (req, res) => {
 app.get("/main/notes/fetch_note_group", async (req, res) => {
     const token = req.headers["x-access-token"];
     const bookmark = req.body.bookmark
+    const decoded = jwt.verify(token, "secret");
+    const email = decoded.email;
     try{
-        const decoded = jwt.verify(token, "secret");
-        const email = decoded.email;
         await db.query("SELECT * FROM notes WHERE user_email = ? AND bookmark = ? ORDER BY update_date DESC", [email, bookmark], (error, data) => {
             if(error){
                 res.json({status: error});
@@ -361,9 +377,9 @@ app.delete("/main/deletetask/:id", async (req, res) => {
 //fetch todo tasks
 app.get("/main/notes/fetch_todo_tasks", async (req, res) => {
     const token = req.headers["x-access-token"];
+    const decoded = jwt.verify(token, "secret");
+    const email = decoded.email;
     try{
-        const decoded = jwt.verify(token, "secret");
-        const email = decoded.email;
         await db.query("SELECT * FROM todo WHERE user_email = ?", [email], (error, data) => {
             if(error){
                 res.json({status: error});
@@ -383,7 +399,6 @@ app.get("/main/notes/fetch_todo_tasks", async (req, res) => {
 app.put("/main/edittask/:id", async (req, res) => {
     const id = req.body.taskID;
     const content = req.body.content;
-
     try{
         await db.query("UPDATE todo SET todo_content = ? WHERE todo_id = ?", [content, id], (error, data) => {
             if(error){
@@ -402,10 +417,10 @@ app.put("/main/edittask/:id", async (req, res) => {
 //task search
 app.post("/main/searchtasks", async (req, res) => {
     const token = req.body.headers["x-access-token"];
+    const decoded = jwt.verify(token, "secret");
+    const email = decoded.email;
+    const search = req.body.search;
     try{
-        const decoded = jwt.verify(token, "secret");
-        const email = decoded.email;
-        const search = req.body.search;
         await db.query("SELECT * FROM todo WHERE user_email = ? AND todo_content LIKE ?", [email, '%'+search+'%'], (error, data) => {
             if(error){
                 res.json({status: error});

@@ -56,7 +56,7 @@ export default function CreateNote(props) {
     return(
         <Container pos="absolute" zIndex="99" minW="100vw" minH="100vh" centerContent bg="blackAlpha.700">
             <Container pos="absolute" minW="30%" maxW="40%" minH="80%" maxH="80%"
-                bg="#dfe1e2" mt="10vh" borderRadius="50px" p="1%">
+                bg="#dfe1e2" mt="10vh" borderRadius="20px" p="1%">
                 <Heading size="2xl" textAlign="center">Create your note:</Heading>
                 <Flex mt="3%" justifyContent="space-evenly" alignItems="center" flexDirection="column" flexWrap="wrap">
 
