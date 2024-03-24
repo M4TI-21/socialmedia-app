@@ -36,7 +36,7 @@ export default function NewBookmark(props) {
     }
 
     return(
-        <Container pos="absolute" alignItems="center" justifyContent="center" zIndex="99" minW="100vw" minH="100vh" centerContent bg="blackAlpha.700">
+        <Container pos="absolute" alignItems="center" justifyContent="center" zIndex="100" minW="100vw" minH="100vh" centerContent bg="blackAlpha.700">
             <Container mb="20vh" minW="20vw" maxW="28vw" h="28vh" bg="#dfe1e2" borderRadius="10px" p="1%">
                 <Flex flexDirection="column" alignItems="center">
                     <Heading fontSize="2xl">New bookmark</Heading>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Heading, Container, Flex, IconButton, Text, Button, Textarea, Menu, MenuItem, MenuList, MenuButton, MenuDivider } from "@chakra-ui/react"
 import { CloseIcon } from "@chakra-ui/icons"
 import { BiEditAlt, BiTrash, BiMenu } from "react-icons/bi";
@@ -12,7 +12,6 @@ export default function ViewNote(props) {
     const [updatedContent, setUpdatedContent] = useState(props.content);
     const [updatedColor, setUpdatedColor] = useState(props.color);
     const [deleteAlertActive, setDeleteAlertActive] = useState("Inactive");
-    const [activeBM, setActiveBM] = useState([]);
 
     const editNote = async (id) => {
         const title = updatedTitle;
@@ -27,7 +26,7 @@ export default function ViewNote(props) {
             color
         })
         .then(() => {
-            props.fetchAllNotes(id);
+            props.fetchAllNotes();
         })
         .catch((err) => {
             console.log(err);
@@ -68,7 +67,7 @@ export default function ViewNote(props) {
             bookmark
         })
         .then(() => {
-            getBMname();
+            props.getBMname();
             props.fetchAllNotes();
         })
         .catch((err) => {
@@ -76,34 +75,16 @@ export default function ViewNote(props) {
         })
     }
 
-    const getBMname = async () => {
-        axios.post(`http://localhost:8080/main/getBMname`, 
-        {
-            noteID: props.note_id,
-            headers: {"x-access-token": localStorage.getItem("token")}
-        })
-        .then((res) => {
-            setActiveBM(res.data)
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-    }
-
-    useEffect(() => {
-        getBMname();
-    }, [])
-    
     return(
         <>
         {edit === false &&
             <>
             <Container pos="fixed" zIndex="100" minW="100vw" minH="100vh"  centerContent bg="blackAlpha.700" top="0">
-                <Container pos="absolute" minW="30%" maxW="40%" h="80vh" bg="#dfe1e2" mt="10vh" borderRadius="20px" pt="1%" pl="2%" pr="2%">
-                    <IconButton size="sm" icon={<CloseIcon />} onClick={props.displayNote} colorScheme="red" pos="absolute" top="4%" right="3%" aria-label="Close window"/>
+                <Container pos="absolute" minW="30%" maxW="40%" h="80vh"  bg={props.color} mt="10vh" borderRadius="20px" pt="1%" pl="2%" pr="2%">
+                    <Button size="sm" onClick={props.displayNote} colorScheme="red" pos="absolute" top="4%" right="3%">✖</Button>
                     
-                    <Heading size="large" textAlign="center" mb="5%">{props.title}</Heading>
-                    <Text color="gray" fontSize="medium">@{activeBM}</Text>
+                    <Heading size="large" textAlign="center" mb="1%">{props.title}</Heading>
+                    <Text color="gray" fontSize="medium" textAlign="center" mb="4%">@{props.activeBM}</Text>
                     
                     <Flex h="40vh" maxW="36vw">
                         <Text fontSize="medium" maxW="36vw" maxH="40vh" overflow="auto">{props.content}</Text>
@@ -113,7 +94,7 @@ export default function ViewNote(props) {
                         <Menu>
                             <MenuButton as={Button} aria-label="options" leftIcon={<BiMenu />}>Bookmarks</MenuButton>
                             <MenuList>
-                                {props.bookmarks.length === 0 && 
+                                {props.bookmarks.length === 1 && 
                                     <MenuItem>No bookmarks</MenuItem>
                                 }
                                 {props.bookmarks.map(e => (
@@ -122,7 +103,7 @@ export default function ViewNote(props) {
                                     
                                     
                                 ))}
-                                {props.bookmarks.length > 0 && 
+                                {props.bookmarks.length > 1 && 
                                     <>
                                     <MenuDivider />
                                     <MenuItem onClick={e => addBookmark(props.note_id, props.defaultBM)} color="red">Remove bookmark</MenuItem>
@@ -153,8 +134,8 @@ export default function ViewNote(props) {
             </>
         }
         {edit === true && 
-            <Container pos="fixed" zIndex="99" minW="100vw" minH="100vh"  centerContent bg="blackAlpha.700" top="0">
-                <Container pos="absolute" minW="30%" maxW="40%" h="80vh" bg="#dfe1e2" mt="10vh" borderRadius="30px" p="2%">
+            <Container pos="fixed" zIndex="100" minW="100vw" minH="100vh"  centerContent bg="blackAlpha.700" top="0">
+                <Container pos="absolute" minW="30%" maxW="40%" h="80vh" bg={props.color} mt="10vh" borderRadius="20px" p="2%">
                     <IconButton size="sm" icon={<CloseIcon />} onClick={props.displayNote} colorScheme="red" pos="absolute" top="4%" right="3%" aria-label="Close window"></IconButton>
                    
                     <Flex mb="5%" pt="5%" textAlign="center" w="36vw">

@@ -317,6 +317,46 @@ app.post("/main/createbookmark", async (req, res) => {
     }
 })
 
+//edit bookmark
+app.put("/main/editbookmark/:id", async (req, res) => {
+    const id = req.body.bookmarkID;
+    const bm_name = req.body.bm_name;
+    try{
+        await db.query("UPDATE bookmarks SET bm_name = ? WHERE bookmark_id = ?", [bm_name, id], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+    }
+})
+
+//delete bookmark
+app.delete("/main/deletebookmark/:id", async (req, res) => {
+    const id = req.body.bookmarkID;
+    const defaultBM = req.body.defaultBM;
+    try{
+        await db.query("DELETE FROM bookmarks WHERE bookmark_id = ?", [id], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                db.query("UPDATE notes SET bookmark = ? WHERE bookmark = ?", [defaultBM, id])
+                return res.json(data);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+        res.json({status: "Invalid token"});
+    }
+})
+
 //set bookmark
 app.put("/main/addbookmark/:id", async (req, res) => {
     const id = req.body.noteID;

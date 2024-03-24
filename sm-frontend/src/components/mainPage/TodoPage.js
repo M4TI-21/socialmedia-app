@@ -2,12 +2,14 @@ import Task from "./elements/Task";
 import "./mainPageStyle.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Flex, OrderedList, Input, Button, Textarea, Text, InputGroup, InputLeftAddon } from "@chakra-ui/react";
+import { Flex, OrderedList, Input, Button, Textarea, Text, InputGroup, InputLeftAddon, RadioGroup, Radio, Stack } from "@chakra-ui/react";
 import { SearchIcon } from '@chakra-ui/icons'
 
 export default function TodoPage(props) {
   const [tasks, setTasks] = useState([]);
   const [todoContent, setTodoContent] = useState("");
+  const [todoDate, setTodoDate] = useState()
+  const [dateRadio, setDateRadio] = useState(false)
   const [search, setSearch] = useState("");
   const [errorMsg, setErrorMsg] = useState([])
 
@@ -89,6 +91,10 @@ export default function TodoPage(props) {
         }
     }
 
+    const datetimeStyle = {
+        width: "8vw",
+    }
+
   return (
     <>
     <Flex flexDir="column" alignItems="center" w="100%">
@@ -105,8 +111,19 @@ export default function TodoPage(props) {
                 <Text color="#a70000" fontWeight="bold" fontSize="large" mt="auto" mb="auto">{errorMsg.todoContent}</Text>
             </Flex>
         }
-        <Flex flexDir="row" alignItems="center" justifyContent="space-between" mb="4vh" w="25%">
+        <Flex flexDir="row" alignItems="center" justifyContent="space-between" mb="4vh" minW="30vw" bg="red">
             <Textarea onChange={e => setTodoContent(e.target.value)} type="text" placeholder="Create new task" border="1px solid #bbb" borderRadius="20px" w="20vw" h="5vh" resize="none"/>
+            
+            <RadioGroup defaultValue="noDate">
+                <Stack direction="column">
+                    <Radio checked={setDateRadio(true)}>Set deadline</Radio>
+                    <Radio >No deadline</Radio>
+                </Stack>
+            </RadioGroup>
+            
+            {dateRadio === true &&
+               <input type="datetime-local" style={datetimeStyle}/>         
+            }
             <Button onClick={addTask}>Submit</Button>
         </Flex>
 

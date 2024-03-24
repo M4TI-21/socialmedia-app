@@ -129,10 +129,7 @@ export default function NotePage(props) {
         </InputLeftAddon>
         <Input onChange={(e) => {setSearch(e.target.value)}} type="text" placeholder="Search your notes..." minW="50vw" maxW="55vw"/>
       </InputGroup>
-        
-        {/* {sort === "date-desc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date descending</Button>}
-        {sort === "date-asc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date ascending</Button>}
-        {sort === "fav" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by favorites</Button>} */}
+
       <Menu>
         <MenuButton as={Button} aria-label="options" size="md" rightIcon={<BiMenu />}>Bookmarks &nbsp;</MenuButton>
           <MenuList>
@@ -146,6 +143,7 @@ export default function NotePage(props) {
               <MenuItem onClick={editBookmarksOnClick}>Edit bookmarks</MenuItem>
           </MenuList>
       </Menu>
+
     </Flex>
     {addNoteActive === "Active" && 
     <CreateNote addNoteActiveOnClick={addNoteActiveOnClick} email={props.email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive} defaultBM={props.defaultBM}/>
@@ -163,7 +161,8 @@ export default function NotePage(props) {
     <NewBookmark addNewBookmark={addNewBookmark} email={props.email} setNewBookmark={setNewBookmark} fetchAllNotes={fetchAllNotes} fetchBookmarks={fetchBookmarks}/>
     }
     {editBookmarks === "Active" &&
-    <EditBookmarks bookmarks={bookmarks} editBookmarks={editBookmarks} email={props.email} EditBookmarks={EditBookmarks} fetchAllNotes={fetchAllNotes} fetchBookmarks={fetchBookmarks} editBookmarksOnClick={editBookmarksOnClick}/>
+    <EditBookmarks bookmarks={bookmarks} editBookmarks={editBookmarks} email={props.email} EditBookmarks={EditBookmarks} fetchAllNotes={fetchAllNotes} fetchBookmarks={fetchBookmarks}
+     editBookmarksOnClick={editBookmarksOnClick} defaultBM={props.defaultBM}/>
     }
     
     <Flex w="100%" minH="40vh" flexDirection="row" justifyContent="center" flexWrap="wrap" pl="3%" pr="3%">
