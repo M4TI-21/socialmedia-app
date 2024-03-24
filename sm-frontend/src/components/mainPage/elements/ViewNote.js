@@ -140,11 +140,12 @@ export default function ViewNote(props) {
                    
                     <Flex mb="5%" pt="5%" textAlign="center" w="36vw">
                         <Textarea onChange={e =>setUpdatedTitle(e.target.value)} bg="#eee" fontSize="2xl" resize="none" border="none" textAlign="center" maxLength="60" 
-                        fontWeight="bold" defaultValue={props.content}/>
+                        fontWeight="bold" defaultValue={props.title}/>
                     </Flex>
 
                     <Flex justifyContent="space-evenly" alignItems="center" flexDirection="column" flexWrap="wrap" h="40vh" maxW="36vw" >
-                        <Textarea onChange={e =>setUpdatedContent(e.target.value)} fontSize="lg" resize="none" border="none" _focusVisible={false} h="100%" bg="#eee" defaultValue={props.content}/>
+                        <Textarea onChange={e =>setUpdatedContent(e.target.value)} fontSize="lg" resize="none" border="none" _focusVisible={false} h="100%" bg="#eee" 
+                        defaultValue={props.content}/>
                     </Flex>
                     
                     <Flex h="5vh" w="36vw" justifyContent="flex-start" alignItems="center">

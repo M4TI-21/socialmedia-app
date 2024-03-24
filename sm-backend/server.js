@@ -424,9 +424,10 @@ app.post("/main/fetch_note_group", async (req, res) => {
 app.put("/main/inserttodo", async (req, res) => {
     const content = req.body.content;
     const email = req.body.email;
-    const values = [email, content, 0];
+    const date = req.body.todoDate
+    const values = [email, content, date, 0];
     try{
-        await db.query("INSERT INTO todo (user_email, todo_content, finished) VALUES (?)", [values] , (error, data) => {
+        await db.query("INSERT INTO todo (user_email, todo_content, due_date, finished) VALUES (?)", [values] , (error, data) => {
             if(error){
                 res.json({status: error});
             }
@@ -520,7 +521,6 @@ app.post("/main/searchtasks", async (req, res) => {
         res.json({status: "Invalid token"});
     }
 })
-
 
 //complete task
 app.put("/main/completetask/:id", async (req, res) => {

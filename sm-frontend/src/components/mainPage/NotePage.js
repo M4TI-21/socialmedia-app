@@ -100,6 +100,24 @@ export default function NotePage(props) {
     fetchNoteGroup(id)
   }
 
+  const fetchFavNotes = async () => {
+    axios.get("http://localhost:8080/main/notes/fetch_fav", {
+      headers: {
+        "x-access-token": localStorage.getItem("token")
+      }
+    })
+    .then((res) => {
+      setNotes(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  const fetchFavOnClick = (id) =>{
+    fetchFavNotes(id)
+  }
+
   const addNewBookmark = (e) => {
     e.preventDefault();
     if(newBookmark === "Active"){
@@ -134,6 +152,8 @@ export default function NotePage(props) {
         <MenuButton as={Button} aria-label="options" size="md" rightIcon={<BiMenu />}>Bookmarks &nbsp;</MenuButton>
           <MenuList>
               <MenuItem onClick={fetchAllNotes}>All notes</MenuItem>
+              <MenuItem onClick={fetchFavOnClick}>Favorite notes</MenuItem>
+              <MenuDivider />
               {bookmarks.map(e => (
                 e.bookmark_id !== props.defaultBM &&
                 <MenuItem key={e.bookmark_id} onClick={e => fetchNoteGroupOnClick(e.target.value)} value={e.bookmark_id}>{e.bm_name}</MenuItem>

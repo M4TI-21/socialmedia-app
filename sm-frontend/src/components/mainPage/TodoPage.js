@@ -2,16 +2,16 @@ import Task from "./elements/Task";
 import "./mainPageStyle.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Flex, OrderedList, Input, Button, Textarea, Text, InputGroup, InputLeftAddon, RadioGroup, Radio, Stack } from "@chakra-ui/react";
+import { Flex, OrderedList, Input, Button, Text, InputGroup, InputLeftAddon, RadioGroup, Radio, Stack, Box } from "@chakra-ui/react";
 import { SearchIcon } from '@chakra-ui/icons'
 
 export default function TodoPage(props) {
   const [tasks, setTasks] = useState([]);
   const [todoContent, setTodoContent] = useState("");
-  const [todoDate, setTodoDate] = useState()
-  const [dateRadio, setDateRadio] = useState(false)
+  const [todoDate, setTodoDate] = useState();
+  const [checked, setChecked] = useState("noDate");
   const [search, setSearch] = useState("");
-  const [errorMsg, setErrorMsg] = useState([])
+  const [errorMsg, setErrorMsg] = useState([]);
 
     const fetchTodoTasks = async () => {
         axios.get("http://localhost:8080/main/notes/fetch_todo_tasks", {
@@ -53,7 +53,7 @@ export default function TodoPage(props) {
         let error = {};
 
         if(todoContent === ""){
-            error.todoContent = "Task cannot be empty"
+            error.todoContent = "Input your task content"
         }
         else{
             error.todoContent = "";
@@ -62,12 +62,14 @@ export default function TodoPage(props) {
         return error;
     }
 
-    const createTodoTask = async () => {
+    const createTodoTask = async (date) => {
         const content = todoContent;
         const email = props.email;
+        const todoDate = date
         axios.put(`http://localhost:8080/main/inserttodo/`, {
             email,
             content, 
+            todoDate,
             headers: {"x-access-token": localStorage.getItem("token")}
         })
         .then((res) => {
@@ -87,51 +89,58 @@ export default function TodoPage(props) {
             console.log("Error");
         }
         else{
-            createTodoTask(); 
+            if(checked === "noDate"){
+                createTodoTask(null); 
+            }
+            else if(checked === "setDate"){
+                createTodoTask(todoDate.replace("T", " ")); 
+            }
+            
         }
     }
 
     const datetimeStyle = {
         width: "8vw",
+        marginRight: "3vw"
     }
 
   return (
     <>
     <Flex flexDir="column" alignItems="center" w="100%">
-        <Flex>
-        <InputGroup>
+        <InputGroup justifyContent="center">
             <InputLeftAddon>
             <SearchIcon />
             </InputLeftAddon>
             <Input onChange={(e) => {setSearch(e.target.value)}} type="text" mb="4vh" placeholder="Search task..." w="40vw"/>
         </InputGroup>
-        </Flex>
-        {errorMsg.todoContent && 
-            <Flex bg="#ffbaba" border="1px" borderColor="#a70000" w="15%" h="4vh" borderRadius="10px" justifyContent="center" mb="1%">
-                <Text color="#a70000" fontWeight="bold" fontSize="large" mt="auto" mb="auto">{errorMsg.todoContent}</Text>
-            </Flex>
-        }
-        <Flex flexDir="row" alignItems="center" justifyContent="space-between" mb="4vh" minW="30vw" bg="red">
-            <Textarea onChange={e => setTodoContent(e.target.value)} type="text" placeholder="Create new task" border="1px solid #bbb" borderRadius="20px" w="20vw" h="5vh" resize="none"/>
+
+        <Flex flexDir="row" bg="#dfe1e2" borderRadius="10px" w="50vw" ml="3%" pr="1%" pl="1%" alignItems="center">
+            <Input onChange={e => setTodoContent(e.target.value)} type="text" placeholder="Create new task" border="none" _focusVisible={false}
+            borderRadius="10px" maxH="5vh" w="20vw" maxLength="50"/>
             
-            <RadioGroup defaultValue="noDate">
+            <RadioGroup defaultValue="noDate" w="10vw" ml="2vw">
                 <Stack direction="column">
-                    <Radio checked={setDateRadio(true)}>Set deadline</Radio>
-                    <Radio >No deadline</Radio>
+                    <Radio value="setDate" checked={checked === "setDate"} colorScheme="blackAlpha" onChange={e => setChecked(e.target.value)}>Set deadline</Radio>
+                    <Radio value="noDate" checked={checked === "noDate"} colorScheme="blackAlpha" onChange={e => setChecked(e.target.value)}>No deadline</Radio>
                 </Stack>
             </RadioGroup>
             
-            {dateRadio === true &&
-               <input type="datetime-local" style={datetimeStyle}/>         
+            {checked === "setDate" &&
+               <input type="datetime-local" style={datetimeStyle} onChange={e => setTodoDate(e.target.value)}/>         
             }
-            <Button onClick={addTask}>Submit</Button>
+            {checked === "noDate" &&
+                <Box bg="blue" w="11vw"></Box>
+            }
+            <Button onClick={addTask} bg="#333" color='white' _hover={{ bg: "#555"}}>Submit</Button>
         </Flex>
+        {errorMsg.todoContent && <Text color="red" fontWeight="" fontSize="small">*{errorMsg.todoContent}</Text>}
 
-    <OrderedList alignItems="center">
-        {tasks.map(e => (
-            <Task key={e.todo_id} content={e.todo_content} finished={e.finished} todo_id={e.todo_id} fetchTodoTasks={fetchTodoTasks}/>
-        ))} 
-    </OrderedList>
+
+        <OrderedList alignItems="center">
+            {tasks.map(e => (
+                <Task key={e.todo_id} content={e.todo_content} finished={e.finished} todo_id={e.todo_id} due_date={e.due_date} fetchTodoTasks={fetchTodoTasks}/>
+            ))} 
+        </OrderedList>
         
     </Flex>
     </>
