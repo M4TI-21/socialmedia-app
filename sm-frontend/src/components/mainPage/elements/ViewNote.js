@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Heading, Container, Flex, IconButton, Text, Button, Textarea, Menu, MenuItem, MenuList, MenuButton } from "@chakra-ui/react"
+import { useEffect, useState } from "react";
+import { Heading, Container, Flex, IconButton, Text, Button, Textarea, Menu, MenuItem, MenuList, MenuButton, MenuDivider } from "@chakra-ui/react"
 import { CloseIcon } from "@chakra-ui/icons"
 import { BiEditAlt, BiTrash, BiMenu } from "react-icons/bi";
 import axios from "axios";
@@ -11,9 +11,8 @@ export default function ViewNote(props) {
     const [updatedTitle, setUpdatedTitle] = useState(props.title);
     const [updatedContent, setUpdatedContent] = useState(props.content);
     const [updatedColor, setUpdatedColor] = useState(props.color);
-    const [deleteAlertActive, setDeleteAlertActive] = useState("Inactive")
-    const [bmList, setBmList] = useState(props.bookmarks)
-    const [bookmark, setBookmark] = useState("")
+    const [deleteAlertActive, setDeleteAlertActive] = useState("Inactive");
+    const [activeBM, setActiveBM] = useState([]);
 
     const editNote = async (id) => {
         const title = updatedTitle;
@@ -45,7 +44,7 @@ export default function ViewNote(props) {
         }
     }
 
-    const cancelEditOnClick = (id) => {
+    const cancelEditOnClick = () => {
         if(edit === true){
             setEdit(false);
         }
@@ -61,7 +60,7 @@ export default function ViewNote(props) {
         }
     }
 
-    const addBookmark = async (id) => {
+    const addBookmark = async (id, bookmark) => {
         const noteID = id;
         axios.put(`http://localhost:8080/main/addbookmark/${noteID}`, 
         {
@@ -69,37 +68,66 @@ export default function ViewNote(props) {
             bookmark
         })
         .then(() => {
-            props.fetchAllNotes(id);
+            getBMname();
+            props.fetchAllNotes();
         })
         .catch((err) => {
             console.log(err);
         })
     }
 
+    const getBMname = async () => {
+        axios.post(`http://localhost:8080/main/getBMname`, 
+        {
+            noteID: props.note_id,
+            headers: {"x-access-token": localStorage.getItem("token")}
+        })
+        .then((res) => {
+            setActiveBM(res.data)
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+
+    useEffect(() => {
+        getBMname();
+    }, [])
+    
     return(
         <>
         {edit === false &&
             <>
-            <Container pos="fixed" zIndex="97" minW="100vw" minH="100vh"  centerContent bg="blackAlpha.700" top="0">
+            <Container pos="fixed" zIndex="100" minW="100vw" minH="100vh"  centerContent bg="blackAlpha.700" top="0">
                 <Container pos="absolute" minW="30%" maxW="40%" h="80vh" bg="#dfe1e2" mt="10vh" borderRadius="20px" pt="1%" pl="2%" pr="2%">
-                    <IconButton size="sm" icon={<CloseIcon />} onClick={props.displayNote} colorScheme="red" pos="absolute" top="4%" right="3%" aria-label="Close window"></IconButton>
+                    <IconButton size="sm" icon={<CloseIcon />} onClick={props.displayNote} colorScheme="red" pos="absolute" top="4%" right="3%" aria-label="Close window"/>
                     
                     <Heading size="large" textAlign="center" mb="5%">{props.title}</Heading>
-
-                    <Flex h="45vh" maxW="36vw">
-                        <Text fontSize="medium" maxW="36vw" maxH="45vh" overflow="auto">{props.content}</Text>
+                    <Text color="gray" fontSize="medium">@{activeBM}</Text>
+                    
+                    <Flex h="40vh" maxW="36vw">
+                        <Text fontSize="medium" maxW="36vw" maxH="40vh" overflow="auto">{props.content}</Text>
                     </Flex>
-
+                    
                     <Flex alignItems="center" justifyContent="center" mt="3vh">
                         <Menu>
                             <MenuButton as={Button} aria-label="options" leftIcon={<BiMenu />}>Bookmarks</MenuButton>
                             <MenuList>
-                                {bmList.length === 0 && 
+                                {props.bookmarks.length === 0 && 
                                     <MenuItem>No bookmarks</MenuItem>
                                 }
-                                {bmList.map(e => (
-                                    <MenuItem onClick={() => {setBookmark(e.bookmark_id); addBookmark(props.note_id)}} key={e.bookmark_id}>{e.bm_name}</MenuItem>
+                                {props.bookmarks.map(e => (
+                                    e.bookmark_id !== props.defaultBM &&
+                                    <MenuItem key={e.bookmark_id} onClick={e => addBookmark(props.note_id, e.target.value)} value={e.bookmark_id}>{e.bm_name}</MenuItem>
+                                    
+                                    
                                 ))}
+                                {props.bookmarks.length > 0 && 
+                                    <>
+                                    <MenuDivider />
+                                    <MenuItem onClick={e => addBookmark(props.note_id, props.defaultBM)} color="red">Remove bookmark</MenuItem>
+                                    </>
+                                }
                             </MenuList>
                         </Menu>
                     </Flex>
@@ -107,8 +135,9 @@ export default function ViewNote(props) {
                     <Flex flexDir="row" justifyContent="space-around" w="36vw" mb="5%">
                         <Button leftIcon={<BiTrash />} colorScheme="red" minW="8vw" onClick={deleteAlert}>Delete</Button>
                         <Button leftIcon={<BiEditAlt />} colorScheme="green" minW="8vw" onClick={() => editNoteOnClick(props.note_id)}>Edit</Button> 
+                        {props.bookmarks.bm_name}
                     </Flex>
-
+                    
                     <Flex flexDir="row" justifyContent="space-evenly" bottom="1">
                         <Text fontWeight="bold" color="#666">Created: <Moment color="#666" format="DD MMM YYYY HH:mm">{props.creationDate}</Moment></Text>
                         <Text fontWeight="bold" color="#666">Last update: <Moment color="#666" format="DD MMM YYYY HH:mm">{props.updateDate}</Moment></Text>

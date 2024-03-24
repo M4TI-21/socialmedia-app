@@ -7,7 +7,7 @@ import ViewNote from "./ViewNote";
 export default function Note(props) {
     const [displayNoteActive, setDisplayNoteActive] = useState("Inactive")
     const [isHover, setIsHover] = useState(false);
-    const [isFav, setIsFav] = useState(props.favorite)
+    const [isFav, setIsFav] = useState(props.favorite);
 
     const displayNote = (e) => {
         e.preventDefault();
@@ -70,7 +70,7 @@ export default function Note(props) {
         props.fetchAllNotes(id);
         setIsFav(false)
     }
-    
+
     return(
         <>
             <Box bg={props.color} maxW="32vw" minW="16vw" h="35vh" pr="1%" pl="1%" pt="1%" pb="3%" borderRadius="10px" ml="1vw" mr="1vw" mb="1vw"
@@ -78,11 +78,11 @@ export default function Note(props) {
                 <Box  w="inherit" h="90%">
                     <Flex alignItems="center" maxW="100%" h="10%" flexDir="row" pt="5%" mb="5%">
                         <Heading size="md" wordBreak="break-all">{props.title}</Heading>
-                        <Tooltip hasArrow label="Bookmark" ><InfoOutlineIcon /></Tooltip>
+                        <Tooltip hasArrow label="Bookmark"><InfoOutlineIcon /></Tooltip>
                         {isFav === 1 && <Button size="sm" position="absolute" right="0" mr="5%" onClick={() => unsetFavoriteOnClick(props.note_id)} colorScheme="yellow">⭐</Button>}
                         {isFav === 0 && <Button size="sm" position="absolute" right="0" mr="5%" onClick={() => setFavoriteOnClick(props.note_id)} colorScheme="gray">⭐</Button>}   
                     </Flex>
-
+                    
                     <Flex width="calc(100%)" h="100%" pl="2%" pr="2%" onClick={displayNote}>
                         <Text fontSize="lg" overflow="hidden" textOverflow="ellipsis" wordBreak="break-all" >{props.content}</Text>
                     </Flex>
@@ -90,7 +90,8 @@ export default function Note(props) {
             </Box>
 
         {displayNoteActive === "Active" && <ViewNote note_id={props.note_id} fetchAllNotes={props.fetchAllNotes} bookmarks={props.bookmarks} setBookmarks={props.setBookmarks}
-        creationDate={props.creationDate} updateDate={props.updateDate} content={props.content} tag={props.tag} title={props.title} displayNote={displayNote} color={props.color}/>}
+        creationDate={props.creationDate} updateDate={props.updateDate} content={props.content} tag={props.tag} title={props.title} displayNote={displayNote} color={props.color}
+        defaultBM={props.defaultBM}/>}
         </>
     );
 }

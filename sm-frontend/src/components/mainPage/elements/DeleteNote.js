@@ -19,7 +19,7 @@ export default function DeleteNote(props) {
     }
 
     return(
-        <Container pos="fixed" zIndex="99" minW="100%" minH="100vh" centerContent bg="blackAlpha.700" top="0">
+        <Container pos="fixed" zIndex="101" minW="100%" minH="100vh" centerContent bg="blackAlpha.700" top="0">
             <Container pos="absolute" minW="30vw" maxW="40vw" minH="30vh" maxH="40vh"
                 bg="#dfe1e2" mt="10vh" borderRadius="30px" pt="2%" pb="1%">
                 <Heading size="xl" textAlign="center">Are you sure to delete?</Heading>

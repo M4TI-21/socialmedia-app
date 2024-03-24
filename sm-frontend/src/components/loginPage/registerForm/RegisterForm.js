@@ -56,21 +56,13 @@ export default function RegisterForm(props) {
       }
       else{
         const axiosRegisterPost = async () => {
-          try{
-            const response = await axios.post('http://localhost:8080/register', {email, pass, dob, name, tag});
-            console.log(response);
-      
-            if(response.data === "Created account"){
-              navigate("/login");
-              alert("User registered. Login Now!");
-            }
-            else if(response.data === "Account already existing"){
-              console.log("Account already existing");
-            }
-          }
-          catch(error){
-            console.log(error);
-          }
+            await axios.post('http://localhost:8080/register', {email, pass, dob, name, tag})
+            .then((res) => {
+              navigate("/login")
+            })
+            .catch((err) => {
+              console.log(err);
+            })
         }
         axiosRegisterPost()
       }

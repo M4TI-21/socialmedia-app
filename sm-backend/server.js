@@ -30,8 +30,8 @@ app.post("/register", async (req, res) => {
                 res.json({status: "Account already existing"});
             }
             else{
-                res.json("Created account");
                 db.query("INSERT INTO user (email, name, tag, date_of_birth, pass) VALUES (?)", [values]);
+                db.query("INSERT INTO bookmarks (bm_name, bm_email) VALUES (?, ?)", ["unsigned", email]);
             }
         })
     }
@@ -100,9 +100,9 @@ app.post("/main/createnote", async (req, res) => {
     const noteColors = ['#ff7eb9', "#ff65a3", "#7afcff", "#feff9c", "#fff740", "#e4a8b9", "#e4eeff", "#cdfc93", "#ffc14a", "#46c45a"];
     const randomColor = noteColors[Math.floor(Math.random() * noteColors.length)];
 
-    const values = [req.body.email, req.body.title, req.body.content, dateValue, dateValue, false, randomColor];
+    const values = [req.body.email, req.body.title, req.body.content, dateValue, dateValue, false, randomColor, req.body.defaultBM];
     try{
-        await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date, favorite, color) VALUES (?)", [values]);
+        await db.query("INSERT INTO notes (user_email, title, content, creation_date, update_date, favorite, color, bookmark) VALUES (?)", [values]);
         res.json({status: "Note created successfully"});
     }
     catch(error){
@@ -239,13 +239,34 @@ app.post("/main/searchnotes", async (req, res) => {
     const email = decoded.email;
     const search = req.body.search;
     try{
-        await db.query("SELECT * FROM notes WHERE user_email = ? AND content LIKE ? OR title LIKE ? ORDER BY update_date DESC", [email, '%'+search+'%', '%'+search+'%'], (error, data) => {
+        await db.query("SELECT * FROM notes WHERE user_email = ? AND (content LIKE ? OR title LIKE ?) ORDER BY update_date DESC", [email, '%'+search+'%', '%'+search+'%'], (error, data) => {
             if(error){
                 res.json({status: error});
             }
             else{
                 return res.json(data);
                 
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+        res.json({status: "Invalid token"});
+    }
+})
+
+//default bookmark
+app.get("/main/defaultBookmark", async (req, res) => {
+    const token = req.headers["x-access-token"];
+    const decoded = jwt.verify(token, "secret");
+    const email = decoded.email;
+    try{
+        await db.query("SELECT bookmark_id FROM bookmarks WHERE bm_email = ? AND bm_name = ?", [email, "unsigned"], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data[0].bookmark_id);
             }
         })
     }
@@ -279,13 +300,17 @@ app.get("/main/notes/bookmarks", async (req, res) => {
 //create new bookmark
 app.post("/main/createbookmark", async (req, res) => {
     const name = req.body.name
-    const color = req.body.color
-    const decoded = jwt.verify(token, "secret");
-    const email = decoded.email;
-    values = [name, email, color]
+    const email = req.body.email
+    values = [name, email]
     try{
-        await db.query("INSERT INTO bookmarks (bm_name, bm_email, color) VALUES (?)", [values]);
-        res.json({status: "Note created successfully"});
+        await db.query("INSERT INTO bookmarks (bm_name, bm_email) VALUES (?)", [values], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data);
+            }
+        })
     }
     catch(error){
         console.log(error);
@@ -311,14 +336,34 @@ app.put("/main/addbookmark/:id", async (req, res) => {
     }
 })
 
-//fetch notes with bookmark
-app.get("/main/notes/fetch_note_group", async (req, res) => {
-    const token = req.headers["x-access-token"];
-    const bookmark = req.body.bookmark
+//fetch bookmark name
+app.post("/main/getBMname", async (req, res) => {
+    const token = req.body.headers["x-access-token"];
     const decoded = jwt.verify(token, "secret");
     const email = decoded.email;
+    const id = req.body.noteID;
     try{
-        await db.query("SELECT * FROM notes WHERE user_email = ? AND bookmark = ? ORDER BY update_date DESC", [email, bookmark], (error, data) => {
+        await db.query("SELECT bookmarks.bm_name FROM bookmarks JOIN notes ON bookmarks.bookmark_id = notes.bookmark WHERE notes.user_email = ? AND notes.note_id = ?", [email, id], (error, data) => {
+            if(error){
+                res.json({status: error});
+            }
+            else{
+                return res.json(data[0].bm_name);
+            }
+        })
+    }
+    catch(error){
+        console.log(error);
+        res.json({status: "Invalid token"});
+    }
+})
+
+//fetch notes with bookmark
+app.post("/main/fetch_note_group", async (req, res) => {
+    const id = req.body.bookmarkID;
+    const email = req.body.email
+    try{
+        await db.query("SELECT * FROM notes WHERE user_email = ? AND bookmark = ? ORDER BY update_date DESC", [email, id], (error, data) => {
             if(error){
                 res.json({status: error});
             }

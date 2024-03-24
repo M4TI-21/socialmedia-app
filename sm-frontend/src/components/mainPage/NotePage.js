@@ -7,15 +7,15 @@ import {Flex, Button, Input, Text, InputGroup, InputLeftAddon, Menu, MenuButton,
 import { SearchIcon, AddIcon } from '@chakra-ui/icons'
 import { BiMenu } from "react-icons/bi";
 import NewBookmark from "./elements/NewBookmark";
+import EditBookmarks from "./elements/EditBookmarks";
 
 export default function NotePage(props) {
   const [addNoteActive, setAddNoteActive] = useState("Inactive");
   const [notes, setNotes] = useState([]);
-  // const [sort, setSort] = useState("date-desc");
   const [search, setSearch] = useState("");
   const [bookmarks, setBookmarks] = useState([]);
-  const [bookmark, setBookmark] = useState();
-  const [newBookmark, setNewBookmark] = useState("Inactive")
+  const [newBookmark, setNewBookmark] = useState("Inactive");
+  const [editBookmarks, setEditBookmarks] = useState("Inactive");
 
   const addNoteActiveOnClick = (e) => {
     e.preventDefault();
@@ -71,6 +71,7 @@ export default function NotePage(props) {
     })
     .then((res) => {
       setBookmarks(res.data);
+      fetchAllNotes();
     })
     .catch((err) => {
       console.log(err);
@@ -80,13 +81,12 @@ export default function NotePage(props) {
   useEffect(() => {
     fetchBookmarks();
   }, [])
-
-  const fetchNoteGroup = async () => {
-    axios.get(`http://localhost:8080/main/notes/fetch_note_group`, 
+  
+  const fetchNoteGroup = async (id) => {
+    axios.post("http://localhost:8080/main/fetch_note_group", 
     {
-      bookmark,
-      headers: {"x-access-token": localStorage.getItem("token")}
-    
+      bookmarkID: id,
+      email: props.email
     })
     .then((res) => {
         setNotes(res.data);
@@ -96,8 +96,8 @@ export default function NotePage(props) {
     })
   }
 
-  const fetchGroup = () => {
-    fetchNoteGroup();
+  const fetchNoteGroupOnClick = (id) =>{
+    fetchNoteGroup(id)
   }
 
   const addNewBookmark = (e) => {
@@ -107,6 +107,16 @@ export default function NotePage(props) {
     }
     else{
       setNewBookmark("Active");
+    }
+  }
+
+  const editBookmarksOnClick = (e) => {
+    e.preventDefault();
+    if(editBookmarks === "Active"){
+      setEditBookmarks("Inactive");
+    }
+    else{
+      setEditBookmarks("Active");
     }
   }
 
@@ -123,20 +133,22 @@ export default function NotePage(props) {
         {/* {sort === "date-desc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date descending</Button>}
         {sort === "date-asc" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by date ascending</Button>}
         {sort === "fav" && <Button onClick={() => sortNotesBtn()} w="16%">Sorting: by favorites</Button>} */}
-    <Menu>
-      <MenuButton as={Button} aria-label="options" size="md" rightIcon={<BiMenu />}>Bookmarks &nbsp;</MenuButton>
-        <MenuList>
-            <MenuItem onClick={fetchAllNotes}>All notes</MenuItem>
-            {bookmarks.map(e => (
-              <MenuItem onClick={() => {setBookmark(e.bookmark_id); fetchGroup()}} key={e.bookmark_id}>{e.bm_name}</MenuItem>
-            ))}
-            <MenuDivider />
-            <MenuItem onClick={addNewBookmark}>New bookmark</MenuItem>
-        </MenuList>
-    </Menu>
+      <Menu>
+        <MenuButton as={Button} aria-label="options" size="md" rightIcon={<BiMenu />}>Bookmarks &nbsp;</MenuButton>
+          <MenuList>
+              <MenuItem onClick={fetchAllNotes}>All notes</MenuItem>
+              {bookmarks.map(e => (
+                e.bookmark_id !== props.defaultBM &&
+                <MenuItem key={e.bookmark_id} onClick={e => fetchNoteGroupOnClick(e.target.value)} value={e.bookmark_id}>{e.bm_name}</MenuItem>
+              ))}
+              <MenuDivider />
+              <MenuItem onClick={addNewBookmark}>New bookmark</MenuItem>
+              <MenuItem onClick={editBookmarksOnClick}>Edit bookmarks</MenuItem>
+          </MenuList>
+      </Menu>
     </Flex>
     {addNoteActive === "Active" && 
-    <CreateNote addNoteActiveOnClick={addNoteActiveOnClick} email={props.email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive}/>
+    <CreateNote addNoteActiveOnClick={addNoteActiveOnClick} email={props.email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive} defaultBM={props.defaultBM}/>
     }
 
     <Flex justifyContent="center" mt="1%">
@@ -148,13 +160,16 @@ export default function NotePage(props) {
     }
 
     {newBookmark === "Active" &&
-    <NewBookmark />
+    <NewBookmark addNewBookmark={addNewBookmark} email={props.email} setNewBookmark={setNewBookmark} fetchAllNotes={fetchAllNotes} fetchBookmarks={fetchBookmarks}/>
+    }
+    {editBookmarks === "Active" &&
+    <EditBookmarks bookmarks={bookmarks} editBookmarks={editBookmarks} email={props.email} EditBookmarks={EditBookmarks} fetchAllNotes={fetchAllNotes} fetchBookmarks={fetchBookmarks} editBookmarksOnClick={editBookmarksOnClick}/>
     }
     
     <Flex w="100%" minH="40vh" flexDirection="row" justifyContent="center" flexWrap="wrap" pl="3%" pr="3%">
         {notes.map(e => (
         <Note key={e.note_id} note_id={e.note_id} tag={props.tag} title={e.title} creationDate={e.creation_date} updateDate={e.update_date} content={e.content} email={props.email}
-        color={e.color} favorite={e.favorite} notes={notes} fetchAllNotes={fetchAllNotes} bookmarks={bookmarks} setBookmarks={setBookmarks}/>
+        color={e.color} favorite={e.favorite} notes={notes} fetchAllNotes={fetchAllNotes} bookmarks={bookmarks} setBookmarks={setBookmarks} defaultBM={props.defaultBM}/>
         ))}
     </Flex>
     

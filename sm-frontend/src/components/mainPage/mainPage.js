@@ -14,6 +14,7 @@ export default function MainPage() {
   const [email, setEmail] = useState('');
   const [tag, setTag] = useState('');
   const [activePage, setActivePage] = useState("note");
+  const [defaultBM, setDefaultBM] = useState([])
 
   const populateMainData = () => {
     axios.get("http://localhost:8080/main/user", {
@@ -36,7 +37,7 @@ export default function MainPage() {
       const user = jwt_decode(token);
       if(!user){
         localStorage.removeItem("token");
-        navigate("/");
+        navigate("/")
       }
       else{
         populateMainData();
@@ -45,9 +46,29 @@ export default function MainPage() {
   })
 
   const logOut = () => {
-    console.log("logout")
     localStorage.removeItem("token");
+    navigate("/")
   }
+
+  const fetchDefaultBM = async () => {
+    axios.get("http://localhost:8080/main/defaultBookmark", 
+    {
+      email: email,
+      headers: {
+        "x-access-token": localStorage.getItem("token")
+      }
+    })
+    .then((res) => {
+      setDefaultBM(res.data)
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  useEffect(() => {
+    fetchDefaultBM()
+  }, [])
 
   return (
     <Flex flexDir="column" alignItems="center">
@@ -56,7 +77,7 @@ export default function MainPage() {
       </Box>
       {activePage === "note" &&
         <>
-          <NotePage email={email} tag={tag}/>
+          <NotePage email={email} tag={tag} defaultBM={defaultBM}/>
         </>
       }
       {activePage === "todo" &&

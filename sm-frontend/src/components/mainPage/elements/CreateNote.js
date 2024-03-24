@@ -30,7 +30,14 @@ export default function CreateNote(props) {
 
     const addNote = async () => {
         const email = props.email;
-        axios.post('http://localhost:8080/main/createnote', {email, title, content})
+        const defaultBM = props.defaultBM;
+        axios.post('http://localhost:8080/main/createnote', 
+        {
+            email, 
+            title, 
+            content,
+            defaultBM
+        })
         .then((res) => {
             props.fetchAllNotes();
         })
