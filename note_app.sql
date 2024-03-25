@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 26 Sty 2024, 09:17
--- Wersja serwera: 10.4.22-MariaDB
--- Wersja PHP: 8.1.2
+-- Czas generowania: 25 Mar 2024, 18:02
+-- Wersja serwera: 10.4.11-MariaDB
+-- Wersja PHP: 7.4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,17 +24,45 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `bookmarks`
+--
+
+CREATE TABLE `bookmarks` (
+  `bookmark_id` int(11) NOT NULL,
+  `bm_name` varchar(200) NOT NULL,
+  `bm_email` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla tabeli `notes`
 --
 
 CREATE TABLE `notes` (
   `note_id` int(11) NOT NULL,
+  `user_email` varchar(200) NOT NULL,
   `title` varchar(200) NOT NULL,
   `content` text NOT NULL,
   `creation_date` datetime NOT NULL,
   `update_date` datetime NOT NULL,
-  `type` varchar(200) NOT NULL,
-  `favorite` tinyint(1) NOT NULL
+  `favorite` tinyint(1) NOT NULL,
+  `color` varchar(200) NOT NULL,
+  `bookmark` int(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `todo`
+--
+
+CREATE TABLE `todo` (
+  `todo_id` int(11) NOT NULL,
+  `user_email` varchar(200) NOT NULL,
+  `todo_content` varchar(100) NOT NULL,
+  `due_date` varchar(200) DEFAULT NULL,
+  `finished` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -57,26 +85,51 @@ CREATE TABLE `user` (
 --
 
 --
+-- Indeksy dla tabeli `bookmarks`
+--
+ALTER TABLE `bookmarks`
+  ADD PRIMARY KEY (`bookmark_id`);
+
+--
 -- Indeksy dla tabeli `notes`
 --
 ALTER TABLE `notes`
   ADD PRIMARY KEY (`note_id`);
 
 --
+-- Indeksy dla tabeli `todo`
+--
+ALTER TABLE `todo`
+  ADD PRIMARY KEY (`todo_id`);
+
+--
 -- Indeksy dla tabeli `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
--- AUTO_INCREMENT dla zrzuconych tabel
+-- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT dla tabeli `bookmarks`
+--
+ALTER TABLE `bookmarks`
+  MODIFY `bookmark_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `notes`
 --
 ALTER TABLE `notes`
   MODIFY `note_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT dla tabeli `todo`
+--
+ALTER TABLE `todo`
+  MODIFY `todo_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `user`
