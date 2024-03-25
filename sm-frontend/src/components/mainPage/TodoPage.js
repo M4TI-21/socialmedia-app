@@ -1,8 +1,8 @@
 import Task from "./elements/Task";
 import "./mainPageStyle.css";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { Flex, OrderedList, Input, Button, Text, InputGroup, InputLeftAddon, RadioGroup, Radio, Stack, Box } from "@chakra-ui/react";
+import { useEffect, useState, useRef } from "react";
+import { Flex, OrderedList, Input, Button, Text, InputGroup, InputLeftAddon, RadioGroup, Radio, Stack, Box, Alert, AlertTitle, AlertIcon, Textarea } from "@chakra-ui/react";
 import { SearchIcon } from '@chakra-ui/icons'
 
 export default function TodoPage(props) {
@@ -12,6 +12,9 @@ export default function TodoPage(props) {
   const [checked, setChecked] = useState("noDate");
   const [search, setSearch] = useState("");
   const [errorMsg, setErrorMsg] = useState([]);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [showCreateAlert, setShowCreateAlert] = useState(false);
+  const timerId = useRef(null)
 
     const fetchTodoTasks = async () => {
         axios.get("http://localhost:8080/main/notes/fetch_todo_tasks", {
@@ -74,6 +77,8 @@ export default function TodoPage(props) {
         })
         .then((res) => {
             fetchTodoTasks();
+            setShowCreateAlert(true)
+            setTodoContent("")
         })
         .catch((err) => {
             console.log(err);
@@ -104,6 +109,18 @@ export default function TodoPage(props) {
         marginRight: "3vw"
     }
 
+    useEffect(() => {
+        if(showDeleteAlert || showCreateAlert){
+          timerId.current = setTimeout(() => {
+            setShowDeleteAlert(false);
+            setShowCreateAlert(false);
+          }, 2000);
+        }
+        return () => {
+          clearTimeout(timerId.current);
+        };
+      }, [showDeleteAlert, showCreateAlert]);
+
   return (
     <>
     <Flex flexDir="column" alignItems="center" w="100%">
@@ -115,8 +132,8 @@ export default function TodoPage(props) {
         </InputGroup>
 
         <Flex flexDir="row" bg="#dfe1e2" borderRadius="10px" w="50vw" ml="3%" pr="1%" pl="1%" alignItems="center">
-            <Input onChange={e => setTodoContent(e.target.value)} type="text" placeholder="Create new task" border="none" _focusVisible={false}
-            borderRadius="10px" maxH="5vh" w="20vw" maxLength="50"/>
+            <Textarea onChange={e => setTodoContent(e.target.value)} type="text" placeholder="Create new task" border="none" _focusVisible={false}
+            borderRadius="10px" maxH="5vh" w="20vw" maxLength="50" resize="none" overflow="hidden"/>
             
             <RadioGroup defaultValue="noDate" w="10vw" ml="2vw">
                 <Stack direction="column">
@@ -138,10 +155,28 @@ export default function TodoPage(props) {
 
         <OrderedList alignItems="center">
             {tasks.map(e => (
-                <Task key={e.todo_id} content={e.todo_content} finished={e.finished} todo_id={e.todo_id} due_date={e.due_date} fetchTodoTasks={fetchTodoTasks}/>
+                <Task key={e.todo_id} content={e.todo_content} finished={e.finished} todo_id={e.todo_id} due_date={e.due_date} fetchTodoTasks={fetchTodoTasks} 
+                setShowDeleteAlert={setShowDeleteAlert}/>
             ))} 
         </OrderedList>
         
+        {showDeleteAlert === true &&
+        <Alert status="success" position="fixed" w="30vw" minH="7vh" right="0" bottom="0">
+          <AlertIcon />
+          <Flex justifyContent="center" alignItems="center" flexDir="column" ml="2vw" w="100%">
+            <AlertTitle textAlign="center" fontSize="large">Task successfully deleted!</AlertTitle>
+          </Flex>
+        </Alert>
+      }
+
+      {showCreateAlert === true &&
+        <Alert status="success" position="fixed" w="30vw" minH="7vh" right="0" bottom="0">
+          <AlertIcon />
+          <Flex justifyContent="center" alignItems="center" flexDir="column" ml="2vw" w="100%">
+            <AlertTitle textAlign="center" fontSize="large">Task successfully created!</AlertTitle>
+          </Flex>
+        </Alert>
+      }
     </Flex>
     </>
   );

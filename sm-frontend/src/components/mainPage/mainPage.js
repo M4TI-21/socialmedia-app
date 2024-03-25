@@ -71,7 +71,7 @@ export default function MainPage() {
   }, [])
 
   return (
-    <Flex flexDir="column" alignItems="center">
+    <Flex flexDir="column" alignItems="center" h="100vh">
       <Box w="100%" h="20vh" bg="FFF">
         <MainNavComp logOut={logOut} activePage={activePage} setActivePage={setActivePage}/>
       </Box>

@@ -1,4 +1,4 @@
-import { FormControl, Button, FormLabel, FormHelperText, Input, Flex, Box } from "@chakra-ui/react";
+import { FormControl, Button, FormLabel, FormHelperText, Input, Flex } from "@chakra-ui/react";
 import './registerFormStyle.css';
 
 export default function RegisterStepOne(props) {
@@ -19,7 +19,7 @@ export default function RegisterStepOne(props) {
             {props.errorMsg.dob && <FormHelperText  color="red" fontSize="md">{props.errorMsg.dob}</FormHelperText>}
           </FormControl>
           
-          <Button size="lg" w="10vw" colorScheme="blue" onClick={props.continueOnClick} alignItems="center">Continue</Button>
+          <Button size="lg" w="10vw" bg="#333" color='white' _hover={{ bg: "#555"}} onClick={props.continueOnClick} alignItems="center">Continue</Button>
       </Flex>
   );
 }

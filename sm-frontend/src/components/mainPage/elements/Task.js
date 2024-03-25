@@ -16,10 +16,13 @@ export default function Task(props) {
 
     const deleteTask = async (id) => {
         const taskID = id;
-        axios.delete(`http://localhost:8080/main/deletetask/${taskID}`, {data: {taskID: taskID}})
+        axios.delete(`http://localhost:8080/main/deletetask/${taskID}`, 
+        {
+            data: {taskID: taskID}
+        })
         .then((res) => {
-            console.log("Task deleted");
             props.fetchTodoTasks();
+            props.setShowDeleteAlert(true);
         })
         .catch((err) => {
             console.log(err);

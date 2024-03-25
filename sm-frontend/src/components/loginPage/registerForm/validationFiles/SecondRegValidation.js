@@ -4,7 +4,7 @@ export default function SecondRegValidation(name, tag, pass, setRegisterData){
     const tagRegex = /^[a-zA-Z0-9_]+$/;
 
     if(name === ""){
-      error.name = "*Enter your name";
+      error.name = "Enter your name";
     }
     else{
       error.name = "";
@@ -12,10 +12,10 @@ export default function SecondRegValidation(name, tag, pass, setRegisterData){
     }
 
     if(tag === ""){
-      error.tag = "*Enter your tag";
+      error.tag = "Enter your tag";
     }
     else if(tagRegex.test(tag) === false){
-      error.tag = "*Create your tag using only letters, numbers or underscore"
+      error.tag = "Create your tag using only letters, numbers or underscore"
     }
     else{
       error.tag = "";
@@ -23,10 +23,10 @@ export default function SecondRegValidation(name, tag, pass, setRegisterData){
     }
 
     if(pass === ""){
-      error.pass = "*Enter your password"
+      error.pass = "Enter your password"
     }
     else if(passRegex.test(pass) === false){
-      error.pass = "*Your password must contain at least one capitalized letter and one number";
+      error.pass = "Your password must contain at least one capitalized letter and one number";
     }
     else{
       error.pass = "";

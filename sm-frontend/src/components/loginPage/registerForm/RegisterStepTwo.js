@@ -4,7 +4,7 @@ import './registerFormStyle.css';
 export default function RegisterStepTwo(props) {
 
   return (
-    <Flex flexDir="column" justifyContent="space-around" alignItems="center" w="45vw" h="inherit" mt="5">
+    <Flex flexDir="column" justifyContent="space-around" alignItems="center" w="45vw" h="inherit" >
         <FormControl ml="20vw">
           <FormLabel fontSize="2xl">Name:</FormLabel>
           <Input placeholder="John" type="text" w="25vw" h="5vh" fontSize="lg" border="1px" borderColor="#888" 
@@ -28,8 +28,10 @@ export default function RegisterStepTwo(props) {
 
         <Flex w="30vw" flexDir="row" alignItems="center" justifyContent="space-evenly">
           <Button size="lg" w="10vw" colorScheme="red" onClick={props.returnOnClick}>Back</Button>
-          <Button size="lg" w="10vw" colorScheme="blue" onClick={props.submitOnClick}>Register</Button>
+          <Button size="lg" w="10vw" bg="#333" color='white' _hover={{ bg: "#555"}} onClick={props.submitOnClick}>Register</Button>
         </Flex>
+
+        
     </Flex>
   );
 }

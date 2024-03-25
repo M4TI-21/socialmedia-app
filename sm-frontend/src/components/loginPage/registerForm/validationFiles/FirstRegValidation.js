@@ -3,10 +3,10 @@ export default function FirstRegValidation(email, dob, setRegisterData){
     const emailRegex = /\S+@\S+\.\S+/;
 
     if(email === ""){
-        error.email = "*Enter your email";
+        error.email = "Enter your email";
     }
     else if(emailRegex.test(email) === false){
-        error.email = "*Incorrect email format";
+        error.email = "Incorrect email format";
     }
     else{
         error.email = "";
@@ -14,7 +14,7 @@ export default function FirstRegValidation(email, dob, setRegisterData){
     }
 
     if(dob === undefined){
-        error.dob = "*Enter you date of birth";
+        error.dob = "Enter you date of birth";
         
     }
     else{

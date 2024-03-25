@@ -130,7 +130,7 @@ export default function ViewNote(props) {
                     </Flex>
                 </Container>
             </Container>
-            {deleteAlertActive === "Active" && <DeleteNote note_id={props.note_id} fetchAllNotes={props.fetchAllNotes} deleteAlert={deleteAlert}/>}
+            {deleteAlertActive === "Active" && <DeleteNote note_id={props.note_id} fetchAllNotes={props.fetchAllNotes} deleteAlert={deleteAlert} setShowDeleteAlert={props.setShowDeleteAlert}/>}
             </>
         }
         {edit === true && 

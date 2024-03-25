@@ -40,6 +40,7 @@ export default function CreateNote(props) {
         })
         .then((res) => {
             props.fetchAllNotes();
+            props.setShowCreateAlert(true)
         })
         .catch((err) => {
             console.log(err);

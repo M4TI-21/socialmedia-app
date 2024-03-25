@@ -2,8 +2,8 @@ import Note from "./elements/Note";
 import CreateNote from "./elements/CreateNote";
 import "./mainPageStyle.css";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import {Flex, Button, Input, Text, InputGroup, InputLeftAddon, Menu, MenuButton, MenuList, MenuItem, MenuDivider } from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
+import {Flex, Button, Input, Text, InputGroup, InputLeftAddon, Menu, MenuButton, MenuList, MenuItem, MenuDivider, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react";
 import { SearchIcon, AddIcon } from '@chakra-ui/icons'
 import { BiMenu } from "react-icons/bi";
 import NewBookmark from "./elements/NewBookmark";
@@ -16,6 +16,9 @@ export default function NotePage(props) {
   const [bookmarks, setBookmarks] = useState([]);
   const [newBookmark, setNewBookmark] = useState("Inactive");
   const [editBookmarks, setEditBookmarks] = useState("Inactive");
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [showCreateAlert, setShowCreateAlert] = useState(false);
+  const timerId = useRef(null)
 
   const addNoteActiveOnClick = (e) => {
     e.preventDefault();
@@ -138,6 +141,18 @@ export default function NotePage(props) {
     }
   }
 
+  useEffect(() => {
+    if(showDeleteAlert || showCreateAlert){
+      timerId.current = setTimeout(() => {
+        setShowDeleteAlert(false);
+        setShowCreateAlert(false);
+      }, 5000);
+    }
+    return () => {
+      clearTimeout(timerId.current);
+    };
+  }, [showDeleteAlert, showCreateAlert]);
+
   return (
     <>
     <Flex>
@@ -166,7 +181,8 @@ export default function NotePage(props) {
 
     </Flex>
     {addNoteActive === "Active" && 
-    <CreateNote addNoteActiveOnClick={addNoteActiveOnClick} email={props.email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive} defaultBM={props.defaultBM}/>
+    <CreateNote addNoteActiveOnClick={addNoteActiveOnClick} email={props.email} fetchAllNotes={fetchAllNotes} setAddNoteActive={setAddNoteActive} defaultBM={props.defaultBM} 
+      setShowCreateAlert={setShowCreateAlert}/>
     }
 
     <Flex justifyContent="center" mt="1%">
@@ -188,10 +204,27 @@ export default function NotePage(props) {
     <Flex w="100%" minH="40vh" flexDirection="row" justifyContent="center" flexWrap="wrap" pl="3%" pr="3%">
         {notes.map(e => (
         <Note key={e.note_id} note_id={e.note_id} tag={props.tag} title={e.title} creationDate={e.creation_date} updateDate={e.update_date} content={e.content} email={props.email}
-        color={e.color} favorite={e.favorite} notes={notes} fetchAllNotes={fetchAllNotes} bookmarks={bookmarks} setBookmarks={setBookmarks} defaultBM={props.defaultBM}/>
+        color={e.color} favorite={e.favorite} notes={notes} fetchAllNotes={fetchAllNotes} bookmarks={bookmarks} setBookmarks={setBookmarks} defaultBM={props.defaultBM} setShowDeleteAlert={setShowDeleteAlert}/>
         ))}
     </Flex>
     
+    {showDeleteAlert === true &&
+        <Alert status="success" position="fixed" w="30vw" minH="7vh" right="0" bottom="0">
+          <AlertIcon />
+          <Flex justifyContent="center" alignItems="center" flexDir="column" ml="2vw" w="100%">
+            <AlertTitle textAlign="center" fontSize="large">Note successfully deleted!</AlertTitle>
+          </Flex>
+        </Alert>
+      }
+
+      {showCreateAlert === true &&
+        <Alert status="success" position="fixed" w="30vw" minH="7vh" right="0" bottom="0">
+          <AlertIcon />
+          <Flex justifyContent="center" alignItems="center" flexDir="column" ml="2vw" w="100%">
+            <AlertTitle textAlign="center" fontSize="large">Note successfully created!</AlertTitle>
+          </Flex>
+        </Alert>
+      }
     </>
   );
 }

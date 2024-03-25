@@ -100,13 +100,13 @@ export default function LoginForm() {
                 {errorMsg.pass && <FormHelperText color="red" fontSize="md">{errorMsg.pass}</FormHelperText>}
             </FormControl>
 
-            <Button size="lg" w="10vw"colorScheme="blue" onClick={submitOnClick}>Sign in</Button>
+            <Button size="lg" w="10vw" bg="#333" color='white' _hover={{ bg: "#555"}} onClick={submitOnClick}>Sign in</Button>
         </Flex>
 
         <Flex className="registerArea" flexDir="column" alignItems="center" justifyContent="center">
           <Text fontSize="2xl" fontWeight="bold" color="#EEE" textAlign="center">Don't have an account?</Text>
           <Text fontSize="5xl" fontWeight="bold" color="#EEE" textAlign="center">Sign up now!</Text>
-          <Button size="lg" w="10vw" colorScheme="blue" as={Link} to="/register" textAlign="center">Create new account</Button>
+          <Button size="lg" w="12vw" bg="#ccc" color='#333' _hover={{ bg: "#aaa"}} as={Link} to="/register" textAlign="center">Create new account</Button>
         </Flex>
       </Box>
     </Flex>

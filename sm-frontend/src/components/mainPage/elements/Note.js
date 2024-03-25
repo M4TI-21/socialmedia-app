@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import ViewNote from "./ViewNote";
 import Moment from "react-moment";
 
+
 export default function Note(props) {
     const [displayNoteActive, setDisplayNoteActive] = useState("Inactive")
     const [isHover, setIsHover] = useState(false);
@@ -96,15 +97,20 @@ export default function Note(props) {
             <Box bg={props.color} minW="16vw" maxW="24vw" h="35vh" pr="1%" pl="1%" pt="1%" pb="3%" borderRadius="10px" ml="1vw" mr="1vw" mb="1vw"
                 style={hoverStyle} onMouseEnter={hoverTrue} onMouseLeave={hoverFalse} boxShadow="xl">
                 <Box w="inherit" h="90%">
+
                     <Flex alignItems="flex-start" minH="4vh" maxH="8vh" flexDir="row">
                         <Heading size="md" overflowWrap="anywhere" pr="10%">{props.title}</Heading>
-                        {isFav === 1 && <IconButton icon={<BiSolidStar />} size="lg" _hover={{ bg: "none"}} bg="none" position="absolute" right="0" mr="5%" onClick={() => unsetFavoriteOnClick(props.note_id)}/>}
-                        {isFav === 0 && <IconButton icon={<BiStar />} size="lg" _hover={{ bg: "none"}} bg="none" position="absolute" right="0" mr="5%" onClick={() => setFavoriteOnClick(props.note_id)}/>}  
+                        {props.favorite === 1 && <IconButton icon={<BiSolidStar />} size="lg" _hover={{ bg: "none"}} bg="none" position="absolute" right="0" mr="5%" onClick={() => unsetFavoriteOnClick(props.note_id)}/>}
+                        
+                        {props.favorite === 0 &&<IconButton icon={<BiStar />} size="lg" _hover={{ bg: "none"}} bg="none" position="absolute" right="0" mr="5%" onClick={() => setFavoriteOnClick(props.note_id)}/>}  
                     </Flex>
+
                     <Text fontSize="x-small">@{activeBM}</Text>
+
                     <Flex width="calc(100%)" h="18vh" pl="2%" pr="2%" onClick={displayNote} mb="1vh">
                         <Text fontSize="lg" overflow="hidden" textOverflow="ellipsis" overflowWrap="anywhere">{props.content}</Text>
                     </Flex>
+                    
                     <Flex h="3vh" justifyContent="flex-end" position="absolute" right="1vw" bottom="1%">
                         <Text fontSize="smaller"><Moment format="DD MMM YYYY HH:mm">{props.updateDate}</Moment></Text>
                     </Flex>
@@ -113,7 +119,7 @@ export default function Note(props) {
 
         {displayNoteActive === "Active" && <ViewNote note_id={props.note_id} fetchAllNotes={props.fetchAllNotes} bookmarks={props.bookmarks} setBookmarks={props.setBookmarks}
         creationDate={props.creationDate} updateDate={props.updateDate} content={props.content} tag={props.tag} title={props.title} displayNote={displayNote} color={props.color}
-        defaultBM={props.defaultBM} activeBM={activeBM} setActiveBM={setActiveBM} getBMname={getBMname}/>}
+        defaultBM={props.defaultBM} activeBM={activeBM} setActiveBM={setActiveBM} getBMname={getBMname} setShowDeleteAlert={props.setShowDeleteAlert}/>}
         </>
     );
 }
