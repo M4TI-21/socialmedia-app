@@ -146,7 +146,7 @@ export default function NotePage(props) {
       timerId.current = setTimeout(() => {
         setShowDeleteAlert(false);
         setShowCreateAlert(false);
-      }, 5000);
+      }, 3000);
     }
     return () => {
       clearTimeout(timerId.current);

@@ -466,7 +466,7 @@ app.get("/main/notes/fetch_todo_tasks", async (req, res) => {
     const decoded = jwt.verify(token, "secret");
     const email = decoded.email;
     try{
-        await db.query("SELECT * FROM todo WHERE user_email = ?", [email], (error, data) => {
+        await db.query("SELECT * FROM todo WHERE user_email = ? ORDER BY due_date ASC", [email], (error, data) => {
             if(error){
                 res.json({status: error});
             }
